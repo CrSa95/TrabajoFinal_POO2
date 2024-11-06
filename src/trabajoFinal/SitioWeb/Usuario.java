@@ -16,6 +16,8 @@ public class Usuario {
 	private LocalDate fechaRegistro;
 	private List<String> comentariosInquilino = new ArrayList<String>();
 	private List<String> comentariosPropietario = new ArrayList<String>();
+	private List<Rankeo> rankeoInquilino = new ArrayList<Rankeo>();
+	private List<Rankeo> rankeoPropietario = new ArrayList<Rankeo>();
 	private Boolean esInquilino;
 	private Boolean esUsuario;
 	private SitioWeb sitioWeb;
