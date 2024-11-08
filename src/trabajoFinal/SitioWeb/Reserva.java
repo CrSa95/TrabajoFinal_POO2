@@ -6,7 +6,7 @@ public class Reserva {
 	private Usuario usuario;
 	private LocalDate fechaDeIngreso;
 	private LocalDate fechaDeEgreso;
-	private String ciudad;
+	private Inmueble inmueble;
 	
 	public Usuario getUsuario() {
 		return usuario;
@@ -20,11 +20,11 @@ public class Reserva {
 		return fechaDeEgreso;
 	}
 	
-	public String getCiudad() {
-		return ciudad;
-	}
-	
 	public void cancelarReserva() {
 		
+	}
+	
+	public Inmueble getInmueble() {
+		return this.inmueble;
 	}
 }
