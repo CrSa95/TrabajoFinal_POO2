@@ -12,6 +12,7 @@ public class SitioWeb {
 	private List<Categoria> todasLasCategoriasDePropietario = new ArrayList<Categoria>();
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<TipoDeServicio>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<TipoDeInmueble>();
+	private List<Filtro> filtros = new ArrayList<Filtro>();
 	
 	
 	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){
