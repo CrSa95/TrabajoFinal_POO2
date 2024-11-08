@@ -1,75 +1,46 @@
 package trabajoFinal.SitioWeb;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SitioWeb {
-	private List<Reserva> reservas = new ArrayList<Reserva>();
+	
 	private List<Inmueble> inmuebles = new ArrayList<Inmueble>();
-	private List<Categoria> categorias = new ArrayList<Categoria>();
+	private List<Categoria> todasLasCategoriasDeInmueble = new ArrayList<Categoria>();
+	private List<Categoria> todasLasCategoriasDeInquilino= new ArrayList<Categoria>();
+	private List<Categoria> todasLasCategoriasDePropietario = new ArrayList<Categoria>();
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<TipoDeServicio>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<TipoDeInmueble>();
-	private List<FormaDePago> todasLasFormasDePago = new ArrayList<FormaDePago>();
 	
-	public Boolean getCategoriaEspecifica(Categoria categoriaEspecifica){
-		return this.categorias.stream()
+	
+	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){
+		return this.todasLasCategoriasDeInmueble.stream()
 		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
 	
-	public List<Reserva> getReservas(Usuario usuario){
-		return reservas.stream()
-		        .filter(reserva -> reserva.getUsuario().equals(usuario))
-		        .collect(Collectors.toList());
+	public Boolean getCategoriaEspecificaInquilino(Categoria categoriaEspecifica){
+		return this.todasLasCategoriasDeInquilino.stream()
+		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
 	
-	public List<Reserva> getReservasFuturas(Usuario usuario, LocalDate fechaActual){
-		return reservas.stream()
-		        .filter(reserva -> reserva.getUsuario().equals(usuario) 
-		        				   && 
-		        				   reserva.getFechaDeIngreso().isAfter(fechaActual))
-		        .collect(Collectors.toList());
+	public Boolean getCategoriaEspecificaPropietario(Categoria categoriaEspecifica){
+		return this.todasLasCategoriasDePropietario.stream()
+		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
 	
-	public List<Reserva> getReservasEnCiudad(Usuario usuario, String ciudad){
-		return reservas.stream()
-		        .filter(reserva -> reserva.getUsuario().equals(usuario) 
-		        				   && 
-		        				   reserva.getCiudad().equalsIgnoreCase(ciudad))
-		        .collect(Collectors.toList());
-	}
-	
-	public List<String> getCiudadesReservadas(Usuario usuario){
-		return reservas.stream()
-		        .map(Reserva::getCiudad)
-		        .collect(Collectors.toList());
-	}
-	
-	public List<String> seleccionarTiposDeServicio(List<String> servicios){
+	public List<TipoDeServicio> seleccionarTiposDeServicio(List<TipoDeServicio> servicios){
 		
 		//Filtra elementos de tiposDeServicio que están presentes en servicios
-		return this.todosLosTiposDeServicios.stream()
-											.map(TipoDeServicio::getTipoDeServicio)
-			    							.filter(servicios::contains)
-			    							.collect(Collectors.toList());
+		return todosLosTiposDeServicios.stream()
+										.filter(servicios::contains)
+										.collect(Collectors.toList());
 	}
 	
-	public List<FormaDePago> seleccionarFormasDePago(List<FormaDePago> formasDePago){
-		
-		//Filtra elementos de todasLasFormasDePago que están presentes en formasDePago
-		return this.todasLasFormasDePago.stream()
-                						.filter(formasDePago::contains)
-                						.collect(Collectors.toList());
-	}
-	
-	public Optional<String> seleccionarTipoDeInmueble(String tipoDeInmueble) {
+	public Boolean seleccionarTipoDeInmueble(TipoDeInmueble tipoDeInmueble) {
 		
 		return this.todosLosTiposDeInmueble.stream()
-										   .map(TipoDeInmueble::getTipoDeInmueble)
-			    						   .filter(tipoInmueble -> tipoInmueble.equals(tipoDeInmueble))
-			    						   .findFirst();
+											.anyMatch(tipoInmueble -> tipoInmueble.equals(tipoDeInmueble));
 
 	}
 	
@@ -77,17 +48,25 @@ public class SitioWeb {
 		this.inmuebles.add(inmueble);
 	}
 	
-	public void setTiposDeServicios(List<TipoDeServicio> todasLosTiposDeServicios) {
-		this.todosLosTiposDeServicios = todasLosTiposDeServicios;
+	//Metodos de administrador
+	public void altaTipoDeServicio(TipoDeServicio tipoDeServicio) {
+		this.todosLosTiposDeServicios.add(tipoDeServicio);
 	}
 	
-
-	public void setFormasDePago(List<FormaDePago> todasLasFormasDePago) {
-		this.todasLasFormasDePago = todasLasFormasDePago;
+	public void altaTipoDeInmueble(TipoDeInmueble tipoDeInmueble) {
+		this.todosLosTiposDeInmueble.add(tipoDeInmueble);
 	}
 	
-	public void setTiposDeInmueble(List<TipoDeInmueble> todosLosTiposDeInmueble) {
-		this.todosLosTiposDeInmueble = todosLosTiposDeInmueble;
+	public void altaTipoDeCategoriaInmueble(Categoria categoria) {
+		this.todasLasCategoriasDeInmueble.add(categoria);
+	}
+	
+	public void altaTipoDeCategoriaPropietario(Categoria categoria) {
+		this.todasLasCategoriasDePropietario.add(categoria);
+	}
+	
+	public void altaTipoDeCategoriaInquilino(Categoria categoria) {
+		this.todasLasCategoriasDeInquilino.add(categoria);
 	}
 	
 }

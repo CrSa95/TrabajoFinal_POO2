@@ -1,11 +1,11 @@
 package trabajoFinal.SitioWeb;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Period;
 
 public class Usuario {
@@ -21,9 +21,12 @@ public class Usuario {
 	private List<String> comentariosPropietario = new ArrayList<String>();
 	private List<Rankeo> rankeosInquilino = new ArrayList<Rankeo>();
 	private List<Rankeo> rankeosPropietario = new ArrayList<Rankeo>();
+	private List<Reserva> reservas = new ArrayList<Reserva>();
 	private Boolean esInquilino;
 	private Boolean esPropietario;
 	private SitioWeb sitioWeb;
+	private int cantidadDeVecesQueAlquile = 0;
+	private int dineroResarcido;
 	
 	public Usuario (String nombreCompleto, String mail, int telefono, Boolean esInquilino, Boolean esPropietario, SitioWeb sitioWeb) {
 		
@@ -37,7 +40,11 @@ public class Usuario {
 		
 	}
 	
-	//FUNCIONES QUE COMPARTEN AMBOS
+	//METODOS QUE COMPARTEN AMBOS TIPOS DE USUARIOS
+	
+	public void registrarReserva(Reserva reserva) {
+		this.reservas.add(reserva);
+	}
 	
 	public void actualizarNombreCompleto(String nombreCompleto) {
 		this.nombreCompleto = nombreCompleto;
@@ -100,14 +107,44 @@ public class Usuario {
 		return this.rankeosInquilino;
 	}
 	
-	//FUNCIONES DE INQUILINO
+	//METODOS DE INQUILINO
+	
+	public List<Reserva> getReservas(){
+		return reservas.stream()
+		        		.filter(reserva -> reserva.getUsuario().equals(this))
+		        		.collect(Collectors.toList());
+	}
+	
+	public List<Reserva> getReservasFuturas(LocalDate fechaActual){
+		return reservas.stream()
+		        .filter(reserva -> reserva.getUsuario().equals(this) 
+		        				   && 
+		        				   reserva.getFechaDeIngreso().isAfter(fechaActual))
+		        .collect(Collectors.toList());
+	}
+	
+	public List<Reserva> getReservasEnCiudad(String ciudad){
+		return reservas.stream()
+		        .filter(reserva -> reserva.getUsuario().equals(this) 
+		        				   && 
+		        				   reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
+		        .collect(Collectors.toList());
+	}
+	
+	public List<String> getCiudadesReservadas(){
+		return reservas.stream()
+					.filter(reserva -> reserva.getUsuario().equals(this))
+	            	.map(reserva -> reserva.getInmueble().getCiudad())
+	            	.distinct()
+	            	.collect(Collectors.toList());
+	}
 	
 	public Inmueble seleccionarInmueble(Inmueble inmueble) {
 		return inmueble;
 	}
 	
 	public void realizarReservar(Inmueble inmueble, Usuario usuario, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
-		Optional<FormaDePago> formaDePagoSeleccionada = inmueble.seleccionarFormaDePago(formaDePago);
+		inmueble.seleccionarFormaDePago(formaDePago);
 		
 	}
 	
@@ -117,169 +154,107 @@ public class Usuario {
 	}
 	*/
 	
-	public List<Reserva> reservasHechas() throws AccesoDenegadoException {
-		if (this.esInquilino) {
-			return this.sitioWeb.getReservas(this);
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
+	public void cancelarReserva(Reserva reserva){
+		
+		reserva.cancelarReserva();
+
 	}
 	
-	public List<Reserva> reservasFuturas() throws AccesoDenegadoException {
-		if (this.esInquilino) {
-			return this.sitioWeb.getReservasFuturas(this, LocalDate.now());
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
+	public void setComentarioInmueble(Inmueble inmueble, String comentario){
+		
+		inmueble.setComentario(comentario);
 	}
 	
-	public List<Reserva> reservasEnCiudad(String ciudad) throws AccesoDenegadoException{
-		if (this.esInquilino) {
-			return this.sitioWeb.getReservasEnCiudad(this, ciudad);
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
+	public void setComentarioPropietario(Usuario usuario, String comentario) {
+		
+		usuario.setComentarioPropietario(comentario);
+			
 	}
 	
-	public List<String> ciudadesReservadas() throws AccesoDenegadoException{
-		if (this.esInquilino) {
-			return this.sitioWeb.getCiudadesReservadas(this);
+	public void rankPropietario(Usuario usuario, Categoria categoria, int puntaje) throws CategoriaIncorrectaException {
+
+		if (this.sitioWeb.getCategoriaEspecificaPropietario(categoria)){
+			usuario.setRankeosPropietario(new Rankeo(categoria, puntaje));
 		}
 		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
-	}
-	
-	public void cancelarReserva(Reserva reserva) throws AccesoDenegadoException{
-		if (this.esInquilino) {
-			reserva.cancelarReserva();
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
-	}
-	
-	public void setComentarioInmueble(Inmueble inmueble, String comentario) throws AccesoDenegadoException{
-		if (this.esInquilino) {
-			inmueble.setComentario(comentario);;
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
-	}
-	
-	public void setComentarioPropietario(Usuario usuario, String comentario) throws AccesoDenegadoException {
-		if (this.esInquilino && usuario.esPropietario) {
-			usuario.setComentarioPropietario(comentario);
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Los inquilinos solo pueden rankear propietarios.");
-		}
-	}
-	
-	public void rankPropietario(Usuario usuario, Categoria categoria, int puntaje) throws AccesoDenegadoException, CategoriaIncorrectaException {
-		if (this.esInquilino && usuario.esPropietario) {
-			if (this.sitioWeb.getCategoriaEspecifica(categoria)){
-				usuario.setRankeosPropietario(new Rankeo(usuario, categoria, puntaje));
-			}
-			else {
 				throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
-			}
 		}
-		else {
-			throw new AccesoDenegadoException("Error: Los inquilinos solo pueden rankear propietarios.");
-		}
-	}
-	
-	public void rankInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws AccesoDenegadoException, CategoriaIncorrectaException  {
-		
-		if (this.esInquilino) {
-			if (this.sitioWeb.getCategoriaEspecifica(categoria)){
-				inmueble.setRankeosInmueble(new Rankeo(inmueble, categoria, puntaje));
-			}
-			else {
-				throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
-			}
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
-	}
-	
-	public Optional<FormaDePago> elegirFormaDePago(List<FormaDePago> formasDePago, FormaDePago formaDePago) throws AccesoDenegadoException {
-		if (this.esInquilino) {
-			return formasDePago.stream()
-					.filter(formaPago -> formaPago == formaDePago)
-	                .findFirst();
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los inquilinos pueden realizar esta acción.");
-		}
-	}
-	
-	//FUNCIONES DE PROPIETARIO
-	
-	public void altaInmueble(String tipoDeInmueble, int superficie, String pais, String ciudad, 
-							 String direccion, int capacidad, List<String> servicios,
-							 String fotos, LocalDate checkIn, LocalDate checkOut, List<FormaDePago> formasDePago, 
-							 int precioPorDia) throws AccesoDenegadoException {
-		
-		if (this.esPropietario) {
-			
-			//Obtengo la lista de servicios que quiero aplicar a mi inmueble
-			this.tiposDeServicios = this.sitioWeb.seleccionarTiposDeServicio(servicios);
-			
-			//Obtengo las formas de pago que quiero aplicar a mi inmueble
-			this.formasDePago = this.sitioWeb.seleccionarFormasDePago(formasDePago);
-			
-			//Obtengo el tipo de inmueble que quiero aplicar a mi inmueble
-			this.tipoDeInmueble = this.sitioWeb.seleccionarTipoDeInmueble(tipoDeInmueble);
-			
-			//Creo el inmueble
-			Inmueble inmueble = new Inmueble(this.tipoDeInmueble, superficie, pais, ciudad, 
-					 direccion, this.tiposDeServicios, capacidad, 
-					 fotos, checkIn, checkOut, this.formasDePago, precioPorDia); 
-			
-			//Lo doy de alta en el sitio
-			this.sitioWeb.altaInmueble(inmueble);
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los propietarios pueden realizar esta acción.");
-		}		
 		
 	}
 	
-	/*
+	public void rankInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws CategoriaIncorrectaException  {
+		
+		if (this.sitioWeb.getCategoriaEspecificaInmueble(categoria)){
+			inmueble.setRankeosInmueble(new Rankeo(categoria, puntaje));
+		}
+		else {
+			throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
+		}
+	}
+	
+	//METODOS DE PROPIETARIO
+	
+	public void altaInmueble(TipoDeInmueble tipoDeInmueble, int superficie, String pais, String ciudad, 
+							 String direccion, int capacidad, List<TipoDeServicio> servicios, 
+							 List<Foto> fotos, LocalTime checkIn, LocalTime checkOut, List<FormaDePago> formasDePago, 
+							 int precioPorDia, PoliticaDeCancelacion politicaDeCancelacion) 
+							 throws TipoDeInmuebleIncorrectoException, CantidadDeFotosIncorrectaException{
+		
+		//Creo el inmueble	
+		Inmueble inmueble = new Inmueble(this,superficie, pais, ciudad, 
+				 direccion, capacidad, checkIn, checkOut, precioPorDia); 
+			
+		//Obtengo la lista de servicios que quiero aplicar a mi inmueble
+		inmueble.setTipoDeServicios(sitioWeb.seleccionarTiposDeServicio(servicios));
+			
+		//Obtengo las formas de pago que quiero aplicar a mi inmueble
+		inmueble.setFormasDePago(formasDePago);
+		
+		inmueble.setFotos(fotos);
+		
+		inmueble.setPoliticaDeCancelacion(politicaDeCancelacion);
+		
+		//Obtengo el tipo de inmueble que quiero aplicar a mi inmueble
+		if (sitioWeb.seleccionarTipoDeInmueble(tipoDeInmueble)) {
+			inmueble.setTipoDeInmueble(tipoDeInmueble);
+		}
+		else {
+			throw new TipoDeInmuebleIncorrectoException("Error: El tipo de inmueble seleccionado es incorrecto.");
+		}
+		
+		//Lo doy de alta en el sitio
+		this.sitioWeb.altaInmueble(inmueble);
+	}
 	  
-	public void aceptarReserva(Reserva) throws AccesoDenegadoException {
-		if (this.esPropietario) {
-			
-		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los propietarios pueden realizar esta acción.");
-		}		
+	public void aceptarReserva(SolicitudDeReserva solicitudDeReserva) {
+		
+		solicitudDeReserva.aceptarReserva();
+	
 	}
 	
-	public void rankearInquilino(Usuario usuario, Categoria categoria, int puntaje) throws AccesoDenegadoException, CategoriaIncorrectaException {
-		if (this.esPropietario && usuario.esInquilino) {
-			
+	public void rankearInquilino(Usuario usuario, Categoria categoria, int puntaje) throws CategoriaIncorrectaException {
+		
+		if (this.sitioWeb.getCategoriaEspecificaInquilino(categoria)){
+			usuario.setRankeosInquilino(new Rankeo(categoria, puntaje));
 		}
 		else {
-			throw new AccesoDenegadoException("Error: Los propietarios solo pueden rankear inquilinos.");
-		}		
-	}
-	
-	public int cantidadTotalDeInmueblesAlquialdos() throws AccesoDenegadoException {
-		if (this.esPropietario) {
-			
+				throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
 		}
-		else {
-			throw new AccesoDenegadoException("Error: Solo los propietarios pueden realizar esta acción.");
-		}		
+		
 	}
 	
-	*/
+	public void setCantidadDeVecesQueAlquile() {
+		
+		this.cantidadDeVecesQueAlquile += 1;
+	}
+	
+	public int getCantidadDeVecesQueAlquile() {	
+		
+		return this.cantidadDeVecesQueAlquile;
+	}
+	
+	public void recibirResarcimiento(int dineroResarcido) {
+		this.dineroResarcido = dineroResarcido;
+	}
+	
 }
