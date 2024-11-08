@@ -1,6 +1,7 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +37,28 @@ public class SitioWeb {
 		return reservas.stream()
 		        .map(Reserva::getCiudad)
 		        .collect(Collectors.toList());
+	}
+	
+	public List<Inmueble> buscarInmuebles(String ciudad, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, Integer capacidad, Double precioMinimo, 
+			Double precioMaximo){
+
+
+		filtros.add(new FiltroCiudad(ciudad));
+		filtros.add(new FiltroFechas(fechaEntrada, fechaSalida));
+
+		if (capacidad != null) {
+			filtros.add(new FiltroCapacidad(capacidad));
+		}
+
+		if (precioMinimo != null || precioMaximo != null) {
+			filtros.add(new FiltroPrecio(precioMinimo, precioMaximo));
+		}
+
+		List<Inmueble> resultado = new ArrayList<>(inmuebles);
+		for (Filtro filtro : filtros) {
+			resultado = filtro.filtrar(resultado);
+		}
+		return resultado;
 	}
 	
 }
