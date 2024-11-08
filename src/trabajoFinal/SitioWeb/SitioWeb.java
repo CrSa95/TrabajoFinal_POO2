@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class SitioWeb {
 	private List<Reserva> reservas = new ArrayList<Reserva>();
 	private List<Inmueble> inmuebles = new ArrayList<Inmueble>();
+	private List<Filtro> filtros = new ArrayList<Filtro>();
 	
 	public List<Reserva> getReservas(Usuario usuario){
 		return reservas.stream()
