@@ -15,10 +15,6 @@ public class SitioWeb {
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<TipoDeServicio>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<TipoDeInmueble>();
 	private List<Filtro> filtros = new ArrayList<Filtro>();
-<<<<<<< HEAD
-	
-=======
->>>>>>> ff304ea40857d939684f6cc8b71abedb5d232e53
 	
 	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){
 		return this.todasLasCategoriasDeInmueble.stream()
