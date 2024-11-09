@@ -1,10 +1,12 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 public class Inmueble {
 	
@@ -82,6 +84,7 @@ public class Inmueble {
 	public Usuario getPropietario() {
 		return this.propietario;
 	}
+	private SolicitudDeReserva solicitudDeReserva; 
 	
 	public void setComentario(String comentario){
 		comentarios.add(comentario);
@@ -142,9 +145,14 @@ public class Inmueble {
 		
 		this.politicaDeCancelacion = politicaDeCancelacion;
 	}
+  
+	public void realizarReservaDelInmueble(Usuario inquilino, FormaDePago formaDePago, LocalDateTime fechaDeIngreso, LocalDateTime fechaDeEgreso) {
+		this.solicitudDeReserva = new SolicitudDeReserva(this, inquilino, formaDePago, fechaDeIngreso, fechaDeEgreso);
+		this.solicitudDeReserva.solicitarReserva();
 	
 	public void setPreciosEspecificos(List<PrecioEspecifico> preciosEspecificos) {
 		this.preciosEspecificos = preciosEspecificos;
+
 	}
 
 }
