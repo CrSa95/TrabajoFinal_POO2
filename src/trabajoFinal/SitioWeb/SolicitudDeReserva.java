@@ -1,5 +1,6 @@
 package trabajoFinal.SitioWeb;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class SolicitudDeReserva{
@@ -7,12 +8,12 @@ public class SolicitudDeReserva{
 	private Inmueble inmueble;
 	private Usuario inquilino;
 	private FormaDePago formaDePago;
-	private LocalDateTime fechaDeIngreso;
-	private LocalDateTime fechaDeEgreso;
+	private LocalDate fechaDeIngreso;
+	private LocalDate fechaDeEgreso;
 	private EstadoDeSolicitud estadoDeSolicitud;
 	private Reserva reserva;
 	
-	public SolicitudDeReserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDateTime fechaDeIngreso,LocalDateTime fechaDeEgreso) {
+	public SolicitudDeReserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
 		this.inmueble = inmueble;
 		this.inquilino = inquilino;
 		this.formaDePago = formaDePago;
@@ -22,15 +23,11 @@ public class SolicitudDeReserva{
 	}
 
 	public void solicitarReserva() {
-		this.inmueble.getPropietatio().recivirSolicitud(this); // Como hacer que el dueño pueda rechazar o aceptar??. No hay ninguna logica a seguir. 
+		this.inmueble.getPropietario().recibirSolicitudReserva(this);  
 	}
 
 	public void aprobarSolicitud() {
 		this.estadoDeSolicitud.aprobar(this);
-	}
-	
-	public void rechazarSolicitud() {
-		this.estadoDeSolicitud.rechazar(this);
 	}
 	
 	public EstadoDeSolicitud getEstado() {
@@ -43,7 +40,8 @@ public class SolicitudDeReserva{
 
 	public void realizarReserva() {
 		this.reserva = new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso);
-		this.inquilino.agregarReserva(this.reserva);
+		this.inquilino.registrarReserva(this.reserva);
+		this.reserva.evaluarReserva();
 		
 		// Quiza hay que agregar en una lista al inmueble, sino no puede buscar para comparar las fechas de una nueva reserva con las que estan activas. 
 	}

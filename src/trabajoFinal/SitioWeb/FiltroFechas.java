@@ -1,14 +1,14 @@
 package trabajoFinal.SitioWeb;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class FiltroFechas implements Filtro{
 
-    private LocalDateTime fechaEntrada;
-    private LocalDateTime fechaSalida;
+    private LocalDate fechaEntrada;
+    private LocalDate fechaSalida;
 
-    public FiltroFechas(LocalDateTime fechaEntrada, LocalDateTime fechaSalida) {
+    public FiltroFechas(LocalDate fechaEntrada, LocalDate fechaSalida) {
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
     }
@@ -17,8 +17,8 @@ public class FiltroFechas implements Filtro{
     public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
         return inmuebles.stream()
                 .filter(inmueble -> 
-                        !inmueble.getCheckIn().isAfter(fechaEntrada) &&
-                        !inmueble.getCheckOut().isBefore(fechaSalida))
+                        !inmueble.getFechaInicial().isAfter(fechaEntrada) &&
+                        !inmueble.getFechaFinal().isBefore(fechaSalida))
                 .toList();
     }
 }

@@ -15,8 +15,4 @@ public class EstadoDeSolicitudPendiente implements EstadoDeSolicitud{
 		
 	}
 
-	@Override
-	public void rechazar(SolicitudDeReserva solicitud) {
-		solicitud.setEstadoDeSolicitus(new EstadoDeSolicitudRechazada());
-	}
 }

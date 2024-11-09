@@ -8,10 +8,4 @@ public class EstadoSolicitudAprobada implements EstadoDeSolicitud{
 		
 	}
 
-	@Override
-	public void rechazar(SolicitudDeReserva solicitud) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
