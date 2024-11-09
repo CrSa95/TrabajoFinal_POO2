@@ -4,14 +4,14 @@ public class EstadoConfirmada implements EstadoDeReserva {
 
 	@Override
 	public void cancelar(Reserva reserva) {
-		// TODO Auto-generated method stub
-		
+		reserva.getInmueble().getPoliticaDeCancelacion().darResarcimiento();
+		reserva.setEstadoDeReserva(new EstadoCancelada());
 	}
 
 	@Override
 	public void finalizar(Reserva reserva) {
-		// TODO Auto-generated method stub
 		
+		reserva.setEstadoDeReserva(new EstadoFinalizada());
 	}
 
 }

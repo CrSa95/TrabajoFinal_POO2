@@ -1,10 +1,12 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 public class Inmueble {
 	
@@ -31,6 +33,11 @@ public class Inmueble {
 	private Usuario propietario;
 	private int precioTotalCalculado;
 	private int cantidadDeDiasAlquilado;
+	private List<PrecioEspecifico> preciosEspecificos;
+	private LocalTime fechaInicial;
+	private LocalTime fechaFinal;
+	private LocalTime fechaIngreso;
+	private LocalTime fechaEgreso;
 	
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad, 
 			 		LocalTime checkIn, LocalTime checkOut, int precioPorDia) {
@@ -47,8 +54,19 @@ public class Inmueble {
 		
 	}
 	
-	public void setPrecioTotalCalculado(int precioTotalCalculado) {
+	public void setDisponibilidad(LocalTime fechaInicial, LocalTime fechaFinal) {
+		
+		this.fechaInicial = fechaInicial;
+		this.fechaFinal = fechaFinal;
+	}
+	
+	public void calcularPrecio() {
 		this.precioTotalCalculado = precioTotalCalculado;
+	}
+	
+	public void setFechaIngresoYEgreso(LocalTime fechaIngreso, LocalTime fechaEgreso) {
+		this.fechaIngreso = fechaIngreso;
+		this.fechaEgreso = fechaEgreso;
 	}
 	
 	public int getPrecioTotalCalculado() {
@@ -66,6 +84,7 @@ public class Inmueble {
 	public Usuario getPropietario() {
 		return this.propietario;
 	}
+	private SolicitudDeReserva solicitudDeReserva; 
 	
 	public void setComentario(String comentario){
 		comentarios.add(comentario);
@@ -126,4 +145,14 @@ public class Inmueble {
 		
 		this.politicaDeCancelacion = politicaDeCancelacion;
 	}
+  
+	public void realizarReservaDelInmueble(Usuario inquilino, FormaDePago formaDePago, LocalDateTime fechaDeIngreso, LocalDateTime fechaDeEgreso) {
+		this.solicitudDeReserva = new SolicitudDeReserva(this, inquilino, formaDePago, fechaDeIngreso, fechaDeEgreso);
+		this.solicitudDeReserva.solicitarReserva();
+	
+	public void setPreciosEspecificos(List<PrecioEspecifico> preciosEspecificos) {
+		this.preciosEspecificos = preciosEspecificos;
+
+	}
+
 }
