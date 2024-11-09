@@ -15,7 +15,7 @@ public class AppMobile implements Suscriptor {
 
 	@Override
 	public void cancelacionDeReserva(Inmueble inmueble) {
-		this.popUpWindow.popUp( "El/la" + inmueble.getTipoInmueble() + "que te interesa se ha liberado! Corre a reservarlo!", ???, ???);
+		this.popUpWindow.popUp( "El/la" + inmueble.getTipoInmueble() + "que te interesa se ha liberado! Corre a reservarlo!", "Rojo", 10);
 	}
 
 	@Override

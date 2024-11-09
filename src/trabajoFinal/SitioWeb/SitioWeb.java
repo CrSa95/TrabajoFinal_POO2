@@ -15,6 +15,10 @@ public class SitioWeb {
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<TipoDeServicio>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<TipoDeInmueble>();
 	private List<Filtro> filtros = new ArrayList<Filtro>();
+<<<<<<< HEAD
+	
+=======
+>>>>>>> ff304ea40857d939684f6cc8b71abedb5d232e53
 	
 	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){
 		return this.todasLasCategoriasDeInmueble.stream()
@@ -71,22 +75,22 @@ public class SitioWeb {
 		this.todasLasCategoriasDeInquilino.add(categoria);
 	}
 	
-	public List<Inmueble> buscarInmuebles(String ciudad, LocalDateTime fechaEntrada, LocalDateTime fechaSalida, Integer capacidad, Double precioMinimo, 
-			Double precioMaximo){
+	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, int capacidad, double precioMinimo, 
+			double precioMaximo){
 
 
 		filtros.add(new FiltroCiudad(ciudad));
 		filtros.add(new FiltroFechas(fechaEntrada, fechaSalida));
 
-		if (capacidad != null) {
+		if (capacidad != 0) {
 			filtros.add(new FiltroCapacidad(capacidad));
 		}
 
-		if (precioMinimo != null || precioMaximo != null) {
+		if (precioMinimo != 0 || precioMaximo != 0) {
 			filtros.add(new FiltroPrecio(precioMinimo, precioMaximo));
 		}
 
-		List<Inmueble> resultado = new ArrayList<>(inmuebles);
+		List<Inmueble> resultado = new ArrayList<Inmueble>();
 		for (Filtro filtro : filtros) {
 			resultado = filtro.filtrar(resultado);
 		}
