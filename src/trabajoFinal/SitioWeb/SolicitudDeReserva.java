@@ -51,8 +51,5 @@ public class SolicitudDeReserva{
 	public void notificarAInquilino() {
 		// Falta hacer, puede ser una clase Mail que maneje de los mails del sistema. 
 	}
-	
-	
-	
-	
+
 }

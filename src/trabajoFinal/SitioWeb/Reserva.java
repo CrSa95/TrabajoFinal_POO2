@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Reserva {
-	
+
 	private Inmueble inmueble;
 	private Usuario inquilino;
 	private FormaDePago formaDePago;
@@ -38,7 +38,7 @@ public class Reserva {
 	public void finalizarReserva() {
 		this.estadoDeReserva.finalizar(reserva);
 	}
-	
+  
 	public void cancelarReserva() {
 		this.estadoDeReserva.cancelar(reserva);
 	}
@@ -49,5 +49,9 @@ public class Reserva {
 
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
 		this.estadoDeReserva = estadoDeReserva;
+	}
+	
+	public Inmueble getInmueble() {
+		return this.inmueble;
 	}
 }
