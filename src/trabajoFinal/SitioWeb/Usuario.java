@@ -27,6 +27,7 @@ public class Usuario {
 	private SitioWeb sitioWeb;
 	private int cantidadDeVecesQueAlquile = 0;
 	private int dineroResarcido;
+	private List<Inmueble> inmueblesBuscados;
 	
 	public Usuario (String nombreCompleto, String mail, int telefono, Boolean esInquilino, Boolean esPropietario, SitioWeb sitioWeb) {
 		
@@ -139,20 +140,18 @@ public class Usuario {
 	            	.collect(Collectors.toList());
 	}
 	
-	public Inmueble seleccionarInmueble(Inmueble inmueble) {
-		return inmueble;
-	}
-	
 	public void realizarReservar(Inmueble inmueble, Usuario usuario, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
 		inmueble.seleccionarFormaDePago(formaDePago);
-		
+		inmueble.realizarReservaDelInmueble(usuario, formaDePago, fechaDeIngreso, fechaDeEgreso);
 	}
 	
-	/* Falta implementacion de la busqueda de inmuebles
-	public List<Inmueble> buescarInmuebles(String ciudad, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso,int cantidadDeHuespedes, int precioMinimo, int precioMaximo){
-		
+	public void buscarInmuebles(String ciudad, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso,int cantidadDeHuespedes, double precioMinimo, double precioMaximo){
+		this.inmueblesBuscados = this.sitioWeb.buscarInmuebles(ciudad, fechaDeIngreso, fechaDeEgreso, cantidadDeHuespedes, precioMinimo, precioMaximo);
 	}
-	*/
+	
+	public Optional<Inmueble> seleccionarInmueble(Inmueble inmueble) {
+		return this.inmueblesBuscados.stream().filter(unInmueble -> unInmueble.equals(inmueble)).findFirst();
+	}
 	
 	public void cancelarReserva(Reserva reserva){
 		
@@ -198,7 +197,7 @@ public class Usuario {
 							 String direccion, int capacidad, List<TipoDeServicio> servicios, 
 							 List<Foto> fotos, LocalTime checkIn, LocalTime checkOut, List<FormaDePago> formasDePago, 
 							 int precioPorDia, PoliticaDeCancelacion politicaDeCancelacion, 
-							 List<PrecioEspecifico> preciosEspecificos, LocalTime fechaInicial, LocalTime fechaFinal) 
+							 List<PrecioEspecifico> preciosEspecificos, LocalDate fechaInicial, LocalDate fechaFinal) 
 							 throws TipoDeInmuebleIncorrectoException, CantidadDeFotosIncorrectaException{
 		
 		//Creo el inmueble	
@@ -231,9 +230,9 @@ public class Usuario {
 		this.sitioWeb.altaInmueble(inmueble);
 	}
 	  
-	public void aceptarReserva(SolicitudDeReserva solicitudDeReserva) {
+	public void recibirSolicitudReserva(SolicitudDeReserva solicitudDeReserva) {
 		
-		solicitudDeReserva.aceptarReserva();
+		solicitudDeReserva.aprobarSolicitud();
 	
 	}
 	
