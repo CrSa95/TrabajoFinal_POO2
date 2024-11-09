@@ -197,7 +197,8 @@ public class Usuario {
 	public void altaInmueble(TipoDeInmueble tipoDeInmueble, int superficie, String pais, String ciudad, 
 							 String direccion, int capacidad, List<TipoDeServicio> servicios, 
 							 List<Foto> fotos, LocalTime checkIn, LocalTime checkOut, List<FormaDePago> formasDePago, 
-							 int precioPorDia, PoliticaDeCancelacion politicaDeCancelacion) 
+							 int precioPorDia, PoliticaDeCancelacion politicaDeCancelacion, 
+							 List<PrecioEspecifico> preciosEspecificos, LocalTime fechaInicial, LocalTime fechaFinal) 
 							 throws TipoDeInmuebleIncorrectoException, CantidadDeFotosIncorrectaException{
 		
 		//Creo el inmueble	
@@ -213,6 +214,10 @@ public class Usuario {
 		inmueble.setFotos(fotos);
 		
 		inmueble.setPoliticaDeCancelacion(politicaDeCancelacion);
+		
+		inmueble.setPreciosEspecificos(preciosEspecificos);
+		
+		inmueble.setDisponibilidad(fechaInicial, fechaFinal);
 		
 		//Obtengo el tipo de inmueble que quiero aplicar a mi inmueble
 		if (sitioWeb.seleccionarTipoDeInmueble(tipoDeInmueble)) {
