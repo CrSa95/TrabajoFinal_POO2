@@ -1,7 +1,6 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class SolicitudDeReserva{
 
@@ -34,20 +33,17 @@ public class SolicitudDeReserva{
 		return this.estadoDeSolicitud;
 	}
 	
-	public void setEstadoDeSolicitus(EstadoDeSolicitud estadoDeSolicitud) {
+	public void setEstadoDeSolicitud(EstadoDeSolicitud estadoDeSolicitud) {
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}
 
 	public void realizarReserva() {
 		this.reserva = new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso);
-		this.inquilino.registrarReserva(this.reserva);
 		this.reserva.evaluarReserva();
-		
-		// Quiza hay que agregar en una lista al inmueble, sino no puede buscar para comparar las fechas de una nueva reserva con las que estan activas. 
 	}
 
 	public void notificarAInquilino() {
-		// Falta hacer, puede ser una clase Mail que maneje de los mails del sistema. 
+		this.inquilino.recibirMail("Solicitud de reserva aceptada");
 	}
 
 }

@@ -54,7 +54,8 @@ public class Reserva {
 			this.estadoDeReserva = new EstadoCondicional();
 		}
 		else {
-			inmueble.agregarReserva(this);
+			this.inmueble.agregarReserva(this);
+			this.inquilino.registrarReserva(this);
 			this.estadoDeReserva = new EstadoConfirmada();
 		}
 	}
