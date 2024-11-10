@@ -1,6 +1,7 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ public class Inmueble {
 	private List<Foto> cincoFotos; 
 	private LocalTime checkIn;
 	private LocalTime checkOut; 
-	private int precioPorDia;
 	private int cantidadVecesAlquilado;
 	private Usuario usuario;
 	private int cantidadDeVecesAlquilado;
@@ -33,15 +33,16 @@ public class Inmueble {
 	private Optional<FormaDePago> formaDePagoSeleccionada; 
 	private List<Reserva> reservasDelInmueble = new ArrayList<Reserva>();
 	private Usuario propietario;
-	private int precioTotalCalculado;
+	private double precioTotalCalculado;
 	private int cantidadDeDiasAlquilado;
 	private List<PrecioEspecifico> preciosEspecificos;
 	private LocalDate fechaInicial;
 	private LocalDate fechaFinal;
-	private int precioBase;
+	private double precioBase;
+	private int promedioPuntajeTotal;
 	
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad, 
-			 		LocalTime checkIn, LocalTime checkOut, int precioPorDia) {
+			 		LocalTime checkIn, LocalTime checkOut, List<PrecioEspecifico> preciosEspecificos, double precioBase) {
 		
 		this.propietario = propietario;
 		this.superficie = superficie;
@@ -51,8 +52,23 @@ public class Inmueble {
 		this.capacidad = capacidad;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut; 
-		this.precioPorDia = precioPorDia; 
+		this.precioBase = precioBase; 
+		this.preciosEspecificos = preciosEspecificos;
 		
+	}
+	
+	public void calcularPromedioTotal() {
+		
+		double sumaTotal = 0;
+        for (Rankeo rank : rankeosInmueble) {
+            sumaTotal += rank.getPuntaje(); 
+        }
+
+        this.promedioPuntajeTotal = (int) (sumaTotal / rankeosInmueble.size());
+	}
+	
+	public int getPromedioPuntajeTotal() {
+		return promedioPuntajeTotal;
 	}
 	
 	public void agregarReserva(Reserva reserva) {
@@ -65,18 +81,15 @@ public class Inmueble {
 	
 	public Boolean estaReservado(Reserva reserva) {
 		return reservasDelInmueble.stream()
-				.anyMatch(unaReserva -> unaReserva.getFechaDeIngreso().isEqual(reserva.getFechaDeIngreso())
-										&& unaReserva.getFechaDeIngreso().isAfter(reserva.getFechaDeIngreso())
-										&& unaReserva.getFechaDeEgreso().isEqual(reserva.getFechaDeEgreso())
-										&& unaReserva.getFechaDeEgreso().isBefore(reserva.getFechaDeEgreso())
-										);
+				.anyMatch(unaReserva -> unaReserva.getFechaDeIngreso().isAfter(reserva.getFechaDeIngreso())
+										&& unaReserva.getFechaDeEgreso().isBefore(reserva.getFechaDeEgreso()));
 	}
 	
-	public void setPrecioBase(int precioBase) {
+	public void modificarPrecioBase(double precioBase) {
 		this.precioBase = precioBase;
 	}
 	
-	public int getPrecioBase() {
+	public double getPrecioBase() {
 		return this.precioBase;
 	}
 	
@@ -94,15 +107,15 @@ public class Inmueble {
 		return this.fechaFinal;
 	}
 	
-	public void calcularPrecio() {
-		this.precioTotalCalculado = precioTotalCalculado;
+	public void calcularPrecio(LocalDate inicioReserva, LocalDate finReserva) {
+	 
 	}
 	
-	public int getPrecioTotalCalculado() {
+	public double getPrecioTotalCalculado() {
 		return this.precioTotalCalculado;
 	}
 	
-	public int getPrecioPorDia() {
+	public double getPrecioPorDia() {
 		return this.precioTotalCalculado / this.cantidadDeDiasAlquilado;
 	}
 	
@@ -186,11 +199,6 @@ public class Inmueble {
 	public void realizarReservaDelInmueble(Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
 		this.solicitudDeReserva = new SolicitudDeReserva(this, inquilino, formaDePago, fechaDeIngreso, fechaDeEgreso);
 		this.solicitudDeReserva.solicitarReserva();
-	}
-	
-	public void setPreciosEspecificos(List<PrecioEspecifico> preciosEspecificos) {
-		this.preciosEspecificos = preciosEspecificos;
-
 	}
 
 	public int getCapacidad() {
