@@ -1,4 +1,4 @@
-package test.TrabajoFinal.StitioWeb;
+package trabajoFinal.SitioWeb;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
