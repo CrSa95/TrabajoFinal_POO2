@@ -18,4 +18,8 @@ public class Rankeo {
 		return this.puntaje;
 	}
 	
+	public void setPuntaje(int puntaje) {
+		this.puntaje = puntaje;
+	}
+	
 }

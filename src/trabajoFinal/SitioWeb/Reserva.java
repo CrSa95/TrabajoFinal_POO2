@@ -69,4 +69,8 @@ public class Reserva {
 		this.estadoDeReserva = estadoDeReserva;
 	}
 	
+	public EstadoDeReserva getEstadoDeReserva() {
+		return this.estadoDeReserva;
+	}
+	
 }

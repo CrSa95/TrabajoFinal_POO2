@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class SitioWeb {
 	
+	private List<Usuario> todosLosUsuarios = new ArrayList<Usuario>();
 	private List<Inmueble> inmuebles = new ArrayList<Inmueble>();
 	private List<Categoria> todasLasCategoriasDeInmueble = new ArrayList<Categoria>();
 	private List<Categoria> todasLasCategoriasDeInquilino= new ArrayList<Categoria>();
@@ -15,6 +16,20 @@ public class SitioWeb {
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<TipoDeServicio>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<TipoDeInmueble>();
 	private List<Filtro> filtros = new ArrayList<Filtro>();
+	
+	public void registrarUsuario(Usuario usuario) {
+		this.todosLosUsuarios.add(usuario);
+		usuario.registrarEnSitioWeb(this);
+	}
+	
+	public Boolean usuarioEstaRegistrado(Usuario usuario) {
+		return this.todosLosUsuarios.stream()
+		        .anyMatch(user -> user.getNombre().equals(usuario.getNombre()));
+	}
+	
+	public List<Usuario> getUsuariosRegistrados() {
+		return this.todosLosUsuarios;
+	}
 	
 	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){
 		return this.todasLasCategoriasDeInmueble.stream()
