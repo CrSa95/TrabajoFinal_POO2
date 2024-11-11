@@ -28,6 +28,7 @@ public class SitioWebTestCase {
 	@Test
 	public void testUnUsuarioSeRegistraEnUnSitioWeb() {
 		
+		//
 		//verifico que la lista de usuarios del sitio web se encuentra vacia
 		assertEquals(0,unSitioWeb.getUsuariosRegistrados().size());
 		
