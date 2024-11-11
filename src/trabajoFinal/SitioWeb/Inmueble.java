@@ -80,9 +80,11 @@ public class Inmueble {
 	}
 	
 	public Boolean estaReservado(Reserva reserva) {
-		return reservasDelInmueble.stream()
-				.anyMatch(unaReserva -> unaReserva.getFechaDeIngreso().isAfter(reserva.getFechaDeIngreso())
-										&& unaReserva.getFechaDeEgreso().isBefore(reserva.getFechaDeEgreso()));
+	    return reservasDelInmueble.stream()
+	            .anyMatch(unaReserva ->
+	                !unaReserva.getFechaDeEgreso().isBefore(reserva.getFechaDeIngreso()) &&
+	                !unaReserva.getFechaDeIngreso().isAfter(reserva.getFechaDeEgreso())
+	            );
 	}
 	
 	public void modificarPrecioBase(double precioBase) {

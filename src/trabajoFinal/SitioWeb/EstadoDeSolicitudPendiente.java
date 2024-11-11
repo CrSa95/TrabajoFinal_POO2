@@ -11,7 +11,7 @@ public class EstadoDeSolicitudPendiente implements EstadoDeSolicitud{
 	public void aprobar(SolicitudDeReserva solicitud) {
 		solicitud.realizarReserva();
 		solicitud.notificarAInquilino();
-		solicitud.setEstadoDeSolicitus(new EstadoSolicitudAprobada());
+		solicitud.setEstadoDeSolicitud(new EstadoSolicitudAprobada());
 		
 	}
 
