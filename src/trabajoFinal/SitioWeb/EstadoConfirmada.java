@@ -25,4 +25,4 @@ public class EstadoConfirmada implements EstadoDeReserva {
 		reserva.getInmueble().eliminarReserva(reserva);
 		reserva.setEstadoDeReserva(new EstadoFinalizada());
 	}
-}
+} 

@@ -14,9 +14,11 @@ public class FiltroPrecio implements Filtro{
     @Override
     public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
         return inmuebles.stream()
-                .filter(inmueble -> 
-                        inmueble.getPrecioPorDia() >= precioMinimo && 
-                        inmueble.getPrecioPorDia() <= precioMaximo)
-                .toList();
+        		.filter(inmueble -> 
+        		(precioMinimo == 0 && precioMaximo == 0) ||
+                inmueble.getPrecioPorDia() >= precioMinimo && 
+                (precioMaximo == 0 || inmueble.getPrecioPorDia() <= precioMaximo))
+        .toList();
     }
 }
+ 
