@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-public class OtroSitioWeb implements Suscriptor{
+public class OtroSitioWeb implements Listener{
 
 	private HomePagePublisher homePagePublisher;
 
@@ -10,16 +10,16 @@ public class OtroSitioWeb implements Suscriptor{
 
 	@Override
 	public void bajaDePrecio(Inmueble inmueble) {
-		this.homePagePublisher.publish( "No te pierdas sta oferta: Un inmueble" + inmueble.getTipoInmueble()
-											+ "a tan sólo" + inmueble.getPrecioBase() + "pesos");
+		this.homePagePublisher.publish( "No te pierdas esta oferta: Un inmueble " + inmueble.getTipoInmueble().getTipoDeInmueble() 
+											+ " a tan sólo " + inmueble.getPrecioBase() + " pesos");
 	}
 
 	@Override
 	public void cancelacionDeReserva(Inmueble inmueble) {
 
 	}
-
-	@Override
+ 
+	@Override 
 	public void altaDeReserva() {
 
 	}

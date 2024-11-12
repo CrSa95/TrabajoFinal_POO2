@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-public class AppMobile implements Suscriptor {
+public class AppMobile implements Listener {
 
 	private PopUpWindow popUpWindow;
 
@@ -15,7 +15,7 @@ public class AppMobile implements Suscriptor {
 
 	@Override
 	public void cancelacionDeReserva(Inmueble inmueble) {
-		this.popUpWindow.popUp( "El/la" + inmueble.getTipoInmueble() + "que te interesa se ha liberado! Corre a reservarlo!", "Rojo", 10);
+		this.popUpWindow.popUp( "El/la " + inmueble.getTipoInmueble().getTipoDeInmueble() + " que te interesa se ha liberado! Corre a reservarlo!", "Rojo", 10);
 	}
 
 	@Override

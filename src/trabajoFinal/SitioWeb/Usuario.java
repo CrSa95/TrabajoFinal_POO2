@@ -38,7 +38,7 @@ public class Usuario {
 	}
 
 	//METODOS QUE COMPARTEN AMBOS TIPOS DE USUARIOS
-
+ 
 	public void registrarEnSitioWeb(SitioWeb sitioWeb) {
 		this.sitioWeb = sitioWeb;
 		this.fechaRegistro = LocalDate.now();
@@ -53,7 +53,7 @@ public class Usuario {
 	}
 
 	public String getNombre() {
-		return this.nombreCompleto;
+		return this.nombreCompleto; 
 	}
 
 	public void setPuntajePromedio(int promedio) {
@@ -390,24 +390,28 @@ public class Usuario {
 		}
 
 	}
-
-	public void sumarCantidadDeVecesQueAlquile() {
-
-		this.cantidadDeVecesQueAlquile += 1;
-	}
-
-	public void restarCantidadDeVecesQueAlquile() {
-
-		this.cantidadDeVecesQueAlquile -= 1;
-	}
-
-	public int getCantidadDeVecesQueAlquile() {
-
-		return this.cantidadDeVecesQueAlquile;
-	}
-
+	
 	public void recibirResarcimiento(double dineroResarcido) {
 		this.dineroResarcido = dineroResarcido;
+	}
+
+	public int getCantidadDeVecesQueAlquile() {	
+		
+		return this.cantidadDeVecesQueAlquile;
+	}
+	
+	public void sumarCantidadDeVecesQueAlquile() {
+
+        this.cantidadDeVecesQueAlquile += 1;
+    }
+
+    public void restarCantidadDeVecesQueAlquile() {
+
+        this.cantidadDeVecesQueAlquile -= 1;
+    }
+
+	public void eliminarReserva(Reserva reserva) {
+		// TODO Auto-generated method stub
 	}
 
 	public void datosDelPropietario(Inmueble inmueble) {

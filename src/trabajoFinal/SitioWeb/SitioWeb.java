@@ -24,14 +24,14 @@ public class SitioWeb {
 
 	public Boolean usuarioEstaRegistrado(Usuario usuario) {
 		return this.todosLosUsuarios.stream()
-		        .anyMatch(user -> user.getNombre().equals(usuario.getNombre()));
+		        .anyMatch(user -> user.getNombre().equals(usuario.getNombre())); 
 	}
 
 	public List<Usuario> getUsuariosRegistrados() {
 		return this.todosLosUsuarios;
 	}
 
-	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){
+	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){ 
 		return this.todasLasCategoriasDeInmueble.stream()
 		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
@@ -101,7 +101,7 @@ public class SitioWeb {
 			filtros.add(new FiltroPrecio(precioMinimo, precioMaximo));
 		}
 
-		List<Inmueble> resultado = new ArrayList<>();
+		List<Inmueble> resultado = this.inmuebles;
 		for (Filtro filtro : filtros) {
 			resultado = filtro.filtrar(resultado);
 		}

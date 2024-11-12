@@ -2,17 +2,23 @@ package trabajoFinal.SitioWeb;
 
 import java.util.Optional;
 
+
 public class EstadoConfirmada implements EstadoDeReserva {
 
 	@Override
-	public void cancelar(Reserva reserva) {
+	public void cancelar(Reserva reserva) {	
+		Inmueble inmueble = reserva.getInmueble();
 
-
-		reserva.getInmueble().getPoliticaDeCancelacion().darResarcimiento(reserva);
-		reserva.getInmueble().eliminarReserva(reserva);
+		inmueble.getPoliticaDeCancelacion().darResarcimiento(reserva);
+		inmueble.eliminarReserva(reserva);
+		inmueble.restarCantidadDeVecesAlquilado();
+		inmueble.getPropietario().recibirMail("La reserva fue cancelada");
+		reserva.getUsuario().eliminarReserva(reserva);
+		inmueble.getPropietario().restarCantidadDeVecesQueAlquile();;
 		reserva.setEstadoDeReserva(new EstadoCancelada());
+		
+		Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(inmueble);
 
-		Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(reserva.getInmueble());
 		if (reservaCondicional.isPresent()) {
 			reservaCondicional.get().evaluarReserva();
 		}
@@ -23,4 +29,4 @@ public class EstadoConfirmada implements EstadoDeReserva {
 		reserva.getInmueble().eliminarReserva(reserva);
 		reserva.setEstadoDeReserva(new EstadoFinalizada());
 	}
-}
+} 
