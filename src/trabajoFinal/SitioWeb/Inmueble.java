@@ -208,4 +208,9 @@ public class Inmueble {
 		return this.capacidad;
 	}
 
+	public void restarCantidadDeVecesAlquilado() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

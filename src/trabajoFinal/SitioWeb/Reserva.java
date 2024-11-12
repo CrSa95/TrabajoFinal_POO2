@@ -2,6 +2,8 @@ package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.stream.Collectors;
@@ -14,7 +16,7 @@ public class Reserva {
 	private LocalDate fechaDeIngreso;
 	private LocalDate fechaDeEgreso;
 	private EstadoDeReserva estadoDeReserva;
-	private PriorityQueue<Reserva> reservasCondicionales = new PriorityQueue<Reserva>();
+	private List<Reserva> reservasCondicionales = new ArrayList<Reserva>();
 	
 	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
 		this.inmueble = inmueble;
@@ -22,6 +24,10 @@ public class Reserva {
 		this.formaDePago = formaDePago;
 		this.fechaDeIngreso = fechaDeIngreso;
 		this.fechaDeEgreso = fechaDeEgreso;
+	}
+	
+	public FormaDePago getFormaDePago() {
+		return this.formaDePago;
 	}
 	
 	public Usuario getUsuario() {
@@ -42,6 +48,8 @@ public class Reserva {
   
 	public void cancelarReserva() {
 		this.estadoDeReserva.cancelar(this);
+		this.inmueble.restarCantidadDeVecesAlquilado();
+		this.inmueble.getPropietario().restarCantidadDeVecesQueAlquile();
 	}
 
 	public Inmueble getInmueble() {
@@ -57,6 +65,8 @@ public class Reserva {
 			this.inmueble.agregarReserva(this);
 			this.inquilino.registrarReserva(this);
 			this.estadoDeReserva = new EstadoConfirmada();
+			this.inmueble.sumarCantidadDeVecesAlquilado();
+			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquile();
 		}
 	}
 	

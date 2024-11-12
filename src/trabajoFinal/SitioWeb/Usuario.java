@@ -361,5 +361,10 @@ public class Usuario {
 	public void recibirResarcimiento(double dineroResarcido) {
 		this.dineroResarcido = dineroResarcido;
 	}
+
+	public void restarCantidadDeVecesQueAlquile() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
