@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-public interface Suscriptor {
+public interface Listener {
 
 	public abstract void bajaDePrecio(Inmueble inmueble);
 	public abstract void cancelacionDeReserva(Inmueble inmueble);

@@ -25,7 +25,7 @@ public class Inmueble {
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<String> comentarios = new ArrayList<>();
 	private List<Rankeo> rankeosInmueble = new ArrayList<>();
-	private List<FormaDePago> todasLasFormasDePago = new ArrayList<>();
+	private List<FormaDePago> todasLasFormasDePago = new ArrayList<>(); 
 	private List<FormaDePago> formasDePagoSeleccionadas;
 	private Optional<FormaDePago> formaDePagoSeleccionada;
 	private List<Reserva> reservasDelInmueble = new ArrayList<>();
@@ -39,9 +39,11 @@ public class Inmueble {
 	private int promedioPuntajeTotal;
 	private SolicitudDeReserva solicitudDeReserva;
 	private SitioWeb sitioWeb;
+	private Manager manager;
 
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
 			 		LocalTime checkIn, LocalTime checkOut, double precioBase) {
+
 
 		this.propietario = propietario;
 		this.superficie = superficie;
@@ -134,7 +136,11 @@ public class Inmueble {
 	            );
 	}
 
-	public void modificarPrecioBase(double precioBase) {
+	
+	public void modificarPrecioBase(double precioBase) {	
+		if (this.precioBase > precioBase) {
+			this.manager.bajaDePrecio(this);
+		}
 		this.precioBase = precioBase;
 	}
 
@@ -308,4 +314,11 @@ public class Inmueble {
 																	&& especifico.getFechaFinal().isBefore(fechaFinal));
 	}
 
+    public void setManager(Manager manager) {
+		this.manager = manager;
+	}
+	
+	public Manager getManager() {
+		return this.manager;
+	}
 }
