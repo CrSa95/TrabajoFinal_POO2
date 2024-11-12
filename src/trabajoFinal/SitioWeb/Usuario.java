@@ -14,20 +14,14 @@ public class Usuario {
 	private String mail;
 	private int telefono;
 	private LocalDate fechaRegistro;
-	private List<String> tiposDeServicios;
-	private List<FormaDePago> formasDePago;
 	private List<String> comentariosInquilino = new ArrayList<>();
 	private List<String> comentariosPropietario = new ArrayList<>();
 	private List<Rankeo> rankeosInquilino = new ArrayList<>();
 	private List<Rankeo> rankeosPropietario = new ArrayList<>();
 	private List<Reserva> reservas = new ArrayList<>();
 	private SitioWeb sitioWeb;
-	private int cantidadDeVecesQueAlquile = 0;
-	private double dineroResarcido;
-	private List<Inmueble> inmueblesBuscados;
-	private int puntajePromedio;
+	private int cantidadDeVecesQueAlquilo = 0;
 	private List<Inmueble> inmueblesDadosDeAlta = new ArrayList<>();
-	private Optional<Inmueble> inmuebleSeleccioando;
 
 	public Usuario (String nombreCompleto, String mail, int telefono) {
 
@@ -44,7 +38,7 @@ public class Usuario {
 		this.fechaRegistro = LocalDate.now();
 	}
 	
-	public SitioWeb getSitioWeb() {
+	public SitioWeb getSitioWeb() { 
 		return this.sitioWeb;
 	}
 
@@ -56,18 +50,14 @@ public class Usuario {
 		return this.nombreCompleto; 
 	}
 
-	public void setPuntajePromedio(int promedio) {
-		this.puntajePromedio = promedio;
-	}
-
-	public int getPuntajePromedio() {
-		return this.puntajePromedio;
-	}
-
 	public void registrarReserva(Reserva reserva) {
 		this.reservas.add(reserva);
 	}
-
+	
+	public void eliminarReserva(Reserva reserva) {
+		this.reservas.remove(reserva);
+	}
+	
 	public void actualizarNombreCompleto(String nombreCompleto) {
 		this.nombreCompleto = nombreCompleto;
 	}
@@ -81,8 +71,7 @@ public class Usuario {
 	}
 
 	public int cantidadTiempoRegistrado(){
-		Period periodo = Period.between(fechaRegistro, LocalDate.now());
-		return periodo.getYears();
+		return Period.between(fechaRegistro, LocalDate.now()).getYears();
 	}
 
 	public String getMail() {
@@ -129,24 +118,18 @@ public class Usuario {
 	
 	//METODOS DE INQUILINO
 
-	public void buscarInmuebles(String ciudad, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso,int cantidadDeHuespedes, double precioMinimo, double precioMaximo){
+	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso,int cantidadDeHuespedes, double precioMinimo, double precioMaximo){
 
-		this.inmueblesBuscados = this.sitioWeb.buscarInmuebles(ciudad, fechaDeIngreso, fechaDeEgreso, cantidadDeHuespedes, precioMinimo, precioMaximo);
-	}
-
-	public void seleccionarInmueble(Inmueble inmueble) {
-
-		this.inmuebleSeleccioando =  this.inmueblesBuscados.stream().filter(unInmueble -> unInmueble.equals(inmueble)).findFirst();
+		return this.sitioWeb.buscarInmuebles(ciudad, fechaDeIngreso, fechaDeEgreso, cantidadDeHuespedes, precioMinimo, precioMaximo);
 	}
 	
-	public void visualizarInmueble(LocalDate fechaDeIngreso, LocalDate fechaDeEgreso){
+	public void visualizarInmueble(Inmueble inmueble){
 
-		this.inmuebleSeleccioando.get().datosDelInmueble(fechaDeIngreso, fechaDeEgreso);
-		this.inmuebleSeleccioando.get().getPropietario().datosDelPropietario(inmuebleSeleccioando.get());
+		inmueble.datosDelInmueble();
+		inmueble.getPropietario().datosDelPropietario(inmueble);
 	}
 	
 	public void realizarReservar(Inmueble inmueble, Usuario usuario, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
-		inmueble.seleccionarFormaDePago(formaDePago);
 		inmueble.realizarReservaDelInmueble(usuario, formaDePago, fechaDeIngreso, fechaDeEgreso);
 	}
 	
@@ -196,7 +179,7 @@ public class Usuario {
 	            	.collect(Collectors.toList());
 	}
 
-	public void cancelarReserva(Reserva reserva){
+	public void cancelarReserva(Reserva reserva) {
 
 		if (reservas.stream().anyMatch(reser -> reser.equals(reserva))){
 			reserva.cancelarReserva();
@@ -205,40 +188,39 @@ public class Usuario {
 
 	//Funciones que se deben realizar luego de finalizar la reserva
 
-	public void setComentarioInmueble(Reserva reserva, Inmueble inmueble, String comentario) throws ReservaNoFinalizadaException{
+	public void setComentarioInmueble(Reserva reserva, Inmueble inmueble, String comentario) throws Exception{
 
 		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
 			inmueble.setComentario(comentario);
 		}
 		else {
-			throw new ReservaNoFinalizadaException("Error: La Reserva aun no finalizo.");
+			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
 
 	}
 
-	public void setComentarioPropietario(Reserva reserva, Usuario usuario, String comentario) throws ReservaNoFinalizadaException{
+	public void setComentarioPropietario(Reserva reserva, Usuario usuario, String comentario) throws Exception{
 
 		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
 			usuario.setComentarioPropietario(comentario);
 		}
 		else {
-			throw new ReservaNoFinalizadaException("Error: La Reserva aun no finalizo.");
+			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
-
 	}
 
-	public void rankPropietario(Reserva reserva, Usuario usuario, Categoria categoria, int puntaje) throws CategoriaIncorrectaException, ReservaNoFinalizadaException {
+	public void rankPropietario(Reserva reserva, Usuario usuario, Categoria categoria, int puntaje) throws Exception {
 		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
 
 			if (this.sitioWeb.getCategoriaEspecificaPropietario(categoria)){
 				this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
 			}
 			else {
-					throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
+					throw new Exception("Error: La categoria seleccionada es incorrecta.");
 			}
 		}
 		else {
-			throw new ReservaNoFinalizadaException("Error: La Reserva aun no finalizo.");
+			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
 	}
 	
@@ -254,18 +236,18 @@ public class Usuario {
 		}
 	}
 
-	public void rankInmueble(Reserva reserva, Inmueble inmueble, Categoria categoria, int puntaje) throws CategoriaIncorrectaException, ReservaNoFinalizadaException  {
+	public void rankInmueble(Reserva reserva, Inmueble inmueble, Categoria categoria, int puntaje) throws Exception  {
 
 		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
 			if (this.sitioWeb.getCategoriaEspecificaInmueble(categoria)){
 				inmueble.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
 			}
 			else {
-				throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
+				throw new Exception("Error: La categoria seleccionada es incorrecta.");
 			}
 		}
 		else {
-			throw new ReservaNoFinalizadaException("Error: La Reserva aun no finalizo.");
+			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
 
 	}
@@ -283,9 +265,9 @@ public class Usuario {
 	//METODOS DE PROPIETARIO
 	public void altaInmueble(TipoDeInmueble tipoDeInmueble, int superficie, String pais, String ciudad,
 			 				 String direccion, List<TipoDeServicio> servicios, int capacidad,
-			 				 List<Foto> fotos, LocalTime checkIn, LocalTime checkOut, List<FormaDePago> formasDePago,
+			 				 List<Foto> fotos, LocalTime checkIn, LocalTime checkOut,
 			 				 PoliticaDeCancelacion politicaDeCancelacion, double precioBase,
-			 				 LocalDate fechaInicial, LocalDate fechaFinal) throws TipoDeInmuebleIncorrectoException, CantidadDeFotosIncorrectaException{
+			 				 LocalDate fechaInicial, LocalDate fechaFinal) throws Exception{
 		//Creo el inmueble
 		Inmueble inmueble = new Inmueble(this,superficie, pais, ciudad,
 		direccion, capacidad, checkIn, checkOut, precioBase);
@@ -297,9 +279,6 @@ public class Usuario {
 		inmueble.setTipoDeServicios(sitioWeb.seleccionarTiposDeServicio(servicios));
 		
 		inmueble.setFotos(fotos);
-			
-		//Obtengo las formas de pago que quiero aplicar a mi inmueble
-		inmueble.setFormasDePago(formasDePago);
 			
 		inmueble.setPoliticaDeCancelacion(politicaDeCancelacion);
 			
@@ -316,8 +295,12 @@ public class Usuario {
 		inmueble.modificarPrecioBase(precioNuevo);
 	}
 	
-	public void setFechasEspecificas(Inmueble inmueble, LocalDate fechaInicial, LocalDate fechaFinal, int precio) throws Exception {
-		inmueble.setFechasEspecificas(fechaInicial, fechaFinal, precio);
+	public void modificarPreciosEspecificos(Inmueble inmueble, LocalDate fechaInicial, LocalDate fechaFinal, int precio) throws Exception {
+		inmueble.modificarPreciosEspecificos(fechaInicial, fechaFinal, precio);
+	}
+	
+	public void modificarFormasDePago(Inmueble inmueble,FormaDePago formaDePago) {
+		inmueble.modificarFormasDePago(formaDePago);
 	}
 	
 	public void setComentarioPropietario(String comentario){
@@ -349,7 +332,7 @@ public class Usuario {
 		usuario.enviarMail(msj, usuario);
 	}
 
-	public void rankearInquilino(Reserva reserva, Usuario usuario, Categoria categoria, int puntaje) throws CategoriaIncorrectaException, ReservaNoFinalizadaException {
+	public void rankearInquilino(Reserva reserva, Usuario usuario, Categoria categoria, int puntaje) throws Exception {
 
 		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
 
@@ -358,12 +341,12 @@ public class Usuario {
 				this.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));
 			}
 			else {
-				throw new CategoriaIncorrectaException("Error: La categoria seleccionada es incorrecta.");
+				throw new Exception("Error: La categoria seleccionada es incorrecta.");
 			}
 		}
 
 		else {
-			throw new ReservaNoFinalizadaException("Error: La Reserva aun no finalizo.");
+			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
 
 	}
@@ -380,39 +363,35 @@ public class Usuario {
 		}
 	}
 	
-	public void setComentarioInqulino(Reserva reserva, Usuario usuario, String comentario) throws ReservaNoFinalizadaException{
+	public void setComentarioInqulino(Reserva reserva, Usuario usuario, String comentario) throws Exception{
 
 		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
 			usuario.setComentarioInquilino(comentario);
 		}
 		else {
-			throw new ReservaNoFinalizadaException("Error: La Reserva aun no finalizo.");
+			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
 
 	}
 	
-	public void recibirResarcimiento(double dineroResarcido) {
-		this.dineroResarcido = dineroResarcido;
+	public double recibirResarcimiento(double dineroResarcido) {
+		return dineroResarcido;
 	}
 
-	public int getCantidadDeVecesQueAlquile() {	
+	public int getCantidadDeVecesQueAlquilo() {	
 		
-		return this.cantidadDeVecesQueAlquile;
+		return this.cantidadDeVecesQueAlquilo;
 	}
 	
-	public void sumarCantidadDeVecesQueAlquile() {
+	public void sumarCantidadDeVecesQueAlquilo() {
 
-        this.cantidadDeVecesQueAlquile += 1;
+        this.cantidadDeVecesQueAlquilo += 1;
     }
 
-    public void restarCantidadDeVecesQueAlquile() {
+    public void restarCantidadDeVecesQueAlquilo() {
 
-        this.cantidadDeVecesQueAlquile -= 1;
+        this.cantidadDeVecesQueAlquilo -= 1;
     }
-
-	public void eliminarReserva(Reserva reserva) {
-		// TODO Auto-generated method stub
-	}
 
 	public void datosDelPropietario(Inmueble inmueble) {
 		this.getNombre();
@@ -423,7 +402,7 @@ public class Usuario {
 		this.calcularPromedioTotal(this.rankeosPropietario);
 		this.cantidadTiempoRegistrado();
 		inmueble.getCantidadDeVecesAlquilado();
-		this.getCantidadDeVecesQueAlquile();
+		this.getCantidadDeVecesQueAlquilo();
 		this.inmueblesAlquilados();
 	}
 }

@@ -21,9 +21,9 @@ public class FiltroPrecioTestCase {
         inmueble2 = mock(Inmueble.class);
         inmueble3 = mock(Inmueble.class);
 
-        when(inmueble1.getPrecioPorDia()).thenReturn(50.0);
-        when(inmueble2.getPrecioPorDia()).thenReturn(150.0);
-        when(inmueble3.getPrecioPorDia()).thenReturn(250.0);
+        when(inmueble1.getPrecioBase()).thenReturn(50.0);
+        when(inmueble2.getPrecioBase()).thenReturn(150.0);
+        when(inmueble3.getPrecioBase()).thenReturn(250.0);
     } 
 
     @Test

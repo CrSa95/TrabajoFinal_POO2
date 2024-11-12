@@ -15,7 +15,7 @@ public class CancelacionGratuita implements PoliticaDeCancelacion {
 		}
 		else {
 			reserva.getInmueble().getPropietario()
-								 .recibirResarcimiento(reserva.getInmueble().getPrecioPorDia() * 2);
+								 .recibirResarcimiento(reserva.getInmueble().getPrecioBase() * 2);
 		}
 	}
 

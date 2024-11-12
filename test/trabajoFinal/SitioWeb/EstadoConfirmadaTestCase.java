@@ -44,7 +44,7 @@ class EstadoConfirmadaTestCase {
 		verify(inmuebleMock, times(1)).restarCantidadDeVecesAlquilado();
 		verify(propietarioMock).recibirMail("La reserva fue cancelada");
 		verify(usuarioMock, times(1)).eliminarReserva(reservaMock);
-		verify(propietarioMock, times(1)).restarCantidadDeVecesQueAlquile(); 
+		verify(propietarioMock, times(1)).restarCantidadDeVecesQueAlquilo(); 
 		verify(reservaMock).setEstadoDeReserva(any(EstadoCancelada.class));
 		verify(reservaCondicionalMock).evaluarReserva();	 
 	} 
@@ -60,7 +60,7 @@ class EstadoConfirmadaTestCase {
 		verify(inmuebleMock, times(1)).restarCantidadDeVecesAlquilado();
 		verify(propietarioMock).recibirMail("La reserva fue cancelada");
 		verify(usuarioMock, times(1)).eliminarReserva(reservaMock);
-		verify(propietarioMock, times(1)).restarCantidadDeVecesQueAlquile();
+		verify(propietarioMock, times(1)).restarCantidadDeVecesQueAlquilo();
 		verify(reservaMock).setEstadoDeReserva(any(EstadoCancelada.class));
 		verify(reservaMock, never()).evaluarReserva();	
 	}

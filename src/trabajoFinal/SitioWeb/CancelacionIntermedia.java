@@ -9,9 +9,9 @@ public class CancelacionIntermedia implements PoliticaDeCancelacion {
 		if (LocalDate.now().isBefore(reserva.getFechaDeIngreso().minusDays(20))) {
 			reserva.getInmueble().getPropietario().recibirResarcimiento(0);
 		} else if (LocalDate.now().isBefore(reserva.getFechaDeIngreso().minusDays(10)) && LocalDate.now().isAfter(reserva.getFechaDeIngreso().minusDays(19))) {
-			reserva.getInmueble().getPropietario().recibirResarcimiento(reserva.getInmueble().getPrecioTotalCalculado() * 0.5);
+			reserva.getInmueble().getPropietario().recibirResarcimiento(reserva.getInmueble().calcularPrecioTotal(reserva.getFechaDeIngreso(), reserva.getFechaDeEgreso()) * 0.5);
 		} else {
-			reserva.getInmueble().getPropietario().recibirResarcimiento(reserva.getInmueble().getPrecioTotalCalculado());
-		}
+			reserva.getInmueble().getPropietario().recibirResarcimiento(reserva.getInmueble().calcularPrecioTotal(reserva.getFechaDeIngreso(), reserva.getFechaDeEgreso()));
+		}  
 	}
 }

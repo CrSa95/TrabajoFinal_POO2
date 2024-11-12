@@ -16,8 +16,8 @@ public class FiltroPrecio implements Filtro{
         return inmuebles.stream()
         		.filter(inmueble -> 
         		(precioMinimo == 0 && precioMaximo == 0) ||
-                inmueble.getPrecioPorDia() >= precioMinimo && 
-                (precioMaximo == 0 || inmueble.getPrecioPorDia() <= precioMaximo))
+                inmueble.getPrecioBase() >= precioMinimo && 
+                (precioMaximo == 0 || inmueble.getPrecioBase() <= precioMaximo))
         .toList();
     }
 }
