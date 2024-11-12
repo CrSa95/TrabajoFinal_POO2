@@ -19,12 +19,7 @@ public class SitioWeb {
 
 	public void registrarUsuario(Usuario usuario) {
 		this.todosLosUsuarios.add(usuario);
-		usuario.registrarEnSitioWeb(this);
-	}
-
-	public Boolean usuarioEstaRegistrado(Usuario usuario) {
-		return this.todosLosUsuarios.stream()
-		        .anyMatch(user -> user.getNombre().equals(usuario.getNombre())); 
+		usuario.registrarEnSitioWeb(this); 
 	}
 
 	public List<Usuario> getUsuariosRegistrados() {
@@ -59,13 +54,14 @@ public class SitioWeb {
 		return this.todosLosTiposDeInmueble.stream()
 											.filter(tipoInmueble -> tipoInmueble.equals(tipoDeInmueble)).findFirst();
 
-	}
+	} 
 
 	public void altaInmueble(Inmueble inmueble) {
 		this.inmuebles.add(inmueble);
 	}
 
 	//Metodos de administrador
+	
 	public void altaTipoDeServicio(TipoDeServicio tipoDeServicio) {
 		this.todosLosTiposDeServicios.add(tipoDeServicio);
 	}

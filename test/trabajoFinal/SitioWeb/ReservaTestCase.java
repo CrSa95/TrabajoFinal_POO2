@@ -83,7 +83,7 @@ public class ReservaTestCase {
         verify(inmuebleMock).agregarReserva(reserva);
         verify(inquilinoMock).registrarReserva(reserva);  
         verify(inmuebleMock, times(1)).sumarCantidadDeVecesAlquilado();
-        verify(propietarioMock, times(1)).sumarCantidadDeVecesQueAlquile();
+        verify(propietarioMock, times(1)).sumarCantidadDeVecesQueAlquilo();
         assertTrue(reserva.getEstadoDeReserva() instanceof EstadoConfirmada);
         verify(managerMock, times(1)).altaDeReserva();
 	}

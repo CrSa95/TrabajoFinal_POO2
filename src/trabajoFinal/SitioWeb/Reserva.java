@@ -1,8 +1,7 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
-
-
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,7 +73,7 @@ public class Reserva {
 			this.inquilino.registrarReserva(this);
 			this.estadoDeReserva = new EstadoConfirmada();
 			this.inmueble.sumarCantidadDeVecesAlquilado();
-			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquile();
+			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquilo();
 			this.manager.altaDeReserva();
 		}
 	}

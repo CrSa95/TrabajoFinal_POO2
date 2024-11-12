@@ -8,7 +8,7 @@ public class PrecioEspecifico {
 	private LocalDate fechaInicial;
 	private LocalDate fechaFinal;
 
-	public PrecioEspecifico(LocalDate fechaInicial, LocalDate fechaFinal, int precio) {
+	public PrecioEspecifico(LocalDate fechaInicial, LocalDate fechaFinal, double precio) {
 
 		this.precioPorPeriodo = precio;
 		this.fechaInicial = fechaInicial;

@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 public class Inmueble {
@@ -20,31 +19,24 @@ public class Inmueble {
 	private List<Foto> cincoFotos;
 	private LocalTime checkIn;
 	private LocalTime checkOut;
-	private Usuario usuario;
 	private int cantidadDeVecesAlquilado = 0;
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<String> comentarios = new ArrayList<>();
 	private List<Rankeo> rankeosInmueble = new ArrayList<>();
-	private List<FormaDePago> todasLasFormasDePago = new ArrayList<>(); 
-	private List<FormaDePago> formasDePagoSeleccionadas;
-	private Optional<FormaDePago> formaDePagoSeleccionada;
+	private List<FormaDePago> formasDePago = new ArrayList<FormaDePago>();
 	private List<Reserva> reservasDelInmueble = new ArrayList<>();
 	private Usuario propietario;
-	private double precioTotalCalculado;
-	private int cantidadDeDiasAlquilado;
 	private List<PrecioEspecifico> preciosEspecificos = new ArrayList<>();
 	private LocalDate fechaInicial;
 	private LocalDate fechaFinal;
 	private double precioBase;
 	private int promedioPuntajeTotal;
 	private SolicitudDeReserva solicitudDeReserva;
-	private SitioWeb sitioWeb;
 	private Manager manager;
 
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
 			 		LocalTime checkIn, LocalTime checkOut, double precioBase) {
-
-
+		
 		this.propietario = propietario;
 		this.superficie = superficie;
 		this.pais = pais;
@@ -53,26 +45,33 @@ public class Inmueble {
 		this.capacidad = capacidad;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		this.precioBase = precioBase;
-		this.sitioWeb = propietario.getSitioWeb();
-
+		this.precioBase = precioBase; 
 	}
-
-	public void datosDelInmueble(LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
+	
+	public void datosDelInmueble() {
 		this.getSuperficie();
 		this.getPais();
 		this.getCiudad();
-		this.getDireccion();
+		this.getDireccion(); 
 		this.getCapacidad();
+		this.getFotos();
+		this.getTiposDeServicios();
 		this.getCheckIn();
 		this.getCheckOut();
-		this.calcularPrecioTotal(fechaDeIngreso, fechaDeEgreso);
-		this.getPrecioTotalCalculado();
 		this.getComentarios();
 		this.getRankeosInmueble();
 		this.calcularPromedioTotal();
 	}
 
+	private List<TipoDeServicio> getTiposDeServicios() {
+		return this.tiposDeServicios;
+		
+	}
+
+	public List<Foto> getFotos(){
+		return this.cincoFotos;
+	}
+	
 	public LocalTime getCheckIn() {
 		return this.checkIn;
 	}
@@ -135,7 +134,6 @@ public class Inmueble {
 	                !unaReserva.getFechaDeIngreso().isAfter(reserva.getFechaDeEgreso())
 	            );
 	}
-
 	
 	public void modificarPrecioBase(double precioBase) {	
 		if (this.precioBase > precioBase) {
@@ -162,27 +160,15 @@ public class Inmueble {
 		return this.fechaFinal;
 	}
 
-	public void calcularPrecioTotal(LocalDate inicioReserva, LocalDate finReserva) {
-		this.precioTotalCalculado = inicioReserva.datesUntil(finReserva.plusDays(1))
-	            					.mapToDouble(fechaActual -> this.preciosEspecificos.stream()
-	            					.filter(precio -> (fechaActual.isEqual(precio.getFechaInicial()) || fechaActual.isAfter(precio.getFechaInicial())) &&
-	                        		                  (fechaActual.isEqual(precio.getFechaFinal()) || fechaActual.isBefore(precio.getFechaFinal())))
-	            					.findFirst()
-	            					.map(PrecioEspecifico::getPrecioPorPeriodo)
-	            					.orElse(this.precioBase))
-	            					.sum();
-	}
-
-	public double getPrecioTotalCalculado() {
-		return this.precioTotalCalculado;
-	}
-
-	public double getPrecioPorDia() {
-		return this.precioTotalCalculado / this.cantidadDeDiasAlquilado;
-	}
-
-	public void setCantidadDeDiasAlquilado(int cantidadDeDias) {
-		this.cantidadDeDiasAlquilado = cantidadDeDias;
+	public double calcularPrecioTotal(LocalDate inicioReserva, LocalDate finReserva) {
+		return inicioReserva.datesUntil(finReserva.plusDays(1))
+	            			.mapToDouble(fechaActual -> this.preciosEspecificos.stream()
+	            			.filter(precio -> (fechaActual.isEqual(precio.getFechaInicial()) || fechaActual.isAfter(precio.getFechaInicial())) &&
+	                                          (fechaActual.isEqual(precio.getFechaFinal()) || fechaActual.isBefore(precio.getFechaFinal())))
+	            			.findFirst()
+	            			.map(PrecioEspecifico::getPrecioPorPeriodo)
+	            			.orElse(this.precioBase))
+	            			.sum();
 	}
 
 	public Usuario getPropietario() {
@@ -233,28 +219,14 @@ public class Inmueble {
 		return rankeosInmueble;
 	}
 
-	public void seleccionarFormaDePago(FormaDePago formaDePagoSeleccionada) {
-
-		this.formaDePagoSeleccionada = this.todasLasFormasDePago.stream()
-																.filter(formaDePago -> formaDePago == formaDePagoSeleccionada)  // Filtra por igualdad de enum
-																.findFirst();
-	}
-
-	public void setFormasDePago(List<FormaDePago> formasDePago){
-
-		this.formasDePagoSeleccionadas = this.todasLasFormasDePago.stream()
-                												  .filter(formasDePago::contains)
-                												  .collect(Collectors.toList());
-	}
-
 	public String getCiudad() {
 
 		return this.ciudad;
 	}
 
-	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws TipoDeInmuebleIncorrectoException {
+	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws Exception {
 		if (tipoDeInmueble.isEmpty()) {
-			throw new TipoDeInmuebleIncorrectoException("Error: El tipo de inmueble seleccionado es incorrecto.");
+			throw new Exception("Error: El tipo de inmueble seleccionado es incorrecto.");
 
 		}
 		else {
@@ -271,13 +243,13 @@ public class Inmueble {
 		this.tiposDeServicios = servicios;
 	}
 
-	public void setFotos(List<Foto> fotos) throws CantidadDeFotosIncorrectaException {
+	public void setFotos(List<Foto> fotos) throws Exception {
 
 		if (fotos.size() > 5) {
 			this.cincoFotos = fotos;
 		}
 		else {
-			throw new CantidadDeFotosIncorrectaException("Error: La cantidad de fotos permitidas es hasta 5.");
+			throw new Exception("Error: La cantidad de fotos permitidas es hasta 5.");
 		}
 	}
 
@@ -299,7 +271,7 @@ public class Inmueble {
 		return this.capacidad;
 	}
 	
-	public void setFechasEspecificas(LocalDate fechaInicial, LocalDate fechaFinal, int precio) throws Exception{
+	public void modificarPreciosEspecificos(LocalDate fechaInicial, LocalDate fechaFinal, double precio) throws Exception{
 		PrecioEspecifico fechaEspecifica = new PrecioEspecifico(fechaInicial, fechaFinal, precio);
 		if(estaFechaEspecifica(fechaInicial, fechaFinal)) {
 			this.preciosEspecificos.add(fechaEspecifica);
@@ -310,8 +282,12 @@ public class Inmueble {
 	}
 	
 	public Boolean estaFechaEspecifica(LocalDate fechaInicial, LocalDate fechaFinal) {
-		return this.preciosEspecificos.stream().anyMatch(especifico -> especifico.getFechaInicial().isAfter(fechaInicial) 
-																	&& especifico.getFechaFinal().isBefore(fechaFinal));
+		return this.preciosEspecificos.stream().anyMatch(especifico -> !especifico.getFechaInicial().isAfter(fechaInicial) 
+																	&& !especifico.getFechaFinal().isBefore(fechaFinal));
+	}
+	
+	public void modificarFormasDePago(FormaDePago formaDePago) {
+		this.formasDePago.add(formaDePago);
 	}
 
     public void setManager(Manager manager) {

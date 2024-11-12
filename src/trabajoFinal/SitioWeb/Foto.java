@@ -7,4 +7,8 @@ public class Foto {
 	public Foto(int tamaño) {
 		this.tamaño = tamaño;
 	}
+	
+	public int getTamaño() {
+		return this.tamaño;
+	}
 }
