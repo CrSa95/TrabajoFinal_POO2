@@ -39,7 +39,7 @@ public class Inmueble {
 	private LocalDate fechaFinal;
 	private double precioBase;
 	private int promedioPuntajeTotal;
-	private Notificacion manager;
+	private Manager manager;
 	
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad, 
 			 		LocalTime checkIn, LocalTime checkOut, List<PrecioEspecifico> preciosEspecificos, double precioBase) {
@@ -223,11 +223,11 @@ public class Inmueble {
         return this.cantidadDeVecesAlquilado; 
     }
 
-    public void setManager(Notificacion manager) {
+    public void setManager(Manager manager) {
 		this.manager = manager;
 	}
 	
-	public Notificacion getManager() {
+	public Manager getManager() {
 		return this.manager;
 	}
 }

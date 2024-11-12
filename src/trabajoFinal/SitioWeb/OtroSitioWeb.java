@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-public class OtroSitioWeb implements Suscriptor{
+public class OtroSitioWeb implements Listener{
 
 	private HomePagePublisher homePagePublisher;
 	

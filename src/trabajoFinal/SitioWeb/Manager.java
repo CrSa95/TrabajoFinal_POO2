@@ -3,19 +3,19 @@ package trabajoFinal.SitioWeb;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Notificacion implements Suscriptor{
+public class Manager implements Listener{
 	
-	private List<Suscriptor> listeners;
+	private List<Listener> listeners;
 	
-	public Notificacion() {
-		listeners = new ArrayList<Suscriptor>();
+	public Manager() {
+		listeners = new ArrayList<Listener>();
 	}
 	
-	public void addListener(Suscriptor listener) {
+	public void addListener(Listener listener) {
 		this.listeners.add(listener);
 	}
 	
-	public void removeListener(Suscriptor listener) {
+	public void removeListener(Listener listener) {
 		this.listeners.remove(listener);
 	}
 
@@ -28,19 +28,16 @@ public class Notificacion implements Suscriptor{
 	@Override
 	public void cancelacionDeReserva(Inmueble inmueble) {
 		this.listeners.stream()
-							.forEach(l -> l.cancelacionDeReserva(inmueble));
-		
+							.forEach(l -> l.cancelacionDeReserva(inmueble));	
 	}
 
 	@Override 
 	public void altaDeReserva() {
 		this.listeners.stream()
-							.forEach(l -> l.altaDeReserva());
-		
+							.forEach(l -> l.altaDeReserva());	
 	}
 	
-	public List<Suscriptor> getListeners(){
+	public List<Listener> getListeners(){
 		return this.listeners;
-	}
-	
+	}	
 }

@@ -15,3 +15,4 @@ public class TipoDeInmueble {
 		return this.tipoDeInmueble;
 	}
 }
+ 

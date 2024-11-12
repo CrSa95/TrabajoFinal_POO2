@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-public class AppMobile implements Suscriptor {
+public class AppMobile implements Listener {
 
 	private PopUpWindow popUpWindow;
 	

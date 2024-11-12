@@ -17,6 +17,7 @@ public class ReservaTestCase {
     private Usuario propietarioMock;
     private FormaDePago formaDePagoMock;
     private EstadoDeReserva estadoDeReservaMock;
+    private Manager managerMock;
 
     @BeforeEach
     public void setUp() {
@@ -25,11 +26,13 @@ public class ReservaTestCase {
         propietarioMock = mock(Usuario.class);
         formaDePagoMock = mock(FormaDePago.class);
         estadoDeReservaMock = mock(EstadoDeReserva.class);
+        managerMock = mock(Manager.class);
  
         LocalDate fechaDeIngreso = LocalDate.of(2024, 12, 1);
         LocalDate fechaDeEgreso = LocalDate.of(2024, 12, 10);
 
         reserva = new Reserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso);
+        reserva.setManager(managerMock);
         when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
     }
 	
@@ -53,9 +56,10 @@ public class ReservaTestCase {
 	@Test
 	void testCuandoSeCancelaLaReserva() {
 		reserva.setEstadoDeReserva(estadoDeReservaMock);
-		reserva.cancelarReserva();
+		reserva.cancelarReserva(); 
 		
 		verify(estadoDeReservaMock, times(1)).cancelar(reserva);;
+		verify(managerMock, times(1)).cancelacionDeReserva(inmuebleMock);
 	}
 	
 	@Test
@@ -81,6 +85,7 @@ public class ReservaTestCase {
         verify(inmuebleMock, times(1)).sumarCantidadDeVecesAlquilado();
         verify(propietarioMock, times(1)).sumarCantidadDeVecesQueAlquile();
         assertTrue(reserva.getEstadoDeReserva() instanceof EstadoConfirmada);
+        verify(managerMock, times(1)).altaDeReserva();
 	}
 	
 	@Test
