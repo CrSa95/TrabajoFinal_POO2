@@ -213,4 +213,9 @@ public class Inmueble {
 		
 	}
 
+	public void sumarCantidadDeVecesAlquilado() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
