@@ -39,6 +39,7 @@ public class Inmueble {
 	private LocalDate fechaFinal;
 	private double precioBase;
 	private int promedioPuntajeTotal;
+	private Notificacion manager;
 	
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad, 
 			 		LocalTime checkIn, LocalTime checkOut, List<PrecioEspecifico> preciosEspecificos, double precioBase) {
@@ -86,7 +87,10 @@ public class Inmueble {
 	            );
 	}
 	
-	public void modificarPrecioBase(double precioBase) {
+	public void modificarPrecioBase(double precioBase) {	
+		if (this.precioBase > precioBase) {
+			this.manager.bajaDePrecio(this);
+		}
 		this.precioBase = precioBase;
 	}
 	
@@ -219,4 +223,11 @@ public class Inmueble {
         return this.cantidadDeVecesAlquilado; 
     }
 
+    public void setManager(Notificacion manager) {
+		this.manager = manager;
+	}
+	
+	public Notificacion getManager() {
+		return this.manager;
+	}
 }

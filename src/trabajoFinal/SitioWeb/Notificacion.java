@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Notificacion implements Suscriptor{
 	
-	private List<Suscriptor> listeners = new ArrayList<Suscriptor>();
-
+	private List<Suscriptor> listeners;
+	
 	public Notificacion() {
-		
+		listeners = new ArrayList<Suscriptor>();
 	}
 	
 	public void addListener(Suscriptor listener) {
@@ -32,7 +32,7 @@ public class Notificacion implements Suscriptor{
 		
 	}
 
-	@Override
+	@Override 
 	public void altaDeReserva() {
 		this.listeners.stream()
 							.forEach(l -> l.altaDeReserva());

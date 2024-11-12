@@ -15,6 +15,7 @@ public class Reserva {
 	private LocalDate fechaDeEgreso;
 	private EstadoDeReserva estadoDeReserva;
 	private List<Reserva> reservasCondicionales = new ArrayList<Reserva>();
+	private Notificacion manager;
 	
 	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
 		this.inmueble = inmueble;
@@ -24,6 +25,14 @@ public class Reserva {
 		this.fechaDeEgreso = fechaDeEgreso;
 	}
 	
+	public void setManager(Notificacion manager) {
+		this.manager = manager;
+	}
+	
+	public Notificacion getManager() {
+		return this.manager;
+	}
+	
 	public FormaDePago getFormaDePago() {
 		return this.formaDePago;
 	}
@@ -31,7 +40,7 @@ public class Reserva {
 	public Usuario getUsuario() {
 		return this.inquilino;
 	}
-	
+	 
 	public LocalDate getFechaDeIngreso() {
 		return this.fechaDeIngreso;
 	}
@@ -46,6 +55,7 @@ public class Reserva {
   
 	public void cancelarReserva() {
 		this.estadoDeReserva.cancelar(this);
+		this.manager.cancelacionDeReserva(this.inmueble);
 	}
 
 	public Inmueble getInmueble() {
@@ -63,6 +73,7 @@ public class Reserva {
 			this.estadoDeReserva = new EstadoConfirmada();
 			this.inmueble.sumarCantidadDeVecesAlquilado();
 			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquile();
+			this.manager.altaDeReserva();
 		}
 	}
 	
