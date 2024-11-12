@@ -32,7 +32,7 @@ public class SolicitudDeReserva{
 	public EstadoDeSolicitud getEstado() {
 		return this.estadoDeSolicitud;
 	}
-	
+	 
 	public void setEstadoDeSolicitud(EstadoDeSolicitud estadoDeSolicitud) {
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}

@@ -12,6 +12,10 @@ public class EstadoConfirmada implements EstadoDeReserva {
 
 		inmueble.getPoliticaDeCancelacion().darResarcimiento(reserva);
 		inmueble.eliminarReserva(reserva);
+		inmueble.restarCantidadDeVecesAlquilado();
+		inmueble.getPropietario().recibirMail("La reserva fue cancelada");
+		reserva.getUsuario().eliminarReserva(reserva);
+		inmueble.getPropietario().restarCantidadDeVecesQueAlquile();;
 		reserva.setEstadoDeReserva(new EstadoCancelada());
 		
 		Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(inmueble);

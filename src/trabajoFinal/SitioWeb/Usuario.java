@@ -348,26 +348,28 @@ public class Usuario {
 			
 	}
 	
-	public void setCantidadDeVecesQueAlquile() {
-		
-		this.cantidadDeVecesQueAlquile += 1;
-	}
 	
-	public int getCantidadDeVecesQueAlquile() {	
-		
-		return this.cantidadDeVecesQueAlquile;
-	}
 	
 	public void recibirResarcimiento(double dineroResarcido) {
 		this.dineroResarcido = dineroResarcido;
 	}
 
-	public void restarCantidadDeVecesQueAlquile() {
-		// TODO Auto-generated method stub
+	public int getCantidadDeVecesQueAlquile() {	
 		
+		return this.cantidadDeVecesQueAlquile;
 	}
-
+	
 	public void sumarCantidadDeVecesQueAlquile() {
+
+        this.cantidadDeVecesQueAlquile += 1;
+    }
+
+    public void restarCantidadDeVecesQueAlquile() {
+
+        this.cantidadDeVecesQueAlquile -= 1;
+    }
+
+	public void eliminarReserva(Reserva reserva) {
 		// TODO Auto-generated method stub
 		
 	}

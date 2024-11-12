@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-// import static org.junit.jupiter.api.Assertions.*;
+//import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -13,6 +13,8 @@ class EstadoConfirmadaTestCase {
 	private EstadoConfirmada estadoConfirmada;
     private Reserva reservaMock;
     private Inmueble inmuebleMock;
+    private Usuario usuarioMock;
+    private Usuario propietarioMock;
     private PoliticaDeCancelacion politicaMock;
 
     @BeforeEach
@@ -20,10 +22,14 @@ class EstadoConfirmadaTestCase {
         estadoConfirmada = new EstadoConfirmada();
         reservaMock = mock(Reserva.class);
         inmuebleMock = mock(Inmueble.class);
+        usuarioMock = mock(Usuario.class);
+        propietarioMock = mock(Usuario.class);
         politicaMock = mock(PoliticaDeCancelacion.class);
 
         when(reservaMock.getInmueble()).thenReturn(inmuebleMock);
+        when(reservaMock.getUsuario()).thenReturn(usuarioMock);
         when(inmuebleMock.getPoliticaDeCancelacion()).thenReturn(politicaMock);
+        when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
 	}
 	 
 	@Test
@@ -31,12 +37,16 @@ class EstadoConfirmadaTestCase {
 		Reserva reservaCondicionalMock = mock(Reserva.class);
 	    when(reservaMock.obtenerReservaCondicional(inmuebleMock)).thenReturn(Optional.of(reservaCondicionalMock));
 		
-		estadoConfirmada.cancelar(reservaMock);
+		estadoConfirmada.cancelar(reservaMock); 
 		
 		verify(politicaMock).darResarcimiento(reservaMock);
-		verify(inmuebleMock).eliminarReserva(reservaMock);
+		verify(inmuebleMock, times(1)).eliminarReserva(reservaMock);
+		verify(inmuebleMock, times(1)).restarCantidadDeVecesAlquilado();
+		verify(propietarioMock).recibirMail("La reserva fue cancelada");
+		verify(usuarioMock, times(1)).eliminarReserva(reservaMock);
+		verify(propietarioMock, times(1)).restarCantidadDeVecesQueAlquile(); 
 		verify(reservaMock).setEstadoDeReserva(any(EstadoCancelada.class));
-		verify(reservaCondicionalMock).evaluarReserva();	
+		verify(reservaCondicionalMock).evaluarReserva();	 
 	} 
 	
 	@Test
@@ -46,7 +56,11 @@ class EstadoConfirmadaTestCase {
 		estadoConfirmada.cancelar(reservaMock);
 		
 		verify(politicaMock).darResarcimiento(reservaMock);
-		verify(inmuebleMock).eliminarReserva(reservaMock); 
+		verify(inmuebleMock).eliminarReserva(reservaMock);
+		verify(inmuebleMock, times(1)).restarCantidadDeVecesAlquilado();
+		verify(propietarioMock).recibirMail("La reserva fue cancelada");
+		verify(usuarioMock, times(1)).eliminarReserva(reservaMock);
+		verify(propietarioMock, times(1)).restarCantidadDeVecesQueAlquile();
 		verify(reservaMock).setEstadoDeReserva(any(EstadoCancelada.class));
 		verify(reservaMock, never()).evaluarReserva();	
 	}

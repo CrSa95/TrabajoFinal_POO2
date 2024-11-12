@@ -22,9 +22,8 @@ public class Inmueble {
 	private List<Foto> cincoFotos; 
 	private LocalTime checkIn;
 	private LocalTime checkOut; 
-	private int cantidadVecesAlquilado;
-	private Usuario usuario;
 	private int cantidadDeVecesAlquilado;
+	private Usuario usuario;
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<String> comentarios = new ArrayList<String>();
 	private List<Rankeo> rankeosInmueble = new ArrayList<Rankeo>();
@@ -208,14 +207,16 @@ public class Inmueble {
 		return this.capacidad;
 	}
 
-	public void restarCantidadDeVecesAlquilado() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void sumarCantidadDeVecesAlquilado() {
-		// TODO Auto-generated method stub
-		
-	}
+        this.cantidadDeVecesAlquilado += 1 ; 
+    }
+
+    public void restarCantidadDeVecesAlquilado() {
+        this.cantidadDeVecesAlquilado -= 1 ; 
+    }
+
+    public int getCantidadDeVecesAlquilado() {
+        return this.cantidadDeVecesAlquilado; 
+    }
 
 }

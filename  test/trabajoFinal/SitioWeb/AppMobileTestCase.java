@@ -2,7 +2,6 @@ package trabajoFinal.SitioWeb;
 
 //import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,7 @@ class AppMobileTestCase {
 		popUpWindowMock = mock(PopUpWindow.class);
 		appMobile = new AppMobile(popUpWindowMock);
 		inmuebleMock = mock(Inmueble.class);
-	}
+	} 
 	
 	@Test
 	void testBajaDePrecio() {
