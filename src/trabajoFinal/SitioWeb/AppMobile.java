@@ -3,14 +3,14 @@ package trabajoFinal.SitioWeb;
 public class AppMobile implements Suscriptor {
 
 	private PopUpWindow popUpWindow;
-	
+
 	public AppMobile(PopUpWindow popUpWindow) {
 		this.popUpWindow = popUpWindow;
 	}
-	
+
 	@Override
 	public void bajaDePrecio(Inmueble inmueble) {
-		
+
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class AppMobile implements Suscriptor {
 
 	@Override
 	public void altaDeReserva() {
-		
+
 	}
 
 }

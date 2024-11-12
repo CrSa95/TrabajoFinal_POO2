@@ -6,7 +6,7 @@ public class SinCancelacion implements PoliticaDeCancelacion {
 	public void darResarcimiento(Reserva reserva) {
 
 		reserva.getInmueble().getPropietario().recibirResarcimiento(reserva.getInmueble().getPrecioTotalCalculado());
-		
+
 	}
 
 }

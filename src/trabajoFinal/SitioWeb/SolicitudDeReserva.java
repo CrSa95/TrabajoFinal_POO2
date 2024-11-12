@@ -11,7 +11,7 @@ public class SolicitudDeReserva{
 	private LocalDate fechaDeEgreso;
 	private EstadoDeSolicitud estadoDeSolicitud;
 	private Reserva reserva;
-	
+
 	public SolicitudDeReserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
 		this.inmueble = inmueble;
 		this.inquilino = inquilino;
@@ -21,18 +21,22 @@ public class SolicitudDeReserva{
 		this.estadoDeSolicitud = new EstadoDeSolicitudPendiente();
 	}
 
+	public Inmueble getInmueble() {
+		return this.inmueble;
+	}
+
 	public void solicitarReserva() {
-		this.inmueble.getPropietario().recibirSolicitudReserva(this);  
+		this.inmueble.getPropietario().recibirSolicitudReserva(this);
 	}
 
 	public void aprobarSolicitud() {
 		this.estadoDeSolicitud.aprobar(this);
 	}
-	
+
 	public EstadoDeSolicitud getEstado() {
 		return this.estadoDeSolicitud;
 	}
-	
+
 	public void setEstadoDeSolicitud(EstadoDeSolicitud estadoDeSolicitud) {
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}

@@ -5,8 +5,8 @@ import java.util.List;
 public class FiltroCiudad implements Filtro{
 
 	private String ciudad;
-	
-	
+
+
 	public FiltroCiudad(String ciudad) {
 		this.ciudad = ciudad;
 	}

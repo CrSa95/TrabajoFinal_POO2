@@ -16,7 +16,7 @@ public class FiltroFechas implements Filtro{
     @Override
     public List<Inmueble> filtrar(List<Inmueble> inmuebles) {
         return inmuebles.stream()
-                .filter(inmueble -> 
+                .filter(inmueble ->
                         !inmueble.getFechaInicial().isAfter(fechaEntrada) &&
                         !inmueble.getFechaFinal().isBefore(fechaSalida))
                 .toList();

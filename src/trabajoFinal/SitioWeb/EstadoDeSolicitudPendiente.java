@@ -2,9 +2,9 @@ package trabajoFinal.SitioWeb;
 
 public class EstadoDeSolicitudPendiente implements EstadoDeSolicitud{
 
-	
+
 	public EstadoDeSolicitudPendiente() {
-		
+
 	}
 
 	@Override
@@ -12,7 +12,7 @@ public class EstadoDeSolicitudPendiente implements EstadoDeSolicitud{
 		solicitud.realizarReserva();
 		solicitud.notificarAInquilino();
 		solicitud.setEstadoDeSolicitud(new EstadoSolicitudAprobada());
-		
+
 	}
 
 }

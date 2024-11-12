@@ -1,9 +1,7 @@
 package trabajoFinal.SitioWeb;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,39 +9,40 @@ import java.util.stream.Collectors;
 
 
 public class Inmueble {
-	
+
 	private TipoDeInmueble tipoInmueble;
 	private int superficie;
 	private String pais;
 	private String ciudad;
 	private String direccion;
 	private List<TipoDeServicio> tiposDeServicios;
-	private int capacidad; 
-	private List<Foto> cincoFotos; 
+	private int capacidad;
+	private List<Foto> cincoFotos;
 	private LocalTime checkIn;
-	private LocalTime checkOut; 
-	private int cantidadVecesAlquilado;
+	private LocalTime checkOut;
 	private Usuario usuario;
-	private int cantidadDeVecesAlquilado;
+	private int cantidadDeVecesAlquilado = 0;
 	private PoliticaDeCancelacion politicaDeCancelacion;
-	private List<String> comentarios = new ArrayList<String>();
-	private List<Rankeo> rankeosInmueble = new ArrayList<Rankeo>();
-	private List<FormaDePago> todasLasFormasDePago = new ArrayList<FormaDePago>();
+	private List<String> comentarios = new ArrayList<>();
+	private List<Rankeo> rankeosInmueble = new ArrayList<>();
+	private List<FormaDePago> todasLasFormasDePago = new ArrayList<>();
 	private List<FormaDePago> formasDePagoSeleccionadas;
-	private Optional<FormaDePago> formaDePagoSeleccionada; 
-	private List<Reserva> reservasDelInmueble = new ArrayList<Reserva>();
+	private Optional<FormaDePago> formaDePagoSeleccionada;
+	private List<Reserva> reservasDelInmueble = new ArrayList<>();
 	private Usuario propietario;
 	private double precioTotalCalculado;
 	private int cantidadDeDiasAlquilado;
-	private List<PrecioEspecifico> preciosEspecificos;
+	private List<PrecioEspecifico> preciosEspecificos = new ArrayList<>();
 	private LocalDate fechaInicial;
 	private LocalDate fechaFinal;
 	private double precioBase;
 	private int promedioPuntajeTotal;
-	
-	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad, 
-			 		LocalTime checkIn, LocalTime checkOut, List<PrecioEspecifico> preciosEspecificos, double precioBase) {
-		
+	private SolicitudDeReserva solicitudDeReserva;
+	private SitioWeb sitioWeb;
+
+	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
+			 		LocalTime checkIn, LocalTime checkOut, double precioBase) {
+
 		this.propietario = propietario;
 		this.superficie = superficie;
 		this.pais = pais;
@@ -51,34 +50,82 @@ public class Inmueble {
 		this.direccion = direccion;
 		this.capacidad = capacidad;
 		this.checkIn = checkIn;
-		this.checkOut = checkOut; 
-		this.precioBase = precioBase; 
-		this.preciosEspecificos = preciosEspecificos;
-		
+		this.checkOut = checkOut;
+		this.precioBase = precioBase;
+		this.sitioWeb = propietario.getSitioWeb();
+
 	}
-	
-	public void calcularPromedioTotal() {
-		
+
+	public void datosDelInmueble(LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
+		this.getSuperficie();
+		this.getPais();
+		this.getCiudad();
+		this.getDireccion();
+		this.getCapacidad();
+		this.getCheckIn();
+		this.getCheckOut();
+		this.calcularPrecioTotal(fechaDeIngreso, fechaDeEgreso);
+		this.getPrecioTotalCalculado();
+		this.getComentarios();
+		this.getRankeosInmueble();
+		this.calcularPromedioTotal();
+	}
+
+	public LocalTime getCheckIn() {
+		return this.checkIn;
+	}
+
+	public LocalTime getCheckOut() {
+		return this.checkOut;
+	}
+
+	public String getDireccion() {
+		return this.direccion;
+	}
+
+	public String getPais() {
+		return this.pais;
+	}
+
+	public int getSuperficie() {
+		return this.superficie;
+	}
+
+	public void sumarCantidadDeVecesAlquilado() {
+		this.cantidadDeVecesAlquilado += 1 ;
+	}
+
+	public void restarCantidadDeVecesAlquilado() {
+		this.cantidadDeVecesAlquilado -= 1 ;
+	}
+
+	public int getCantidadDeVecesAlquilado() {
+		return this.cantidadDeVecesAlquilado;
+	}
+
+
+	public int calcularPromedioTotal() {
+
 		double sumaTotal = 0;
         for (Rankeo rank : rankeosInmueble) {
-            sumaTotal += rank.getPuntaje(); 
+            sumaTotal += rank.getPuntaje();
         }
 
-        this.promedioPuntajeTotal = (int) (sumaTotal / rankeosInmueble.size());
+        return (int) (sumaTotal / rankeosInmueble.size());
 	}
-	
+
 	public int getPromedioPuntajeTotal() {
 		return promedioPuntajeTotal;
 	}
-	
+
 	public void agregarReserva(Reserva reserva) {
 		this.reservasDelInmueble.add(reserva);
 	}
-	
+
 	public void eliminarReserva(Reserva reserva) {
 		this.reservasDelInmueble.remove(reserva);
 	}
-	
+
 	public Boolean estaReservado(Reserva reserva) {
 	    return reservasDelInmueble.stream()
 	            .anyMatch(unaReserva ->
@@ -86,101 +133,140 @@ public class Inmueble {
 	                !unaReserva.getFechaDeIngreso().isAfter(reserva.getFechaDeEgreso())
 	            );
 	}
-	
+
 	public void modificarPrecioBase(double precioBase) {
 		this.precioBase = precioBase;
 	}
-	
+
 	public double getPrecioBase() {
 		return this.precioBase;
 	}
-	
+
 	public void setDisponibilidad(LocalDate fechaInicial, LocalDate fechaFinal) {
-		
+
 		this.fechaInicial = fechaInicial;
 		this.fechaFinal = fechaFinal;
 	}
-	
+
 	public LocalDate getFechaInicial(){
 		return this.fechaInicial;
 	}
-	
+
 	public LocalDate getFechaFinal(){
 		return this.fechaFinal;
 	}
-	
-	public void calcularPrecio(LocalDate inicioReserva, LocalDate finReserva) {
-	 
+
+	public void calcularPrecioTotal(LocalDate inicioReserva, LocalDate finReserva) {
+		this.precioTotalCalculado = inicioReserva.datesUntil(finReserva.plusDays(1))
+	            					.mapToDouble(fechaActual -> this.preciosEspecificos.stream()
+	            					.filter(precio -> (fechaActual.isEqual(precio.getFechaInicial()) || fechaActual.isAfter(precio.getFechaInicial())) &&
+	                        		                  (fechaActual.isEqual(precio.getFechaFinal()) || fechaActual.isBefore(precio.getFechaFinal())))
+	            					.findFirst()
+	            					.map(PrecioEspecifico::getPrecioPorPeriodo)
+	            					.orElse(this.precioBase))
+	            					.sum();
 	}
-	
+
 	public double getPrecioTotalCalculado() {
 		return this.precioTotalCalculado;
 	}
-	
+
 	public double getPrecioPorDia() {
 		return this.precioTotalCalculado / this.cantidadDeDiasAlquilado;
 	}
-	
+
 	public void setCantidadDeDiasAlquilado(int cantidadDeDias) {
 		this.cantidadDeDiasAlquilado = cantidadDeDias;
 	}
-	
+
 	public Usuario getPropietario() {
 		return this.propietario;
 	}
-	private SolicitudDeReserva solicitudDeReserva; 
-	
+
 	public void setComentario(String comentario){
 		comentarios.add(comentario);
 	}
-	
-	public void setRankeosInmueble(Rankeo rankeo){
+
+	public void setRankeosInmueble(Rankeo rankeo) {
 		this.rankeosInmueble.add(rankeo);
+	}
+
+	public void actualizarListaDeRaneko(Rankeo rankeo) {
+
+		if (this.estaElRank(rankeo)) {
+
+			this.actualizarPuntajeDeRankeo(rankeo);
+		}
+		else {
+
+			this.setRankeosInmueble(rankeo);
+		}
+	}
+
+	public Boolean estaElRank(Rankeo rankeo) {
+		return this.rankeosInmueble.stream()
+				.anyMatch(rank -> rank.getCategoria().nombreCategoria().equals
+						 (rankeo.getCategoria().nombreCategoria()));
+	}
+
+	public void actualizarPuntajeDeRankeo(Rankeo rankeo) {
+
+		Optional<Rankeo> rankeoViejo = this.rankeosInmueble.stream()
+			    									   .filter(rank -> rank.getCategoria().nombreCategoria().equals(rankeo.getCategoria().nombreCategoria())).findFirst();
+
+		this.rankeosInmueble.stream()
+	    				.filter(rank -> rank.getCategoria().nombreCategoria().equals(rankeo.getCategoria().nombreCategoria()))
+	    				.forEach(rank -> rank.setPuntaje((int) ((rankeoViejo.get().getPuntaje() + rankeo.getPuntaje()) / 2)));
 	}
 	
 	public List<String> getComentarios(){
 		return comentarios;
 	}
-	
+
 	public List<Rankeo> getRankeosInmueble(){
 		return rankeosInmueble;
 	}
-	
+
 	public void seleccionarFormaDePago(FormaDePago formaDePagoSeleccionada) {
-		
+
 		this.formaDePagoSeleccionada = this.todasLasFormasDePago.stream()
 																.filter(formaDePago -> formaDePago == formaDePagoSeleccionada)  // Filtra por igualdad de enum
 																.findFirst();
 	}
-	
+
 	public void setFormasDePago(List<FormaDePago> formasDePago){
-		
+
 		this.formasDePagoSeleccionadas = this.todasLasFormasDePago.stream()
                 												  .filter(formasDePago::contains)
                 												  .collect(Collectors.toList());
 	}
-	
+
 	public String getCiudad() {
-		
+
 		return this.ciudad;
 	}
-	
-	public void setTipoDeInmueble(TipoDeInmueble tipoDeInmueble) {
-		
-		this.tipoInmueble = tipoDeInmueble;
+
+	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws TipoDeInmuebleIncorrectoException {
+		if (tipoDeInmueble.isEmpty()) {
+			throw new TipoDeInmuebleIncorrectoException("Error: El tipo de inmueble seleccionado es incorrecto.");
+
+		}
+		else {
+			this.tipoInmueble = tipoDeInmueble.get();
+		}
 	}
-	
+
 	public TipoDeInmueble getTipoInmueble() {
 		return this.tipoInmueble;
 	}
-	
+
 	public void setTipoDeServicios(List<TipoDeServicio> servicios) {
-		
+
 		this.tiposDeServicios = servicios;
 	}
-	
+
 	public void setFotos(List<Foto> fotos) throws CantidadDeFotosIncorrectaException {
-		
+
 		if (fotos.size() > 5) {
 			this.cincoFotos = fotos;
 		}
@@ -188,24 +274,38 @@ public class Inmueble {
 			throw new CantidadDeFotosIncorrectaException("Error: La cantidad de fotos permitidas es hasta 5.");
 		}
 	}
-	
+
 	public void setPoliticaDeCancelacion(PoliticaDeCancelacion politicaDeCancelacion) {
-		
+
 		this.politicaDeCancelacion = politicaDeCancelacion;
 	}
-	
+
 	public PoliticaDeCancelacion getPoliticaDeCancelacion() {
 		return politicaDeCancelacion;
 	}
-  
+
 	public void realizarReservaDelInmueble(Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
 		this.solicitudDeReserva = new SolicitudDeReserva(this, inquilino, formaDePago, fechaDeIngreso, fechaDeEgreso);
 		this.solicitudDeReserva.solicitarReserva();
 	}
 
 	public int getCapacidad() {
-		// TODO Auto-generated method stub
 		return this.capacidad;
+	}
+	
+	public void setFechasEspecificas(LocalDate fechaInicial, LocalDate fechaFinal, int precio) throws Exception{
+		PrecioEspecifico fechaEspecifica = new PrecioEspecifico(fechaInicial, fechaFinal, precio);
+		if(estaFechaEspecifica(fechaInicial, fechaFinal)) {
+			this.preciosEspecificos.add(fechaEspecifica);
+		}
+		else {
+			throw new Exception("Las fechas ingresadas ya estan declaradas");
+		}
+	}
+	
+	public Boolean estaFechaEspecifica(LocalDate fechaInicial, LocalDate fechaFinal) {
+		return this.preciosEspecificos.stream().anyMatch(especifico -> especifico.getFechaInicial().isAfter(fechaInicial) 
+																	&& especifico.getFechaFinal().isBefore(fechaFinal));
 	}
 
 }

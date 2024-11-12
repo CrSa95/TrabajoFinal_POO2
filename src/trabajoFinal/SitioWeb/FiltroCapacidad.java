@@ -4,7 +4,7 @@ import java.util.List;
 
 public class FiltroCapacidad implements Filtro {
 	public int capacidad;
-	
+
 	public FiltroCapacidad(int capacidad) {
         this.capacidad = capacidad;
     }

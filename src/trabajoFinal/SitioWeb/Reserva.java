@@ -1,10 +1,8 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.PriorityQueue;
-import java.util.stream.Collectors;
 
 public class Reserva {
 
@@ -14,8 +12,8 @@ public class Reserva {
 	private LocalDate fechaDeIngreso;
 	private LocalDate fechaDeEgreso;
 	private EstadoDeReserva estadoDeReserva;
-	private PriorityQueue<Reserva> reservasCondicionales = new PriorityQueue<Reserva>();
-	
+	private PriorityQueue<Reserva> reservasCondicionales = new PriorityQueue<>();
+
 	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
 		this.inmueble = inmueble;
 		this.inquilino = inquilino;
@@ -23,23 +21,23 @@ public class Reserva {
 		this.fechaDeIngreso = fechaDeIngreso;
 		this.fechaDeEgreso = fechaDeEgreso;
 	}
-	
+
 	public Usuario getUsuario() {
 		return this.inquilino;
 	}
-	
+
 	public LocalDate getFechaDeIngreso() {
 		return this.fechaDeIngreso;
 	}
-	
+
 	public LocalDate getFechaDeEgreso() {
 		return this.fechaDeEgreso;
 	}
-	
+
 	public void finalizarReserva() {
 		this.estadoDeReserva.finalizar(this);
 	}
-  
+
 	public void cancelarReserva() {
 		this.estadoDeReserva.cancelar(this);
 	}
@@ -47,7 +45,7 @@ public class Reserva {
 	public Inmueble getInmueble() {
 		return this.inmueble;
 	}
-	
+
 	public void evaluarReserva() {
 		if (inmueble.estaReservado(this)) {
 			this.reservasCondicionales.add(this);
@@ -59,18 +57,18 @@ public class Reserva {
 			this.estadoDeReserva = new EstadoConfirmada();
 		}
 	}
-	
+
 	public Optional<Reserva> obtenerReservaCondicional(Inmueble inmueble) {
 		return this.reservasCondicionales.stream().filter(unaReserva -> unaReserva.getInmueble()
 												.equals(inmueble)).findFirst();
 	}
-	
+
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
 		this.estadoDeReserva = estadoDeReserva;
 	}
-	
+
 	public EstadoDeReserva getEstadoDeReserva() {
 		return this.estadoDeReserva;
 	}
-	
+
 }
