@@ -245,7 +245,7 @@ public class Inmueble {
 
 	public void setFotos(List<Foto> fotos) throws Exception {
 
-		if (fotos.size() > 5) {
+		if (fotos.size() <= 5) {
 			this.cincoFotos = fotos;
 		}
 		else {
