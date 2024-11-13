@@ -1,47 +1,148 @@
 package trabajoFinal.SitioWeb;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class SitioWebTestCase {
-	
-	private SitioWeb unSitioWeb;
-	private Usuario usuario;
-	
-	@BeforeEach
-	public void setUp() {
-		
-		unSitioWeb = new SitioWeb();
-		usuario = new Usuario("Cristian Pablo Sanabria", "crissanabria1995@gmail.com", 1160583214);
-		
-	}
+
+    private SitioWeb sitioWeb;
+    private Usuario usuarioMock;
+    private Categoria categoriaMock;
+    private Categoria otraCategoriaMock;
+    private TipoDeServicio gas;
+    private TipoDeServicio agua;
+    private TipoDeInmueble quincho;
+    private TipoDeInmueble dormitorio;
+    private TipoDeInmueble terraza;
+    private Inmueble inmueble;
+    private Inmueble otroInmueble;
+    private String ciudad;
+    private LocalDate fechaEntrada;
+    private LocalDate fechaSalida;
+    private int capacidad;
+    private double precioMinimo;
+	private double precioMaximo;
+    
+    @BeforeEach
+    public void setUp() {
+    	
+    	sitioWeb = new SitioWeb();
+        usuarioMock = mock(Usuario.class);
+        categoriaMock = mock(Categoria.class);
+        otraCategoriaMock = mock(Categoria.class);
+        gas = mock(TipoDeServicio.class);
+        agua = mock(TipoDeServicio.class);
+        quincho = mock(TipoDeInmueble.class);
+        dormitorio = mock(TipoDeInmueble.class);
+        terraza = mock(TipoDeInmueble.class);
+        inmueble = mock(Inmueble.class);
+        otroInmueble = mock(Inmueble.class);
+        ciudad = "Buenos Aires";
+        fechaEntrada = LocalDate.of(2024, 11, 1);
+        fechaSalida = LocalDate.of(2024, 11, 10);
+        capacidad = 3;
+        precioMinimo = 30;
+        precioMaximo = 50;
+    }
 	
 	@Test
-	public void testUnUsuarioSeRegistraEnUnSitioWeb() {
+    void testUnSitioWebPuedeRegistrarUnUsuario() {
 		
-		//
-		//verifico que la lista de usuarios del sitio web se encuentra vacia
-		assertEquals(0,unSitioWeb.getUsuariosRegistrados().size());
+		sitioWeb.registrarUsuario(usuarioMock);
+        assertTrue(sitioWeb.getUsuariosRegistrados().contains(usuarioMock));
+    }
+	 
+	@Test
+    void testUnSitioWebPuedeDarDeAltaYVerificarUnaCategoriaDeInmuebleEspacifica() {
 		
-		//registro un usuario al sitio web
-		unSitioWeb.registrarUsuario(usuario);
-		
-		//verifico si la lista de usuarios del sitio web se encuentra un usuario registrado
-		assertEquals(1,unSitioWeb.getUsuariosRegistrados().size());
-		
-		//verifico si el ususario se encuentra registrado en el sitio web
-		//assertTrue(unSitioWeb.usuarioEstaRegistrado(usuario));
-		
-		//verifico la fecha de registro del ususario
-		assertTrue(usuario.getFechaDeRegistro().isEqual(LocalDate.now()));
-	}
+		when(categoriaMock.nombreCategoria()).thenReturn("Comodo");
+		when(otraCategoriaMock.nombreCategoria()).thenReturn("Iluminado");
+        sitioWeb.altaTipoDeCategoriaInmueble(categoriaMock);
+        assertTrue(sitioWeb.getCategoriaEspecificaInmueble(categoriaMock));
+        assertFalse(sitioWeb.getCategoriaEspecificaInmueble(otraCategoriaMock));
+    }
 	
+	@Test
+    void testUnSitioWebPuedeDarDeAltaYVerificarUnaCategoriaDeInquilinoEspacifica() {
+		
+		when(categoriaMock.nombreCategoria()).thenReturn("Sucio");
+		when(otraCategoriaMock.nombreCategoria()).thenReturn("Limpio");
+        sitioWeb.altaTipoDeCategoriaInquilino(categoriaMock);
+        assertTrue(sitioWeb.getCategoriaEspecificaInquilino(categoriaMock));
+        assertFalse(sitioWeb.getCategoriaEspecificaInmueble(otraCategoriaMock));
+    }
+	
+	@Test
+    void testUnSitioWebPuedeDarDeAltaYVerificarUnaCategoriaDePropietarioEspacifica() {
+
+		when(categoriaMock.nombreCategoria()).thenReturn("Amable");
+		when(otraCategoriaMock.nombreCategoria()).thenReturn("Malumorado");
+        sitioWeb.altaTipoDeCategoriaPropietario(categoriaMock);
+        assertTrue(sitioWeb.getCategoriaEspecificaPropietario(categoriaMock));
+        assertFalse(sitioWeb.getCategoriaEspecificaInmueble(otraCategoriaMock));
+    }
+	
+	@Test
+    void testUnSitioWebPuedeDarDeAltaYFiltrarUnaListaDeTiposDeServicios() {
+		
+		List<TipoDeServicio> listaServicios = new ArrayList<TipoDeServicio>();
+		listaServicios.add(gas);
+        sitioWeb.altaTipoDeServicio(gas);
+        sitioWeb.altaTipoDeServicio(agua);
+        assertTrue(sitioWeb.seleccionarTiposDeServicio(listaServicios).contains(gas));
+        assertFalse(sitioWeb.seleccionarTiposDeServicio(listaServicios).contains(agua));
+    }
+	
+	@Test
+    void testUnSitioWebPuedeDarDeAltaYVerficiarSiEstaUnTipoDeInmueble() {
+		
+		when(quincho.getTipoDeInmueble()).thenReturn("Quincho");
+		when(terraza.getTipoDeInmueble()).thenReturn("Terraza");
+		when(dormitorio.getTipoDeInmueble()).thenReturn("Dormitorio");
+        sitioWeb.altaTipoDeInmueble(quincho);
+        sitioWeb.altaTipoDeInmueble(dormitorio);
+        assertTrue(sitioWeb.seleccionarTipoDeInmueble(quincho).get().equals(quincho));
+        assertTrue(sitioWeb.seleccionarTipoDeInmueble(terraza).isEmpty());
+    }
+	
+	@Test
+    void testUnSitioWebPuedeDarDeAltaUnInmueble() {
+		
+        sitioWeb.altaInmueble(inmueble);
+        assertTrue(sitioWeb.getTodosLosInmuebles().contains(inmueble));
+        assertFalse(sitioWeb.getTodosLosInmuebles().contains(otroInmueble));
+    }
+	
+	@Test
+    void testUnSitioWebPuedeBuscarInmuebles() {
+		
+		when(inmueble.getCapacidad()).thenReturn(3);
+        when(otroInmueble.getCapacidad()).thenReturn(4);
+        
+        when(inmueble.getCiudad()).thenReturn("Buenos Aires");
+        when(otroInmueble.getCiudad()).thenReturn("Córdoba");
+        
+        when(inmueble.getFechaInicial()).thenReturn(LocalDate.of(2024, 11, 1));
+        when(inmueble.getFechaFinal()).thenReturn(LocalDate.of(2024, 11, 10));
+        when(otroInmueble.getFechaInicial()).thenReturn(LocalDate.of(2024, 10, 20));
+        when(otroInmueble.getFechaFinal()).thenReturn(LocalDate.of(2024, 10, 25));
+        
+        when(inmueble.getPrecioBase()).thenReturn(50.0);
+        when(otroInmueble.getPrecioBase()).thenReturn(150.0);
+        
+        sitioWeb.altaInmueble(inmueble);
+        sitioWeb.altaInmueble(otroInmueble);
+        assertTrue(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo).contains(inmueble));
+        assertTrue(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, 0, 0, 0).contains(inmueble));
+        assertFalse(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo).contains(otroInmueble));
+	}
+
 }
- 
