@@ -20,10 +20,6 @@ public class SolicitudDeReserva{
 		this.estadoDeSolicitud = new EstadoDeSolicitudPendiente();
 	}
 
-	public Inmueble getInmueble() {
-		return this.inmueble;
-	}
-
 	public void solicitarReserva() {
 		this.inmueble.getPropietario().recibirSolicitudReserva(this);
 	}
@@ -39,8 +35,8 @@ public class SolicitudDeReserva{
 	public void setEstadoDeSolicitud(EstadoDeSolicitud estadoDeSolicitud) {
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}
-	
-	public void evaluarReserva(Reserva reserva) {
+  
+	public void realizarReserva(Reserva reserva) {
 		reserva.evaluarReserva();
 	}
 	
