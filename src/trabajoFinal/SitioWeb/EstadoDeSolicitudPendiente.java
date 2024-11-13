@@ -8,8 +8,8 @@ public class EstadoDeSolicitudPendiente implements EstadoDeSolicitud{
 	}
 
 	@Override
-	public void aprobar(SolicitudDeReserva solicitud) {
-		solicitud.realizarReserva();
+	public void aprobar(SolicitudDeReserva solicitud) {;
+		solicitud.realizarReserva(solicitud.crearReserva());
 		solicitud.notificarAInquilino();
 		solicitud.setEstadoDeSolicitud(new EstadoSolicitudAprobada());
 

@@ -10,7 +10,6 @@ public class SolicitudDeReserva{
 	private LocalDate fechaDeIngreso;
 	private LocalDate fechaDeEgreso;
 	private EstadoDeSolicitud estadoDeSolicitud;
-	private Reserva reserva;
 
 	public SolicitudDeReserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
 		this.inmueble = inmueble;
@@ -19,10 +18,6 @@ public class SolicitudDeReserva{
 		this.fechaDeIngreso = fechaDeIngreso;
 		this.fechaDeEgreso = fechaDeEgreso;
 		this.estadoDeSolicitud = new EstadoDeSolicitudPendiente();
-	}
-
-	public Inmueble getInmueble() {
-		return this.inmueble;
 	}
 
 	public void solicitarReserva() {
@@ -41,9 +36,12 @@ public class SolicitudDeReserva{
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}
 
-	public void realizarReserva() {
-		this.reserva = new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso);
-		this.reserva.evaluarReserva();
+	public void realizarReserva(Reserva reserva) {
+		reserva.evaluarReserva();
+	}
+	
+	public Reserva crearReserva() {
+		return new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso);
 	}
 
 	public void notificarAInquilino() {

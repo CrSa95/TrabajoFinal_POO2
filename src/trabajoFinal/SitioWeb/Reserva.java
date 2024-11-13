@@ -1,7 +1,7 @@
 package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,7 +74,7 @@ public class Reserva {
 			this.estadoDeReserva = new EstadoConfirmada();
 			this.inmueble.sumarCantidadDeVecesAlquilado();
 			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquilo();
-			this.manager.altaDeReserva();
+			this.getManager().altaDeReserva();
 		}
 	}
 
@@ -84,7 +84,7 @@ public class Reserva {
 	}
 
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
-		this.estadoDeReserva = estadoDeReserva;
+		this.estadoDeReserva = estadoDeReserva; 
 	}
 
 	public EstadoDeReserva getEstadoDeReserva() {
