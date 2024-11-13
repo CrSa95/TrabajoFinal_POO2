@@ -35,7 +35,7 @@ public class SolicitudDeReserva{
 	public void setEstadoDeSolicitud(EstadoDeSolicitud estadoDeSolicitud) {
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}
-
+  
 	public void realizarReserva(Reserva reserva) {
 		reserva.evaluarReserva();
 	}

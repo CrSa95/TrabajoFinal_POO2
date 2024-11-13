@@ -2,7 +2,7 @@ package trabajoFinal.SitioWeb;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +22,7 @@ public class Usuario {
 	private SitioWeb sitioWeb;
 	private int cantidadDeVecesQueAlquilo = 0;
 	private List<Inmueble> inmueblesDadosDeAlta = new ArrayList<>();
+	private String contenidoMail;
 
 	public Usuario (String nombreCompleto, String mail, int telefono) {
 
@@ -49,14 +50,6 @@ public class Usuario {
 	public String getNombre() {
 		return this.nombreCompleto; 
 	}
-
-	public void registrarReserva(Reserva reserva) {
-		this.reservas.add(reserva);
-	}
-	
-	public void eliminarReserva(Reserva reserva) {
-		this.reservas.remove(reserva);
-	}
 	
 	public void actualizarNombreCompleto(String nombreCompleto) {
 		this.nombreCompleto = nombreCompleto;
@@ -71,7 +64,8 @@ public class Usuario {
 	}
 
 	public int cantidadTiempoRegistrado(){
-		return Period.between(fechaRegistro, LocalDate.now()).getYears();
+		//return Period.between(fechaRegistro, LocalDate.now()).getYears();
+		return (int) ChronoUnit.DAYS.between(fechaRegistro, LocalDate.now());
 	}
 
 	public String getMail() {
@@ -82,12 +76,24 @@ public class Usuario {
 		return telefono;
 	}
 
-	public String recibirMail(String mail){
-		return "Mail Recibido";
+	public void recibirMail(String contenidoMail){
+		this.contenidoMail = contenidoMail;
+	}
+	
+	public String getContenidoMail() {
+		return this.contenidoMail;
 	}
 
-	public void enviarMail(String mail, Usuario usuario){
-		usuario.recibirMail(mail);
+	public void enviarMail(String contenidoDelMail, Usuario usuario){
+		usuario.recibirMail(contenidoDelMail);
+	}
+	
+	public void registrarReserva(Reserva reserva) {
+		this.reservas.add(reserva);
+	}
+	
+	public void eliminarReserva(Reserva reserva) {
+		this.reservas.remove(reserva);
 	}
 
 	public int calcularPromedioTotal(List<Rankeo> rankeos) {
@@ -133,20 +139,12 @@ public class Usuario {
 		inmueble.realizarReservaDelInmueble(usuario, formaDePago, fechaDeIngreso, fechaDeEgreso);
 	}
 	
-	public void setRankeosInquilino(Rankeo rankeo){
-		this.rankeosInquilino.add(rankeo);
-	}
-
 	public List<Rankeo> getRankeosInquilino(){
 		return this.rankeosInquilino;
 	}
 
-	public void setComentarioInquilino(String comentario){
-		comentariosInquilino.add(comentario);
-	}
-
 	public List<String> getComentariosInquilino(){
-		return comentariosInquilino;
+		return comentariosInquilino; 
 	}
 
 	public List<Reserva> getReservas(){
@@ -183,6 +181,7 @@ public class Usuario {
 
 		if (reservas.stream().anyMatch(reser -> reser.equals(reserva))){
 			reserva.cancelarReserva();
+			this.eliminarReserva(reserva);
 		}
 	}
 
@@ -190,7 +189,7 @@ public class Usuario {
 
 	public void setComentarioInmueble(Reserva reserva, Inmueble inmueble, String comentario) throws Exception{
 
-		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
+		if (reserva.getEstadoDeReserva() instanceof EstadoFinalizada) {
 			inmueble.setComentario(comentario);
 		}
 		else {
@@ -199,18 +198,18 @@ public class Usuario {
 
 	}
 
-	public void setComentarioPropietario(Reserva reserva, Usuario usuario, String comentario) throws Exception{
+	public void setComentarioPropietario(Reserva reserva, String comentario) throws Exception{
 
-		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
-			usuario.setComentarioPropietario(comentario);
+		if (reserva.getEstadoDeReserva() instanceof EstadoFinalizada) {
+			this.comentariosPropietario.add(comentario);
 		}
 		else {
 			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
 	}
 
-	public void rankPropietario(Reserva reserva, Usuario usuario, Categoria categoria, int puntaje) throws Exception {
-		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
+	public void rankPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		if (reserva.getEstadoDeReserva() instanceof EstadoFinalizada) {
 
 			if (this.sitioWeb.getCategoriaEspecificaPropietario(categoria)){
 				this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
@@ -232,13 +231,13 @@ public class Usuario {
 		}
 		else {
 
-			this.setRankeosPropietario(rankeo);
+			this.rankeosPropietario.add(rankeo);
 		}
 	}
 
 	public void rankInmueble(Reserva reserva, Inmueble inmueble, Categoria categoria, int puntaje) throws Exception  {
 
-		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
+		if (reserva.getEstadoDeReserva() instanceof EstadoFinalizada) {
 			if (this.sitioWeb.getCategoriaEspecificaInmueble(categoria)){
 				inmueble.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
 			}
@@ -303,16 +302,12 @@ public class Usuario {
 		inmueble.modificarFormasDePago(formaDePago);
 	}
 	
-	public void setComentarioPropietario(String comentario){
-		comentariosPropietario.add(comentario);
+	public List<Inmueble> getInmueblesDadosDeAlta(){
+		return this.inmueblesDadosDeAlta;
 	}
-
+	
 	public List<String> getComentariosPropietario(){
-		return comentariosPropietario;
-	}
-
-	public void setRankeosPropietario(Rankeo rankeo){
-		this.rankeosPropietario.add(rankeo);
+		return this.comentariosPropietario;
 	}
 
 	public List<Rankeo> getRankeosPropietario(){
@@ -328,14 +323,10 @@ public class Usuario {
 
 	}
 
-	public void comunicarsePorMail(Usuario usuario, String msj) {
-		usuario.enviarMail(msj, usuario);
-	}
-
-	public void rankearInquilino(Reserva reserva, Usuario usuario, Categoria categoria, int puntaje) throws Exception {
-
-		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
-
+	public void rankearInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		
+		if (reserva.getEstadoDeReserva() instanceof EstadoFinalizada) {
+			
 			if (this.sitioWeb.getCategoriaEspecificaInquilino(categoria)){
 
 				this.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));
@@ -344,7 +335,6 @@ public class Usuario {
 				throw new Exception("Error: La categoria seleccionada es incorrecta.");
 			}
 		}
-
 		else {
 			throw new Exception("Error: La Reserva aun no finalizo.");
 		}
@@ -359,14 +349,14 @@ public class Usuario {
 		}
 		else {
 
-			this.setRankeosPropietario(rankeo);
+			this.rankeosInquilino.add(rankeo);
 		}
 	}
 	
-	public void setComentarioInqulino(Reserva reserva, Usuario usuario, String comentario) throws Exception{
+	public void setComentarioInqulino(Reserva reserva, String comentario) throws Exception{
 
-		if (reserva.getEstadoDeReserva().equals(new EstadoFinalizada())) {
-			usuario.setComentarioInquilino(comentario);
+		if (reserva.getEstadoDeReserva()instanceof EstadoFinalizada) {
+			this.comentariosInquilino.add(comentario);
 		}
 		else {
 			throw new Exception("Error: La Reserva aun no finalizo.");

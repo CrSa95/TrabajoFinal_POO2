@@ -21,16 +21,15 @@ public class Inmueble {
 	private LocalTime checkOut;
 	private int cantidadDeVecesAlquilado = 0;
 	private PoliticaDeCancelacion politicaDeCancelacion;
-	private List<String> comentarios = new ArrayList<>();
-	private List<Rankeo> rankeosInmueble = new ArrayList<>();
+	private List<String> comentarios = new ArrayList<String>();
+	private List<Rankeo> rankeosInmueble = new ArrayList<Rankeo>();
 	private List<FormaDePago> formasDePago = new ArrayList<FormaDePago>();
-	private List<Reserva> reservasDelInmueble = new ArrayList<>();
+	private List<Reserva> reservasDelInmueble = new ArrayList<Reserva>();
 	private Usuario propietario;
-	private List<PrecioEspecifico> preciosEspecificos = new ArrayList<>();
+	private List<PrecioEspecifico> preciosEspecificos = new ArrayList<PrecioEspecifico>();
 	private LocalDate fechaInicial;
 	private LocalDate fechaFinal;
 	private double precioBase;
-	private int promedioPuntajeTotal;
 	private SolicitudDeReserva solicitudDeReserva;
 	private Manager manager;
 
@@ -115,10 +114,6 @@ public class Inmueble {
         return (int) (sumaTotal / rankeosInmueble.size());
 	}
 
-	public int getPromedioPuntajeTotal() {
-		return promedioPuntajeTotal;
-	}
-
 	public void agregarReserva(Reserva reserva) {
 		this.reservasDelInmueble.add(reserva);
 	}
@@ -127,6 +122,10 @@ public class Inmueble {
 		this.reservasDelInmueble.remove(reserva);
 	}
 
+	public List<Reserva> getReservas(){
+		return this.reservasDelInmueble;
+	}
+	
 	public Boolean estaReservado(Reserva reserva) {
 	    return reservasDelInmueble.stream()
 	            .anyMatch(unaReserva ->
@@ -225,12 +224,12 @@ public class Inmueble {
 	}
 
 	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws Exception {
+		
 		if (tipoDeInmueble.isEmpty()) {
 			throw new Exception("Error: El tipo de inmueble seleccionado es incorrecto.");
-
 		}
 		else {
-			this.tipoInmueble = tipoDeInmueble.get();
+			this.tipoInmueble = tipoDeInmueble.get();	
 		}
 	}
 
@@ -245,7 +244,7 @@ public class Inmueble {
 
 	public void setFotos(List<Foto> fotos) throws Exception {
 
-		if (fotos.size() > 5) {
+		if (fotos.size() <= 5) {
 			this.cincoFotos = fotos;
 		}
 		else {
