@@ -21,7 +21,7 @@ class EstadoDeSolicitudPendienteTestCase {
 	void testAprobar() {
 		estadoDeSolicitudPendiente.aprobar(solicitudMock);
 		
-		verify(solicitudMock).realizarReserva();
+		verify(solicitudMock).evaluarReserva(solicitudMock.crearReserva());
 		verify(solicitudMock).notificarAInquilino();
 		verify(solicitudMock).setEstadoDeSolicitud(any(EstadoSolicitudAprobada.class));
 	}

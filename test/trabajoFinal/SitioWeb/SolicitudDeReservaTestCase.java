@@ -25,7 +25,8 @@ public class SolicitudDeReservaTestCase {
 
         LocalDate fechaDeIngreso = LocalDate.of(2024, 12, 1);
         LocalDate fechaDeEgreso = LocalDate.of(2024, 12, 10);
-
+        
+         
         solicitud = new SolicitudDeReserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso);
     }
 
@@ -52,6 +53,22 @@ public class SolicitudDeReservaTestCase {
     	assertEquals("EstadoDeSolicitudPendiente", solicitud.getEstado().getClass().getSimpleName());
     }
 
+    @Test
+    // No lo puedo hacer andar, ya que dentro del metodo se hace un nuevo new de Reserva
+    public void testRealizarReserva() {
+        Reserva reservaMock = mock(Reserva.class);
+        Usuario propietarioMock = mock(Usuario.class);
+        Manager managerMock = mock(Manager.class);
+        
+        reservaMock.setManager(managerMock);
+        when(reservaMock.getManager()).thenReturn(managerMock);
+        when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
+        
+        solicitud.evaluarReserva(reservaMock); 
+
+        verify(reservaMock).evaluarReserva();
+    }
+    
     @Test 
     public void testNotificarAInquilino() {
         solicitud.notificarAInquilino();

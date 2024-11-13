@@ -225,12 +225,12 @@ public class Inmueble {
 	}
 
 	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws Exception {
+		
 		if (tipoDeInmueble.isEmpty()) {
 			throw new Exception("Error: El tipo de inmueble seleccionado es incorrecto.");
-
 		}
 		else {
-			this.tipoInmueble = tipoDeInmueble.get();
+			this.tipoInmueble = tipoDeInmueble.get();	
 		}
 	}
 

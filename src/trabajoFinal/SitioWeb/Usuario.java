@@ -22,6 +22,7 @@ public class Usuario {
 	private SitioWeb sitioWeb;
 	private int cantidadDeVecesQueAlquilo = 0;
 	private List<Inmueble> inmueblesDadosDeAlta = new ArrayList<>();
+	private String contenidoMail;
 
 	public Usuario (String nombreCompleto, String mail, int telefono) {
 
@@ -49,14 +50,6 @@ public class Usuario {
 	public String getNombre() {
 		return this.nombreCompleto; 
 	}
-
-	public void registrarReserva(Reserva reserva) {
-		this.reservas.add(reserva);
-	}
-	
-	public void eliminarReserva(Reserva reserva) {
-		this.reservas.remove(reserva);
-	}
 	
 	public void actualizarNombreCompleto(String nombreCompleto) {
 		this.nombreCompleto = nombreCompleto;
@@ -82,12 +75,24 @@ public class Usuario {
 		return telefono;
 	}
 
-	public String recibirMail(String mail){
-		return "Mail Recibido";
+	public void recibirMail(String contenidoMail){
+		this.contenidoMail = mail;
+	}
+	
+	public String getContenidoMail() {
+		return this.contenidoMail;
 	}
 
-	public void enviarMail(String mail, Usuario usuario){
-		usuario.recibirMail(mail);
+	public void enviarMail(String contenidoDelMail, Usuario usuario){
+		usuario.recibirMail(contenidoDelMail);
+	}
+	
+	public void registrarReserva(Reserva reserva) {
+		this.reservas.add(reserva);
+	}
+	
+	public void eliminarReserva(Reserva reserva) {
+		this.reservas.remove(reserva);
 	}
 
 	public int calcularPromedioTotal(List<Rankeo> rankeos) {
