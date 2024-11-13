@@ -75,7 +75,7 @@ public class SolicitudDeReservaTestCase {
     }
     
     @Test
-    public void testRealizarReserva() {
+    public void testRealizarReserva() {  
     	Reserva reservaMock = mock(Reserva.class);
     	Usuario propietarioMock = mock(Usuario.class);
     	Manager managerMock = mock(Manager.class);
