@@ -52,12 +52,16 @@ public class SitioWeb {
 	public Optional<TipoDeInmueble> seleccionarTipoDeInmueble(TipoDeInmueble tipoDeInmueble) {
 
 		return this.todosLosTiposDeInmueble.stream()
-											.filter(tipoInmueble -> tipoInmueble.equals(tipoDeInmueble)).findFirst();
+				   .filter(tipoInmueble -> tipoInmueble.getTipoDeInmueble().equals(tipoDeInmueble.getTipoDeInmueble())).findFirst();
 
 	} 
 
 	public void altaInmueble(Inmueble inmueble) {
 		this.inmuebles.add(inmueble);
+	}
+	
+	public List<Inmueble> getTodosLosInmuebles() {
+		return this.inmuebles;
 	}
 
 	//Metodos de administrador
@@ -81,7 +85,7 @@ public class SitioWeb {
 	public void altaTipoDeCategoriaInquilino(Categoria categoria) {
 		this.todasLasCategoriasDeInquilino.add(categoria);
 	}
-
+	
 	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, int capacidad, double precioMinimo,
 			double precioMaximo){
 
