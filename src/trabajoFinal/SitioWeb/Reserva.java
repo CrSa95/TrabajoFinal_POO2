@@ -73,7 +73,7 @@ public class Reserva {
 			this.estadoDeReserva = new EstadoConfirmada();
 			this.inmueble.sumarCantidadDeVecesAlquilado();
 			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquilo();
-			this.manager.altaDeReserva();
+			this.getManager().altaDeReserva();
 		}
 	}
 
@@ -83,7 +83,7 @@ public class Reserva {
 	}
 
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
-		this.estadoDeReserva = estadoDeReserva;
+		this.estadoDeReserva = estadoDeReserva; 
 	}
 
 	public EstadoDeReserva getEstadoDeReserva() {

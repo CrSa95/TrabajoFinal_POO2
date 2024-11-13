@@ -2,6 +2,8 @@ package trabajoFinal.SitioWeb;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+
 import static org.mockito.Mockito.*;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,7 @@ public class SolicitudDeReservaTestCase {
     
     @BeforeEach
     public void setUp() {
-        inmuebleMock = mock(Inmueble.class);
+        inmuebleMock = mock(Inmueble.class); 
         inquilinoMock = mock(Usuario.class);
         formaDePagoMock = mock(FormaDePago.class);
         estadoMock = mock(EstadoDeSolicitud.class);
@@ -68,11 +70,38 @@ public class SolicitudDeReservaTestCase {
 
         verify(reservaMock).evaluarReserva();
     }
-    
-    @Test 
+ 
     public void testNotificarAInquilino() {
         solicitud.notificarAInquilino();
 
         verify(inquilinoMock).recibirMail("Solicitud de reserva aceptada");
+    }
+    
+    @Test
+    public void testCuandoSeCreaUnaReserva() {
+        Reserva reserva = solicitud.crearReserva();
+
+        assertNotNull(reserva);
+
+        assertEquals(inmuebleMock, reserva.getInmueble());
+        assertEquals(inquilinoMock, reserva.getUsuario());
+        assertEquals(formaDePagoMock, reserva.getFormaDePago());
+        assertEquals(LocalDate.of(2024, 12, 1), reserva.getFechaDeIngreso());
+        assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso());
+    }
+    
+    @Test
+    public void testRealizarReserva() {
+    	Reserva reservaMock = mock(Reserva.class);
+    	Usuario propietarioMock = mock(Usuario.class);
+    	Manager managerMock = mock(Manager.class);
+
+    	reservaMock.setManager(managerMock);
+    	when(reservaMock.getManager()).thenReturn(managerMock);
+    	when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
+    	
+        solicitud.realizarReserva(reservaMock); // Llamamos al método que debería evaluar la reserva
+
+        verify(reservaMock).evaluarReserva(); // Verificamos la interacción con el mock
     }
 }
