@@ -81,7 +81,7 @@ public class Usuario {
 	}
 	
 	public String getContenidoMail() {
-		return this.contenidoMail;
+		return this.contenidoMail; 
 	}
 
 	public void enviarMail(String contenidoDelMail, Usuario usuario){

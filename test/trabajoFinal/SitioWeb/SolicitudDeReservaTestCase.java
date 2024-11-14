@@ -54,7 +54,8 @@ public class SolicitudDeReservaTestCase {
     public void testGetEstadoInicial() {
     	assertEquals("EstadoDeSolicitudPendiente", solicitud.getEstado().getClass().getSimpleName());
     }
- 
+    
+    @Test
     public void testNotificarAInquilino() {
         solicitud.notificarAInquilino();
 
