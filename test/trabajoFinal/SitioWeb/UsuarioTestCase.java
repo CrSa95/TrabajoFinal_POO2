@@ -410,4 +410,14 @@ public class UsuarioTestCase {
 		assertFalse(usuario.getReservas().contains(reservaMock));
     }
 	
+	@Test
+    void testUnUsuarioConoceLaCantidadDeVecesQueAlquilo() {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		
+		usuario.registrarReserva(reservaMock);
+		
+		assertTrue(usuario.cantidadDeVecesQueAlquiloUnInquilino() == 1);
+    }
+	
 }

@@ -177,7 +177,7 @@ public class InmuebleTestCase {
 		listaServicios.add(gasMock);
 		
 		inmueble.setTipoDeServicios(listaServicios);
-		assertTrue(inmueble.getTipoDeServicios().contains(gasMock));
+		assertTrue(inmueble.getTiposDeServicios().contains(gasMock));
 		
 	}
 	
@@ -234,5 +234,12 @@ public class InmuebleTestCase {
 		verify(solicitudMock).solicitarReserva();
 	}
 	
+	@Test
+    void testUnInmueblePudeSaberSiActualmenteEstaAlquilado() {
+		
+		assertFalse(inmueble.estaAlquiladoActualmente());
+		inmueble.agregarReserva(otraReservaMock);
+		assertTrue(inmueble.estaAlquiladoActualmente());
+	}
 	
 }
