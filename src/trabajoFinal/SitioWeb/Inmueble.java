@@ -30,7 +30,6 @@ public class Inmueble {
 	private LocalDate fechaInicial;
 	private LocalDate fechaFinal;
 	private double precioBase;
-	private SolicitudDeReserva solicitudDeReserva;
 	private Manager manager;
 
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
@@ -158,7 +157,17 @@ public class Inmueble {
 	public LocalDate getFechaFinal(){
 		return this.fechaFinal;
 	}
-
+	
+	public void modificarPreciosEspecificos(LocalDate fechaInicial, LocalDate fechaFinal, double precio) throws Exception{
+		PrecioEspecifico fechaEspecifica = new PrecioEspecifico(fechaInicial, fechaFinal, precio);
+		if(estaFechaEspecifica(fechaInicial, fechaFinal)) {
+			throw new Exception("Las fechas ingresadas ya estan declaradas");
+		}
+		else {
+			this.preciosEspecificos.add(fechaEspecifica);
+		}
+	}
+	
 	public double calcularPrecioTotal(LocalDate inicioReserva, LocalDate finReserva) {
 		return inicioReserva.datesUntil(finReserva.plusDays(1))
 	            			.mapToDouble(fechaActual -> this.preciosEspecificos.stream()
@@ -178,10 +187,6 @@ public class Inmueble {
 		comentarios.add(comentario);
 	}
 
-	public void setRankeosInmueble(Rankeo rankeo) {
-		this.rankeosInmueble.add(rankeo);
-	}
-
 	public void actualizarListaDeRaneko(Rankeo rankeo) {
 
 		if (this.estaElRank(rankeo)) {
@@ -190,7 +195,7 @@ public class Inmueble {
 		}
 		else {
 
-			this.setRankeosInmueble(rankeo);
+			this.rankeosInmueble.add(rankeo);
 		}
 	}
 
@@ -241,7 +246,11 @@ public class Inmueble {
 
 		this.tiposDeServicios = servicios;
 	}
-
+	
+	public List<TipoDeServicio> getTipoDeServicios() {
+		return this.tiposDeServicios;
+	}
+	
 	public void setFotos(List<Foto> fotos) throws Exception {
 
 		if (fotos.size() <= 5) {
@@ -260,24 +269,17 @@ public class Inmueble {
 	public PoliticaDeCancelacion getPoliticaDeCancelacion() {
 		return politicaDeCancelacion;
 	}
-
-	public void realizarReservaDelInmueble(Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
-		this.solicitudDeReserva = new SolicitudDeReserva(this, inquilino, formaDePago, fechaDeIngreso, fechaDeEgreso);
-		this.solicitudDeReserva.solicitarReserva();
+	
+	public SolicitudDeReserva realizarReservaDelInmueble(Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso) {
+		return new SolicitudDeReserva(this, inquilino, formaDePago, fechaDeIngreso, fechaDeEgreso);
 	}
 
-	public int getCapacidad() {
-		return this.capacidad;
+	public void solicitarReserva(SolicitudDeReserva solicitud) {
+		solicitud.solicitarReserva();
 	}
 	
-	public void modificarPreciosEspecificos(LocalDate fechaInicial, LocalDate fechaFinal, double precio) throws Exception{
-		PrecioEspecifico fechaEspecifica = new PrecioEspecifico(fechaInicial, fechaFinal, precio);
-		if(estaFechaEspecifica(fechaInicial, fechaFinal)) {
-			this.preciosEspecificos.add(fechaEspecifica);
-		}
-		else {
-			throw new Exception("Las fechas ingresadas ya estan declaradas");
-		}
+	public int getCapacidad() {
+		return this.capacidad;
 	}
 	
 	public Boolean estaFechaEspecifica(LocalDate fechaInicial, LocalDate fechaFinal) {
@@ -288,7 +290,11 @@ public class Inmueble {
 	public void modificarFormasDePago(FormaDePago formaDePago) {
 		this.formasDePago.add(formaDePago);
 	}
-
+	
+	public List<FormaDePago> getFormasDePago(){
+		return this.formasDePago;
+	}
+	
     public void setManager(Manager manager) {
 		this.manager = manager;
 	}

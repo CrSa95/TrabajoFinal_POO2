@@ -180,7 +180,7 @@ public class UsuarioTestCase {
     void testUnUsuarioPropietarioPuedeConocerLaInformacionDeUnInquilino() {
 		
 		usuario.datosDelInquilino();
-		
+
 	}
 	
 	@Test
@@ -191,13 +191,6 @@ public class UsuarioTestCase {
 		assertTrue(usuario.getCantidadDeVecesQueAlquilo() == 1);
 		usuario.restarCantidadDeVecesQueAlquilo();
 		assertTrue(usuario.getCantidadDeVecesQueAlquilo() == 0);
-		
-	}
-	
-	@Test
-    void testUnUsuarioPropietarioPuedeRestarLaCantidadDeVecesQueAlquilo() {
-		
-		usuario.datosDelInquilino();
 		
 	}
 	
@@ -244,7 +237,7 @@ public class UsuarioTestCase {
     void testUnUsuarioPropietarioPuedeRecibirUnaSolicitudDeResera() {
 		
 		usuario.recibirSolicitudReserva(solicitudMock);
-		
+		verify(solicitudMock).aprobarSolicitud();
 	}
 	
 	@Test
