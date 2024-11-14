@@ -15,6 +15,9 @@ public class SitioWebTestCase {
 
     private SitioWeb sitioWeb;
     private Usuario usuarioMock;
+    private Usuario usuarioMock2;
+    private Usuario usuarioMock3;
+    private Usuario usuarioMock4;
     private Categoria categoriaMock;
     private Categoria otraCategoriaMock;
     private TipoDeServicio gas;
@@ -36,6 +39,9 @@ public class SitioWebTestCase {
     	
     	sitioWeb = new SitioWeb();
         usuarioMock = mock(Usuario.class);
+        usuarioMock2 = mock(Usuario.class);
+        usuarioMock3 = mock(Usuario.class);
+        usuarioMock4 = mock(Usuario.class);
         categoriaMock = mock(Categoria.class);
         otraCategoriaMock = mock(Categoria.class);
         gas = mock(TipoDeServicio.class);
@@ -145,4 +151,34 @@ public class SitioWebTestCase {
         assertFalse(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo).contains(otroInmueble));
 	}
 
+	@Test
+    void testUnSitioWebPuedeCalcularSuTasaDeOcupacion() {
+		
+		when(inmueble.estaAlquiladoActualmente()).thenReturn(true);
+		when(otroInmueble.estaAlquiladoActualmente()).thenReturn(false);
+		
+		sitioWeb.altaInmueble(inmueble);
+		sitioWeb.altaInmueble(otroInmueble);
+		
+		assertTrue(sitioWeb.calcularTasaOcupacion() == 0.5);
+	}
+	
+	@Test
+    void testUnSitioWebConoceSuTopTresDeInquilinosQueMasAlquilaron() {
+		
+		sitioWeb.registrarUsuario(usuarioMock);
+		sitioWeb.registrarUsuario(usuarioMock2);
+		sitioWeb.registrarUsuario(usuarioMock3);
+		sitioWeb.registrarUsuario(usuarioMock4);
+		
+		when(usuarioMock.getCantidadDeVecesQueAlquilo()).thenReturn(10);
+		when(usuarioMock2.getCantidadDeVecesQueAlquilo()).thenReturn(5);
+		when(usuarioMock3.getCantidadDeVecesQueAlquilo()).thenReturn(11);
+		when(usuarioMock4.getCantidadDeVecesQueAlquilo()).thenReturn(3);
+		
+		assertTrue(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock));
+		assertTrue(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock2));	
+		assertTrue(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock3));
+		assertFalse(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock4));	
+	}
 }

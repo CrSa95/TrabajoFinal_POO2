@@ -63,6 +63,28 @@ public class SitioWeb {
 	public List<Inmueble> getTodosLosInmuebles() {
 		return this.inmuebles;
 	}
+	
+	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, int capacidad, double precioMinimo,
+			double precioMaximo){
+
+
+		filtros.add(new FiltroCiudad(ciudad));
+		filtros.add(new FiltroFechas(fechaEntrada, fechaSalida));
+
+		if (capacidad != 0) {
+			filtros.add(new FiltroCapacidad(capacidad));
+		}
+
+		if (precioMinimo != 0 || precioMaximo != 0) {
+			filtros.add(new FiltroPrecio(precioMinimo, precioMaximo));
+		}
+
+		List<Inmueble> resultado = this.inmuebles;
+		for (Filtro filtro : filtros) {
+			resultado = filtro.filtrar(resultado);
+		}
+		return resultado;
+	}
 
 	//Metodos de administrador
 	
@@ -86,25 +108,17 @@ public class SitioWeb {
 		this.todasLasCategoriasDeInquilino.add(categoria);
 	}
 	
-	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, int capacidad, double precioMinimo,
-			double precioMaximo){
-
-
-		filtros.add(new FiltroCiudad(ciudad));
-		filtros.add(new FiltroFechas(fechaEntrada, fechaSalida));
-
-		if (capacidad != 0) {
-			filtros.add(new FiltroCapacidad(capacidad));
-		}
-
-		if (precioMinimo != 0 || precioMaximo != 0) {
-			filtros.add(new FiltroPrecio(precioMinimo, precioMaximo));
-		}
-
-		List<Inmueble> resultado = this.inmuebles;
-		for (Filtro filtro : filtros) {
-			resultado = filtro.filtrar(resultado);
-		}
-		return resultado;
-	}
+	public double calcularTasaOcupacion() {
+        long inmueblesOcupados = inmuebles.stream()
+            .filter(inmueble -> inmueble.estaAlquiladoActualmente())
+            .count();
+        return (double) inmueblesOcupados / inmuebles.size();
+    }
+	
+	public List<Usuario> obtenerTopTresInquilinoQueMasAlquilaron() {
+        return this.todosLosUsuarios.stream()
+                .sorted((u1, u2) -> Long.compare(u2.cantidadDeVecesQueAlquiloUnInquilino(), u1.cantidadDeVecesQueAlquiloUnInquilino()))
+                .limit(3)
+                .collect(Collectors.toList());
+    }
 }

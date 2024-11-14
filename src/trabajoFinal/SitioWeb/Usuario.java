@@ -124,6 +124,12 @@ public class Usuario {
 	
 	//METODOS DE INQUILINO
 
+	public long cantidadDeVecesQueAlquiloUnInquilino() {
+		return this.reservas.stream()
+                			.filter(reserva -> reserva.getEstadoDeReserva()  instanceof EstadoFinalizada ) 
+                			.count();
+	}
+	
 	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaDeIngreso, LocalDate fechaDeEgreso,int cantidadDeHuespedes, double precioMinimo, double precioMaximo){
 
 		return this.sitioWeb.buscarInmuebles(ciudad, fechaDeIngreso, fechaDeEgreso, cantidadDeHuespedes, precioMinimo, precioMaximo);

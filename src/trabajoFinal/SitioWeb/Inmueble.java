@@ -61,7 +61,7 @@ public class Inmueble {
 		this.calcularPromedioTotal();
 	}
 
-	private List<TipoDeServicio> getTiposDeServicios() {
+	public List<TipoDeServicio> getTiposDeServicios() {
 		return this.tiposDeServicios;
 		
 	}
@@ -247,10 +247,6 @@ public class Inmueble {
 		this.tiposDeServicios = servicios;
 	}
 	
-	public List<TipoDeServicio> getTipoDeServicios() {
-		return this.tiposDeServicios;
-	}
-	
 	public void setFotos(List<Foto> fotos) throws Exception {
 
 		if (fotos.size() <= 5) {
@@ -301,5 +297,10 @@ public class Inmueble {
 	
 	public Manager getManager() {
 		return this.manager;
+	}
+
+	public Boolean estaAlquiladoActualmente() {
+
+		return this.reservasDelInmueble.size() != 0;
 	}
 }
