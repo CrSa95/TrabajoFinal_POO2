@@ -23,6 +23,7 @@ public class Reserva {
 		this.formaDePago = formaDePago;
 		this.fechaDeIngreso = fechaDeIngreso;
 		this.fechaDeEgreso = fechaDeEgreso;
+		this.evaluarReserva();
 	} 
 	
 	public void setManager(Manager manager) {
@@ -71,8 +72,6 @@ public class Reserva {
 			this.inmueble.agregarReserva(this);
 			this.inquilino.registrarReserva(this);
 			this.estadoDeReserva = new EstadoConfirmada();
-			this.inmueble.sumarCantidadDeVecesAlquilado();
-			this.inmueble.getPropietario().sumarCantidadDeVecesQueAlquilo();
 			this.getManager().altaDeReserva();
 		}
 	}

@@ -19,7 +19,6 @@ public class Inmueble {
 	private List<Foto> cincoFotos;
 	private LocalTime checkIn;
 	private LocalTime checkOut;
-	private int cantidadDeVecesAlquilado = 0;
 	private PoliticaDeCancelacion politicaDeCancelacion;
 	private List<String> comentarios = new ArrayList<String>();
 	private List<Rankeo> rankeosInmueble = new ArrayList<Rankeo>();
@@ -31,6 +30,7 @@ public class Inmueble {
 	private LocalDate fechaFinal;
 	private double precioBase;
 	private Manager manager;
+	private SitioWeb sitioWeb;
 
 	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
 			 		LocalTime checkIn, LocalTime checkOut, double precioBase) {
@@ -44,6 +44,7 @@ public class Inmueble {
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.precioBase = precioBase; 
+		this.sitioWeb = propietario.getSitioWeb();
 	}
 	
 	public void datosDelInmueble() {
@@ -89,19 +90,6 @@ public class Inmueble {
 	public int getSuperficie() {
 		return this.superficie;
 	}
-
-	public void sumarCantidadDeVecesAlquilado() {
-		this.cantidadDeVecesAlquilado += 1 ;
-	}
-
-	public void restarCantidadDeVecesAlquilado() {
-		this.cantidadDeVecesAlquilado -= 1 ;
-	}
-
-	public int getCantidadDeVecesAlquilado() {
-		return this.cantidadDeVecesAlquilado;
-	}
-
 
 	public int calcularPromedioTotal() {
 
@@ -182,11 +170,27 @@ public class Inmueble {
 	public Usuario getPropietario() {
 		return this.propietario;
 	}
+	
+	public void dejarUnComentarioAlInmueble(Reserva reserva, Inmueble inmueble, String comentario) throws Exception {
 
-	public void setComentario(String comentario){
-		comentarios.add(comentario);
+		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
+			comentarios.add(comentario);
+		}
+	
 	}
+	
+	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception  {
 
+		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
+			if (this.sitioWeb.estaCategoriaEspecificaInmueble(categoria)){
+				this.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
+			}
+			else {
+				throw new Exception("Error: La categoria seleccionada es incorrecta.");
+			}
+		}
+	}
+	
 	public void actualizarListaDeRaneko(Rankeo rankeo) {
 
 		if (this.estaElRank(rankeo)) {

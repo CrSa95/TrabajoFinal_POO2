@@ -26,17 +26,17 @@ public class SitioWeb {
 		return this.todosLosUsuarios;
 	}
 
-	public Boolean getCategoriaEspecificaInmueble(Categoria categoriaEspecifica){ 
+	public Boolean estaCategoriaEspecificaInmueble(Categoria categoriaEspecifica){ 
 		return this.todasLasCategoriasDeInmueble.stream()
 		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
 
-	public Boolean getCategoriaEspecificaInquilino(Categoria categoriaEspecifica){
+	public Boolean estaCategoriaEspecificaInquilino(Categoria categoriaEspecifica){
 		return this.todasLasCategoriasDeInquilino.stream()
 		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
 
-	public Boolean getCategoriaEspecificaPropietario(Categoria categoriaEspecifica){
+	public Boolean estaCategoriaEspecificaPropietario(Categoria categoriaEspecifica){
 		return this.todasLasCategoriasDePropietario.stream()
 		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
 	}
@@ -121,4 +121,10 @@ public class SitioWeb {
                 .limit(3)
                 .collect(Collectors.toList());
     }
+	
+	public void visualizarInmueble(Inmueble inmueble){
+
+		inmueble.datosDelInmueble();
+		inmueble.getPropietario().datosDelPropietario(inmueble);
+	}
 }

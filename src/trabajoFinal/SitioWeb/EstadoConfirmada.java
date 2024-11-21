@@ -11,10 +11,8 @@ public class EstadoConfirmada implements EstadoDeReserva {
 
 		inmueble.getPoliticaDeCancelacion().darResarcimiento(reserva);
 		inmueble.eliminarReserva(reserva);
-		inmueble.restarCantidadDeVecesAlquilado();
 		inmueble.getPropietario().recibirMail("La reserva fue cancelada");
 		reserva.getUsuario().eliminarReserva(reserva);
-		inmueble.getPropietario().restarCantidadDeVecesQueAlquilo();;
 		reserva.setEstadoDeReserva(new EstadoCancelada());
 		
 		Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(inmueble);
@@ -29,4 +27,11 @@ public class EstadoConfirmada implements EstadoDeReserva {
 		reserva.getInmueble().eliminarReserva(reserva);
 		reserva.setEstadoDeReserva(new EstadoFinalizada());
 	}
+
+	@Override
+	public boolean finalizoLaReserva(Reserva reserva) throws Exception  {
+		
+		throw new Exception("Error: La Reserva aun no finalizo.");
+	}
+
 } 
