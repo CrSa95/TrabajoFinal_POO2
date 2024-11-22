@@ -15,7 +15,7 @@ public class EstadoCondicional implements EstadoDeReserva{
 	}
 
 	@Override
-	public boolean finalizoLaReserva(Reserva reserva) throws Exception  {
+	public void finalizoLaReserva(Reserva reserva) throws Exception  {
 		
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}

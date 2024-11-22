@@ -25,20 +25,27 @@ public class SitioWeb {
 	public List<Usuario> getUsuariosRegistrados() {
 		return this.todosLosUsuarios;
 	}
-
-	public Boolean estaCategoriaEspecificaInmueble(Categoria categoriaEspecifica){ 
-		return this.todasLasCategoriasDeInmueble.stream()
-		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
+	
+	
+	public void estaCategoriaEspecificaInmueble(Categoria categoriaEspecifica) throws Exception{ 
+		this.todasLasCategoriasDeInmueble.stream()
+		        						 .filter(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()))
+		        						 .findFirst()
+		        						 .orElseThrow(() -> new Exception("Error: La categoria" + categoriaEspecifica.nombreCategoria() + "es incorrecta.")); 
 	}
 
-	public Boolean estaCategoriaEspecificaInquilino(Categoria categoriaEspecifica){
-		return this.todasLasCategoriasDeInquilino.stream()
-		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
+	public void estaCategoriaEspecificaInquilino(Categoria categoriaEspecifica) throws Exception{
+		this.todasLasCategoriasDeInquilino.stream()
+		   								  .filter(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()))
+		        						  .findFirst()
+				        				  .orElseThrow(() -> new Exception("Error: La categoria " + categoriaEspecifica.nombreCategoria() + "es incorrecta."));
 	}
 
-	public Boolean estaCategoriaEspecificaPropietario(Categoria categoriaEspecifica){
-		return this.todasLasCategoriasDePropietario.stream()
-		        .anyMatch(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()));
+	public void estaCategoriaEspecificaPropietario(Categoria categoriaEspecifica) throws Exception{
+		this.todasLasCategoriasDePropietario.stream()
+		        							.filter(categoria -> categoria.nombreCategoria().equals(categoriaEspecifica.nombreCategoria()))
+		        							.findFirst()
+		        							.orElseThrow(() -> new Exception("Error: La categoria" + categoriaEspecifica.nombreCategoria() + "es incorrecta."));
 	}
 
 	public List<TipoDeServicio> seleccionarTiposDeServicio(List<TipoDeServicio> servicios){

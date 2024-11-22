@@ -15,9 +15,8 @@ public class EstadoFinalizada implements EstadoDeReserva {
 	}
 
 	@Override
-	public boolean finalizoLaReserva(Reserva reserva) {
+	public void finalizoLaReserva(Reserva reserva) {
 		
-		return true;
 	}
 
 

@@ -127,7 +127,8 @@ public class Usuario implements UsuarioPropietario {
 		return this.reservas.stream()
                 			.filter(reserva -> {
 													try {
-														return reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+														return true;
 													} catch (Exception e) {
 														return false;
 													}
@@ -185,21 +186,15 @@ public class Usuario implements UsuarioPropietario {
 
 	public void dejarUnComentarioAlPropietario(Reserva reserva, String comentario) throws Exception{
 
-		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
-			this.comentariosPropietario.add(comentario);
-		}
+		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		this.comentariosPropietario.add(comentario);
 	}
 
 	public void rankearUnPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
-
-			if (this.sitioWeb.estaCategoriaEspecificaPropietario(categoria)){
-				this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
-			}
-			else {
-					throw new Exception("Error: La categoria seleccionada es incorrecta.");
-			}
-		}
+		
+		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		this.sitioWeb.estaCategoriaEspecificaPropietario(categoria);
+		this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
 	}
 	
 	public void actualizarListaDeRankeoPropietario(Rankeo rankeo) {
@@ -281,8 +276,8 @@ public class Usuario implements UsuarioPropietario {
 		return this.reservas.stream()
     			.filter(reserva -> {
 										try {
-											return reserva.getEstadoDeReserva().finalizoLaReserva(reserva)
-												   && reserva.getInmueble().getPropietario() == usuario;
+											reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+											return reserva.getInmueble().getPropietario() == usuario;
 										} catch (Exception e) {
 											return false;
 										}
@@ -298,16 +293,9 @@ public class Usuario implements UsuarioPropietario {
 
 	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
 		
-		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
-			
-			if (this.sitioWeb.estaCategoriaEspecificaInquilino(categoria)){
-
-				this.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));
-			}
-			else {
-				throw new Exception("Error: La categoria seleccionada es incorrecta.");
-			}
-		}
+		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		this.sitioWeb.estaCategoriaEspecificaInquilino(categoria);
+		this.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));
 
 	}
 
@@ -325,9 +313,8 @@ public class Usuario implements UsuarioPropietario {
 	
 	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception{
 
-		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
-			this.comentariosInquilino.add(comentario);
-		}
+		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		this.comentariosInquilino.add(comentario);
 	}
 	
 	public double recibirResarcimiento(double dineroResarcido) {
@@ -338,8 +325,8 @@ public class Usuario implements UsuarioPropietario {
 		return this.reservas.stream()
                 			.filter(reserva -> {
 													try {
-														return reserva.getEstadoDeReserva().finalizoLaReserva(reserva)
-															   && reserva.getInmueble().getPropietario() == this;
+														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+														return reserva.getInmueble().getPropietario() == this;
 													} catch (Exception e) {
 														return false;
 													}
@@ -351,8 +338,8 @@ public class Usuario implements UsuarioPropietario {
 		return this.reservas.stream()
                 			.filter(reserva -> {
 													try {
-														return reserva.getEstadoDeReserva().finalizoLaReserva(reserva)
-															   && reserva.getInmueble().getPropietario() == this
+														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+														return reserva.getInmueble().getPropietario() == this
 															   && reserva.getInmueble() == inmueble;
 													} catch (Exception e) {
 														return false;

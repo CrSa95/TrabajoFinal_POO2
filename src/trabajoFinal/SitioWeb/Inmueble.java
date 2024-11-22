@@ -173,22 +173,16 @@ public class Inmueble {
 	
 	public void dejarUnComentarioAlInmueble(Reserva reserva, Inmueble inmueble, String comentario) throws Exception {
 
-		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
-			comentarios.add(comentario);
-		}
+		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		comentarios.add(comentario);
 	
 	}
 	
 	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception  {
 
-		if (reserva.getEstadoDeReserva().finalizoLaReserva(reserva)) {
-			if (this.sitioWeb.estaCategoriaEspecificaInmueble(categoria)){
-				this.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
-			}
-			else {
-				throw new Exception("Error: La categoria seleccionada es incorrecta.");
-			}
-		}
+		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		this.sitioWeb.estaCategoriaEspecificaInmueble(categoria);
+		this.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
 	}
 	
 	public void actualizarListaDeRaneko(Rankeo rankeo) {
