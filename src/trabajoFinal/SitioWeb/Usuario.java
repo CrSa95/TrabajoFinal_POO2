@@ -145,40 +145,37 @@ public class Usuario implements UsuarioPropietario {
 	}
 
 	public List<Reserva> getReservas(){
-		return reservas.stream()
-		        		.filter(reserva -> reserva.getUsuario().equals(this))
-		        		.collect(Collectors.toList());
+		return this.reservas;
 	}
 
 	public List<Reserva> getReservasFuturas(LocalDate fechaActual){
 		return reservas.stream()
-		        .filter(reserva -> reserva.getUsuario().equals(this)
-		        				   &&
-		        				   reserva.getFechaDeIngreso().isAfter(fechaActual))
+		        .filter(reserva -> reserva.getFechaDeIngreso().isAfter(fechaActual))
 		        .collect(Collectors.toList());
 	}
 
 	public List<Reserva> getReservasEnCiudad(String ciudad){
 		return reservas.stream()
-		        .filter(reserva -> reserva.getUsuario().equals(this)
-		        				   &&
-		        				   reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
+		        .filter(reserva -> reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
 		        .collect(Collectors.toList());
 	}
 
 	public List<String> getCiudadesReservadas(){
 		return reservas.stream()
-					.filter(reserva -> reserva.getUsuario().equals(this))
+					.filter(reserva -> reserva.getInquilino().equals(this))
 	            	.map(reserva -> reserva.getInmueble().getCiudad())
 	            	.distinct()
 	            	.collect(Collectors.toList());
 	}
 
-	public void cancelarReserva(Reserva reserva) {
+	public void cancelarReserva(Reserva reserva) throws Exception{
 
 		if (reservas.stream().anyMatch(reser -> reser.equals(reserva))){
 			reserva.cancelarReserva();
 			this.eliminarReserva(reserva);
+		}
+		else {
+			throw new Exception("La Reserva no le pertenece");
 		}
 	}
 
@@ -272,12 +269,12 @@ public class Usuario implements UsuarioPropietario {
 		return this.rankeosPropietario;
 	}
 
-	public List<Inmueble> inmueblesAlquilados(Usuario usuario) {
+	public List<Inmueble> inmueblesAlquilados() {
 		return this.reservas.stream()
     			.filter(reserva -> {
 										try {
 											reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-											return reserva.getInmueble().getPropietario() == usuario;
+											return true;
 										} catch (Exception e) {
 											return false;
 										}
@@ -321,12 +318,12 @@ public class Usuario implements UsuarioPropietario {
 		return dineroResarcido;
 	}
 	
-	public long cantidadDeVecesQueAlquiloUnPropietario() {
+	public long cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles() {
 		return this.reservas.stream()
                 			.filter(reserva -> {
 													try {
 														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-														return reserva.getInmueble().getPropietario() == this;
+														return true;
 													} catch (Exception e) {
 														return false;
 													}
@@ -339,8 +336,7 @@ public class Usuario implements UsuarioPropietario {
                 			.filter(reserva -> {
 													try {
 														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-														return reserva.getInmueble().getPropietario() == this
-															   && reserva.getInmueble() == inmueble;
+														return reserva.getInmueble() == inmueble;
 													} catch (Exception e) {
 														return false;
 													}
@@ -357,7 +353,7 @@ public class Usuario implements UsuarioPropietario {
 		this.calcularPromedioTotal(this.rankeosPropietario);
 		this.cantidadTiempoRegistrado();
 		this.cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(inmueble);
-		this.cantidadDeVecesQueAlquiloUnPropietario();
-		this.inmueblesAlquilados(this);
+		this.cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles();
+		this.inmueblesAlquilados();
 	}
 }

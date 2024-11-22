@@ -38,7 +38,7 @@ public class Reserva {
 		return this.formaDePago;
 	}
 
-	public Usuario getUsuario() {
+	public Usuario getInquilino() {
 		return this.inquilino;
 	}
 

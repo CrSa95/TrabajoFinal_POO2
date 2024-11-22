@@ -44,7 +44,11 @@ public class Inmueble {
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.precioBase = precioBase; 
-		this.sitioWeb = propietario.getSitioWeb();
+		this.setSitioWeb(propietario.getSitioWeb());
+	}
+	
+	public void setSitioWeb(SitioWeb sitioWeb) {
+		this.sitioWeb = sitioWeb;
 	}
 	
 	public void datosDelInmueble() {
@@ -171,7 +175,7 @@ public class Inmueble {
 		return this.propietario;
 	}
 	
-	public void dejarUnComentarioAlInmueble(Reserva reserva, Inmueble inmueble, String comentario) throws Exception {
+	public void dejarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
 
 		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
 		comentarios.add(comentario);

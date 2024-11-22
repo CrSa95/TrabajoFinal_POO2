@@ -16,13 +16,13 @@ public interface UsuarioPropietario {
 	public void modificarFormasDePago(Inmueble inmueble,FormaDePago formaDePago);
 	public List<Inmueble> getInmueblesDadosDeAlta();
 	public List<String> getComentariosPropietario();
-	public List<Inmueble> inmueblesAlquilados(Usuario usuario);
+	public List<Inmueble> inmueblesAlquilados();
 	public void recibirSolicitudReserva(SolicitudDeReserva solicitudDeReserva);
 	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception;
 	public void actualizarListaDeRankeoInquilino(Rankeo rankeo);
 	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception;
 	public double recibirResarcimiento(double dineroResarcido);
-	public long cantidadDeVecesQueAlquiloUnPropietario();
+	public long cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles();
 	public long cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(Inmueble inmueble);
 	public void datosDelPropietario(Inmueble inmueble);
 	

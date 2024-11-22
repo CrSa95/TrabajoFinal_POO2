@@ -60,20 +60,22 @@ public class SitioWebTestCase {
     }
 	
 	@Test
-    void testUnSitioWebPuedeRegistrarUnUsuario() {
+    void testUnSitioWebPuedeRegistrarUnUsuario() { 
 		
 		sitioWeb.registrarUsuario(usuarioMock);
         assertTrue(sitioWeb.getUsuariosRegistrados().contains(usuarioMock));
     }
 	 
 	@Test
-    void testUnSitioWebPuedeDarDeAltaYVerificarUnaCategoriaDeInmuebleEspacifica() {
+    void testUnSitioWebPuedeDarDeAltaYVerificarUnaCategoriaDeInmuebleEspacifica() throws Exception {
 		
 		when(categoriaMock.nombreCategoria()).thenReturn("Comodo");
 		when(otraCategoriaMock.nombreCategoria()).thenReturn("Iluminado");
+		
         sitioWeb.altaTipoDeCategoriaInmueble(categoriaMock);
-        assertTrue(sitioWeb.getCategoriaEspecificaInmueble(categoriaMock));
-        assertFalse(sitioWeb.getCategoriaEspecificaInmueble(otraCategoriaMock));
+        assertDoesNotThrow(() -> sitioWeb.estaCategoriaEspecificaInmueble(categoriaMock));
+        assertThrows(Exception.class, () -> {sitioWeb.estaCategoriaEspecificaInmueble(otraCategoriaMock);});
+       
     }
 	
 	@Test
@@ -81,9 +83,10 @@ public class SitioWebTestCase {
 		
 		when(categoriaMock.nombreCategoria()).thenReturn("Sucio");
 		when(otraCategoriaMock.nombreCategoria()).thenReturn("Limpio");
+		
         sitioWeb.altaTipoDeCategoriaInquilino(categoriaMock);
-        assertTrue(sitioWeb.getCategoriaEspecificaInquilino(categoriaMock));
-        assertFalse(sitioWeb.getCategoriaEspecificaInmueble(otraCategoriaMock));
+        assertDoesNotThrow(() -> sitioWeb.estaCategoriaEspecificaInquilino(categoriaMock));
+        assertThrows(Exception.class, () -> {sitioWeb.estaCategoriaEspecificaInquilino(otraCategoriaMock);});
     }
 	
 	@Test
@@ -91,9 +94,10 @@ public class SitioWebTestCase {
 
 		when(categoriaMock.nombreCategoria()).thenReturn("Amable");
 		when(otraCategoriaMock.nombreCategoria()).thenReturn("Malumorado");
+		
         sitioWeb.altaTipoDeCategoriaPropietario(categoriaMock);
-        assertTrue(sitioWeb.getCategoriaEspecificaPropietario(categoriaMock));
-        assertFalse(sitioWeb.getCategoriaEspecificaInmueble(otraCategoriaMock));
+        assertDoesNotThrow(() -> sitioWeb.estaCategoriaEspecificaPropietario(categoriaMock));
+        assertThrows(Exception.class, () -> {sitioWeb.estaCategoriaEspecificaPropietario(otraCategoriaMock);});
     }
 	
 	@Test
@@ -171,14 +175,28 @@ public class SitioWebTestCase {
 		sitioWeb.registrarUsuario(usuarioMock3);
 		sitioWeb.registrarUsuario(usuarioMock4);
 		
-		when(usuarioMock.getCantidadDeVecesQueAlquilo()).thenReturn(10);
-		when(usuarioMock2.getCantidadDeVecesQueAlquilo()).thenReturn(5);
-		when(usuarioMock3.getCantidadDeVecesQueAlquilo()).thenReturn(11);
-		when(usuarioMock4.getCantidadDeVecesQueAlquilo()).thenReturn(3);
+		
+		when(usuarioMock.cantidadDeVecesQueAlquiloUnInquilino()).thenReturn((long) 10);
+		when(usuarioMock2.cantidadDeVecesQueAlquiloUnInquilino()).thenReturn((long) 5);
+		when(usuarioMock3.cantidadDeVecesQueAlquiloUnInquilino()).thenReturn((long) 11);
+		when(usuarioMock4.cantidadDeVecesQueAlquiloUnInquilino()).thenReturn((long) 3);
 		
 		assertTrue(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock));
 		assertTrue(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock2));	
 		assertTrue(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock3));
 		assertFalse(sitioWeb.obtenerTopTresInquilinoQueMasAlquilaron().contains(usuarioMock4));	
+		
 	}
+	
+	@Test
+    void testUnSitioWebPuedeVisualizarUnInmueble() {
+		
+		when(inmueble.getPropietario()).thenReturn(usuarioMock);
+		
+		sitioWeb.visualizarInmueble(inmueble);
+		
+        verify(inmueble).datosDelInmueble();
+        verify(inmueble.getPropietario()).datosDelPropietario(inmueble);
+    }
+	
 }
