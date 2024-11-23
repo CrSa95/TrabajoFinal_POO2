@@ -18,13 +18,15 @@ public class UsuarioTestCase {
 	private Usuario otroUsuarioMock;
 	private SitioWeb sitioWebMock;
 	private Reserva reservaMock;
+	private Reserva unaReservaMock;
+	private Reserva otraReservaMock;
     private Inmueble inmuebleMock;
+    private Inmueble otroInmuebleMock;
     private String ciudad;
     private LocalDate fechaEntrada;
     private LocalDate fechaSalida;
     private int capacidad;
-    private double precioMinimo;
-	private double precioMaximo;
+    private double precioMaximo;
 	private Categoria categoriaMock;
 	private Categoria otraCategoriaMock;
 	private TipoDeInmueble tipoDeInmuebleMock;
@@ -32,21 +34,21 @@ public class UsuarioTestCase {
     private Foto foto;
     private PoliticaDeCancelacion politicaMock;
     private SolicitudDeReserva solicitudMock;
-	
-	
-	@BeforeEach
+    @BeforeEach
     public void setUp() {
     	
 		usuario = new Usuario("Cristian Sanabria", "crissanabria@gmail.com", 1160583214);
     	sitioWebMock = mock(SitioWeb.class);
     	otroUsuarioMock = mock(Usuario.class);
     	reservaMock = mock(Reserva.class);
+    	unaReservaMock = mock(Reserva.class);
+    	otraReservaMock = mock(Reserva.class);
     	inmuebleMock = mock(Inmueble.class);
+    	otroInmuebleMock = mock(Inmueble.class);
     	ciudad = "Buenos Aires";
         fechaEntrada = LocalDate.of(2024, 11, 1);
         fechaSalida = LocalDate.of(2024, 11, 10);
         capacidad = 3;
-        precioMinimo = 30;
         precioMaximo = 50;
         usuario.registrarEnSitioWeb(sitioWebMock);
         categoriaMock = mock(Categoria.class);
@@ -56,8 +58,11 @@ public class UsuarioTestCase {
         foto = mock(Foto.class);
         politicaMock = mock(PoliticaDeCancelacion.class);
         solicitudMock = mock(SolicitudDeReserva.class);
+        new ArrayList<Inmueble>();
         
     }
+	
+	//Test de funcionalidades en comun 
 	
 	@Test
     void testUnUsuarioPuedeRegistrarseEnSitioWeb() {
@@ -70,7 +75,7 @@ public class UsuarioTestCase {
     void testUnUsuarioPuedeSaberLaCantidadDeTiempoQueEstaRegistrado() {
 		
         assertTrue(usuario.cantidadTiempoRegistrado() == 0);
-    }
+    } 
 	
 	@Test
     void testUnUsuarioPuedeActualizarSuNombreCompleto() {
@@ -105,7 +110,7 @@ public class UsuarioTestCase {
 	
 	@Test
     void testUnUsuarioPuedeRegistrarYEliminarUnaReserva() {
-		when(reservaMock.getUsuario()).thenReturn(usuario);
+		when(reservaMock.getInquilino()).thenReturn(usuario);
 		
 		usuario.registrarReserva(reservaMock);
 		assertTrue(usuario.getReservas().contains(reservaMock));
@@ -114,50 +119,33 @@ public class UsuarioTestCase {
     }
 	
 	@Test
-    void testUnUsuarioPuedeBuscarInmuebles() {
+    void testUnUsuarioPuedeCalcularSuPromedioTotalDeRanking() throws Exception {
 		
-		List<Inmueble> inmuebles = new ArrayList<Inmueble>();
-		inmuebles.add(inmuebleMock);
-		when(sitioWebMock.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo)).thenReturn(inmuebles);
-        
-        assertTrue(usuario.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo).contains(inmuebleMock));
-    }
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		
+		assertDoesNotThrow(() -> usuario.rankearUnPropietario(reservaMock, categoriaMock, 5));
+		assertTrue(usuario.calcularPromedioTotal(usuario.getRankeosPropietario()) == 5);
+	}
 	
-	@Test
-    void testUnUsuarioPuedeVisualizarUnInmueble() {
-		
-		when(inmuebleMock.getPropietario()).thenReturn(otroUsuarioMock);
-		
-		usuario.visualizarInmueble(inmuebleMock);
-		
-        verify(inmuebleMock).datosDelInmueble();
-        verify(inmuebleMock.getPropietario()).datosDelPropietario(inmuebleMock);
-    }
-	
-	@Test
-    void testUnUsuarioPuedeRealizarUnaReserva() {
-		
-		usuario.realizarReservar(inmuebleMock, usuario, FormaDePago.EFECTIVO, fechaSalida, fechaEntrada);
-        verify(inmuebleMock).realizarReservaDelInmueble(usuario, FormaDePago.EFECTIVO, fechaSalida, fechaEntrada);
-    }
+	//Test de Usuario Propietario
 
 	@Test
     void testUnUsuarioPropietarioPuedeRankearUnInquilino() throws Exception {
 		
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaInquilino(categoriaMock)).thenReturn(true);
 		
-		assertDoesNotThrow(() -> usuario.rankearInquilino(reservaMock, categoriaMock, 5));
+		assertDoesNotThrow(() -> usuario.rankearUnInquilino(reservaMock, categoriaMock, 5));
 		assertFalse(usuario.getRankeosInquilino().isEmpty());
 	}
 	
 	@Test
     void testUnUsuarioPropietarioNoPuedeRankearUnInquilino() throws Exception {
 		
-		assertThrows(Exception.class, () -> {usuario.rankearInquilino(reservaMock, categoriaMock, 5);});
+		assertThrows(Exception.class, () -> {usuario.rankearUnInquilino(reservaMock, categoriaMock, 5);});
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaInquilino(categoriaMock)).thenReturn(false);
-		assertThrows(Exception.class, () -> {usuario.rankearInquilino(reservaMock, categoriaMock, 5);});
+		when(categoriaMock.nombreCategoria()).thenReturn(" ");
+		doThrow(new Exception("Error: La categoria" + categoriaMock.nombreCategoria() + "es incorrecta.")).when(sitioWebMock).estaCategoriaEspecificaInquilino(categoriaMock);
+		assertThrows(Exception.class, () -> {usuario.rankearUnInquilino(reservaMock, categoriaMock, 5);});
 	}
 	
 	@Test
@@ -165,14 +153,14 @@ public class UsuarioTestCase {
 		
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		
-		assertDoesNotThrow(() -> usuario.setComentarioInqulino(reservaMock, "Buen inquilino"));
+		assertDoesNotThrow(() -> usuario.dejarUnComentarioAlInqulino(reservaMock, "Buen inquilino"));
 		assertFalse(usuario.getComentariosInquilino().isEmpty());
 	}
 	
 	@Test
     void testUnUsuarioPropietarioNoPuedeDejarleUnComentarioAUnInquilino() throws Exception {
 		
-		assertThrows(Exception.class, () -> {usuario.setComentarioInqulino(reservaMock, "Sucio");});
+		assertThrows(Exception.class, () -> {usuario.dejarUnComentarioAlInqulino(reservaMock, "Sucio");});
 		
 	}
 	
@@ -181,17 +169,6 @@ public class UsuarioTestCase {
 		
 		usuario.datosDelInquilino();
 
-	}
-	
-	@Test
-    void testUnUsuarioPropietarioPuedeAumentarYRestarLaCantidadDeVecesQueAlquilo() {
-		
-		assertTrue(usuario.getCantidadDeVecesQueAlquilo() == 0);
-		usuario.sumarCantidadDeVecesQueAlquilo();
-		assertTrue(usuario.getCantidadDeVecesQueAlquilo() == 1);
-		usuario.restarCantidadDeVecesQueAlquilo();
-		assertTrue(usuario.getCantidadDeVecesQueAlquilo() == 0);
-		
 	}
 	
 	@Test
@@ -229,114 +206,62 @@ public class UsuarioTestCase {
 	@Test
     void testUnUsuarioPropietarioConoceSusInmueblesAlquilados() {
 		
-		assertTrue(usuario.inmueblesAlquilados().size() == 0);
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(reservaMock.getInmueble()).thenReturn(inmuebleMock);
+		when(otraReservaMock.getEstadoDeReserva()).thenReturn(new EstadoConfirmada());
+		when(otraReservaMock.getInmueble()).thenReturn(otroInmuebleMock);
+		
+		usuario.registrarReserva(reservaMock); 
+		usuario.registrarReserva(otraReservaMock);
+		assertTrue(usuario.inmueblesAlquilados().size() == 1);
 		
 	}
 	
 	@Test
-    void testUnUsuarioPropietarioPuedeRecibirUnaSolicitudDeResera() {
+    void testUnUsuarioPropietarioConoceLaCantidadDeVecesQueAlquiloSusInmuebles() {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(otraReservaMock.getEstadoDeReserva()).thenReturn(new EstadoConfirmada());
+		
+		usuario.registrarReserva(reservaMock);  
+		usuario.registrarReserva(otraReservaMock);
+		assertTrue(usuario.cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles() == 1);
+		
+	}
+	
+	@Test
+    void testUnUsuarioPropietarioConoceLaCantidadDeVecesQueAlquiloUnInmueble() {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(reservaMock.getInmueble()).thenReturn(inmuebleMock);
+		when(unaReservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(unaReservaMock.getInmueble()).thenReturn(otroInmuebleMock);
+		when(otraReservaMock.getEstadoDeReserva()).thenReturn(new EstadoConfirmada());
+		when(otraReservaMock.getInmueble()).thenReturn(inmuebleMock);
+		
+		usuario.registrarReserva(reservaMock);  
+		usuario.registrarReserva(otraReservaMock);
+		usuario.registrarReserva(unaReservaMock);
+		assertTrue(usuario.cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(inmuebleMock) == 1);
+		
+	}
+	
+	@Test
+    void testUnUsuarioPropietarioPuedeRecibirUnaSolicitudDeReserva() {
 		
 		usuario.recibirSolicitudReserva(solicitudMock);
 		verify(solicitudMock).aprobarSolicitud();
 	}
 	
 	@Test
-    void testUnUsuarioInquilinoPuedeConocerLaInformacionDeUnPropietario() {
-		
-		usuario.datosDelPropietario(inmuebleMock);
-		
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoPuedeRankearUnPropietario() throws Exception {
-		
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaPropietario(categoriaMock)).thenReturn(true);
-		
-		assertDoesNotThrow(() -> usuario.rankPropietario(reservaMock, categoriaMock, 5));
-		assertFalse(usuario.getRankeosPropietario().isEmpty());
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoNoPuedeRankearUnPropietario() throws Exception {
-		
-		assertThrows(Exception.class, () -> {usuario.rankPropietario(reservaMock, categoriaMock, 5);});
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaPropietario(categoriaMock)).thenReturn(false);
-		assertThrows(Exception.class, () -> {usuario.rankPropietario(reservaMock, categoriaMock, 5);});
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoPuedeDejarleUnComentarioAUnPropietario() throws Exception {
-		
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		
-		assertDoesNotThrow(() -> usuario.setComentarioPropietario(reservaMock, "Hermoso"));
-		assertFalse(usuario.getComentariosPropietario().isEmpty());
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoNoPuedeDejarleUnComentarioAUnPropietario() throws Exception {
-		
-		assertThrows(Exception.class, () -> {usuario.setComentarioPropietario(reservaMock, "Hermoso");});
-		
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoPuedeDejarleUnComentarioAUnInmueble() throws Exception {
-		
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		
-		assertDoesNotThrow(() -> usuario.setComentarioInmueble(reservaMock, inmuebleMock ,"Hermoso inmueble"));
-		verify(inmuebleMock).setComentario("Hermoso inmueble");
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoNoPuedeDejarleUnComentarioAUnInmueble() throws Exception {
-		
-		assertThrows(Exception.class, () -> {usuario.setComentarioInmueble(reservaMock, inmuebleMock ,"Hermoso inmueble");});
-		
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoPuedeRankearUnInmueble() throws Exception {
-		
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaInmueble(categoriaMock)).thenReturn(true);
-		
-		assertDoesNotThrow(() -> usuario.rankInmueble(reservaMock, inmuebleMock, categoriaMock, 5));
-	}
-	
-	@Test
-    void testUnUsuarioInquilinoNoPuedeRankearUnInmueble() throws Exception {
-		
-		assertThrows(Exception.class, () -> {usuario.rankInmueble(reservaMock, inmuebleMock, categoriaMock, 5);});
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaPropietario(categoriaMock)).thenReturn(false);
-		assertThrows(Exception.class, () -> {usuario.rankInmueble(reservaMock, inmuebleMock, categoriaMock, 5);});
-	}
-	
-	@Test
-    void testUnUsuarioPuedeCalcularSuPromedioTotalDeRanking() throws Exception {
-		
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaPropietario(categoriaMock)).thenReturn(true);
-		
-		assertDoesNotThrow(() -> usuario.rankPropietario(reservaMock, categoriaMock, 5));
-		assertTrue(usuario.calcularPromedioTotal(usuario.getRankeosPropietario()) == 5);
-	}
-	
-	@Test
     void testUnUsuarioPropietarioPuedeActualizarUnValorEspecificoDeSuRanking() throws Exception {
 		
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaPropietario(categoriaMock)).thenReturn(true);
-		when(sitioWebMock.getCategoriaEspecificaPropietario(otraCategoriaMock)).thenReturn(true);
 		when(categoriaMock.nombreCategoria()).thenReturn("Amable");
 		when(otraCategoriaMock.nombreCategoria()).thenReturn("Amable");
 		
-		assertDoesNotThrow(() -> usuario.rankPropietario(reservaMock, categoriaMock, 5));
-		assertDoesNotThrow(() -> usuario.rankPropietario(reservaMock, otraCategoriaMock, 3));
+		assertDoesNotThrow(() -> usuario.rankearUnPropietario(reservaMock, categoriaMock, 5));
+		assertDoesNotThrow(() -> usuario.rankearUnPropietario(reservaMock, otraCategoriaMock, 3));
 		
 	}
 	
@@ -356,32 +281,85 @@ public class UsuarioTestCase {
 		assertFalse(usuario.getInmueblesDadosDeAlta().isEmpty());
 	}
 	
+	//Test de Usuario Inquilino
+	
 	@Test
-    void testUnUsuarioInquilinoPuedeActualizarUnValorEspecificoDeSuRanking() throws Exception {
+    void testUnUsuarioInquilinoPuedeConocerLaInformacionDeUnPropietario() {
 		
-		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
-		when(sitioWebMock.getCategoriaEspecificaInquilino(categoriaMock)).thenReturn(true);
-		when(sitioWebMock.getCategoriaEspecificaInquilino(otraCategoriaMock)).thenReturn(true);
-		when(categoriaMock.nombreCategoria()).thenReturn("Amable");
-		when(otraCategoriaMock.nombreCategoria()).thenReturn("Amable");
-		
-		assertDoesNotThrow(() -> usuario.rankearInquilino(reservaMock, categoriaMock, 5));
-		assertDoesNotThrow(() -> usuario.rankearInquilino(reservaMock, otraCategoriaMock, 3));
+		usuario.datosDelPropietario(inmuebleMock);
 		
 	}
 	
 	@Test
-    void testUnUsuarioPuedeVerSusReservasFuturas() {
-		when(reservaMock.getUsuario()).thenReturn(usuario);
-		when(reservaMock.getFechaDeIngreso()).thenReturn(LocalDate.of(2025, 1, 23));
+    void testUnUsuarioInquilinoPuedeRankearUnPropietario() throws Exception {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		
+		assertDoesNotThrow(() -> usuario.rankearUnPropietario(reservaMock, categoriaMock, 5));
+		assertFalse(usuario.getRankeosPropietario().isEmpty());
+	}
+	
+	@Test
+    void testUnUsuarioInquilinoNoPuedeRankearUnPropietario() throws Exception {
+		
+		assertThrows(Exception.class, () -> {usuario.rankearUnPropietario(reservaMock, categoriaMock, 5);});
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(categoriaMock.nombreCategoria()).thenReturn(" ");
+		doThrow(new Exception("Error: La categoria" + categoriaMock.nombreCategoria() + "es incorrecta.")).when(sitioWebMock).estaCategoriaEspecificaPropietario(categoriaMock);   
+		assertThrows(Exception.class, () -> {usuario.rankearUnPropietario(reservaMock, categoriaMock, 5);});
+	}
+	
+	@Test
+    void testUnUsuarioInquilinoPuedeDejarleUnComentarioAUnPropietario() throws Exception {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		
+		assertDoesNotThrow(() -> usuario.dejarUnComentarioAlPropietario(reservaMock, "Hermoso"));
+		assertFalse(usuario.getComentariosPropietario().isEmpty());
+	}
+	
+	@Test
+    void testUnUsuarioInquilinoNoPuedeDejarleUnComentarioAUnPropietario() throws Exception {
+		
+		assertThrows(Exception.class, () -> {usuario.dejarUnComentarioAlPropietario(reservaMock, "Hermoso");});
+		
+	}
+	
+	@Test
+    void testUnUsuarioInquilinoPuedeActualizarUnValorEspecificoDeSuRanking() throws Exception {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(categoriaMock.nombreCategoria()).thenReturn("Amable");
+		when(otraCategoriaMock.nombreCategoria()).thenReturn("Amable");
+		
+		assertDoesNotThrow(() -> usuario.rankearUnInquilino(reservaMock, categoriaMock, 5));
+		assertDoesNotThrow(() -> usuario.rankearUnInquilino(reservaMock, otraCategoriaMock, 3));
+		
+	}
+	
+	@Test
+    void testUnUsuarioInquilinoPuedeVerTodasSusReservas() {
 		
 		usuario.registrarReserva(reservaMock);
-		assertTrue(usuario.getReservasFuturas(LocalDate.now()).contains(reservaMock));
+		otroUsuarioMock.registrarReserva(otraReservaMock);
+		assertTrue(usuario.getReservas().contains(reservaMock));
+		assertFalse(usuario.getReservas().contains(otraReservaMock));
     }
 	
 	@Test
-    void testUnUsuarioPuedeVerSusReservasEnCiudad() {
-		when(reservaMock.getUsuario()).thenReturn(usuario);
+    void testUnUsuarioInquilinoPuedeVerSusReservasFuturas() {
+		when(reservaMock.getFechaDeIngreso()).thenReturn(LocalDate.of(2025, 1, 23));
+		when(otraReservaMock.getFechaDeIngreso()).thenReturn(LocalDate.of(2024, 1, 23));	
+		
+		usuario.registrarReserva(reservaMock);
+		usuario.registrarReserva(otraReservaMock);
+		assertTrue(usuario.getReservasFuturas(LocalDate.now()).contains(reservaMock));
+		assertFalse(usuario.getReservasFuturas(LocalDate.now()).contains(otraReservaMock));
+    }
+	
+	@Test
+    void testUnUsuarioInquilinoPuedeVerSusReservasEnCiudad() {
+		when(reservaMock.getInquilino()).thenReturn(usuario);
 		when(reservaMock.getInmueble()).thenReturn(inmuebleMock);
 		when(inmuebleMock.getCiudad()).thenReturn(ciudad);
 		
@@ -390,8 +368,8 @@ public class UsuarioTestCase {
     }
 	
 	@Test
-    void testUnUsuarioPuedeVerLasCiudadesReservadas() {
-		when(reservaMock.getUsuario()).thenReturn(usuario);
+    void testUnUsuarioInquilinoPuedeVerLasCiudadesReservadas() {
+		when(reservaMock.getInquilino()).thenReturn(usuario);
 		when(reservaMock.getInmueble()).thenReturn(inmuebleMock);
 		when(inmuebleMock.getCiudad()).thenReturn(ciudad);
 		
@@ -400,22 +378,23 @@ public class UsuarioTestCase {
     }
 	
 	@Test
-    void testUnUsuarioPuedeCancelarUnaReserva() {
-		
-		when(reservaMock.getUsuario()).thenReturn(usuario);
+    void testUnUsuarioInquilinoPuedeCancelarUnaReserva() throws Exception {
 		
 		usuario.registrarReserva(reservaMock);
 		assertTrue(usuario.getReservas().contains(reservaMock));
-		usuario.cancelarReserva(reservaMock);
+		assertDoesNotThrow(() -> usuario.cancelarReserva(reservaMock));
 		assertFalse(usuario.getReservas().contains(reservaMock));
+		assertThrows(Exception.class, () -> {usuario.cancelarReserva(otraReservaMock);});
     }
 	
 	@Test
-    void testUnUsuarioConoceLaCantidadDeVecesQueAlquilo() {
+    void testUnUsuarioInquilinoConoceLaCantidadDeVecesQueAlquilo() {
 		
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(otraReservaMock.getEstadoDeReserva()).thenReturn(new EstadoConfirmada());
 		
 		usuario.registrarReserva(reservaMock);
+		usuario.registrarReserva(otraReservaMock);
 		
 		assertTrue(usuario.cantidadDeVecesQueAlquiloUnInquilino() == 1);
     }

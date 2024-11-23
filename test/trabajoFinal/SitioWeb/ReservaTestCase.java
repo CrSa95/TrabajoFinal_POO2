@@ -22,7 +22,7 @@ public class ReservaTestCase {
     @BeforeEach
     public void setUp() {
         inmuebleMock = mock(Inmueble.class); 
-        inquilinoMock = mock(Usuario.class);
+        inquilinoMock = mock(Usuario.class); 
         propietarioMock = mock(Usuario.class);
         formaDePagoMock = mock(FormaDePago.class);
         estadoDeReservaMock = mock(EstadoDeReserva.class);
@@ -39,7 +39,7 @@ public class ReservaTestCase {
     @Test
     void testCreacionDeReserva() {
         assertEquals(inmuebleMock, reserva.getInmueble());
-        assertEquals(inquilinoMock, reserva.getUsuario());
+        assertEquals(inquilinoMock, reserva.getInquilino());
         assertEquals(formaDePagoMock, reserva.getFormaDePago());
         assertEquals(LocalDate.of(2024, 12, 1), reserva.getFechaDeIngreso());
         assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso());
@@ -82,10 +82,8 @@ public class ReservaTestCase {
 		assertFalse(reserva.obtenerReservaCondicional(inmuebleMock).isPresent()); 
         verify(inmuebleMock).agregarReserva(reserva);
         verify(inquilinoMock).registrarReserva(reserva);  
-        verify(inmuebleMock, times(1)).sumarCantidadDeVecesAlquilado();
-        verify(propietarioMock, times(1)).sumarCantidadDeVecesQueAlquilo();
         assertTrue(reserva.getEstadoDeReserva() instanceof EstadoConfirmada);
-        verify(managerMock, times(1)).altaDeReserva();
+        verify(managerMock, times(1)).altaDeReserva(); 
 	}
 	
 	@Test

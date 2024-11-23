@@ -69,12 +69,12 @@ public class SolicitudDeReservaTestCase {
         assertNotNull(reserva);
 
         assertEquals(inmuebleMock, reserva.getInmueble());
-        assertEquals(inquilinoMock, reserva.getUsuario());
+        assertEquals(inquilinoMock, reserva.getInquilino());
         assertEquals(formaDePagoMock, reserva.getFormaDePago());
         assertEquals(LocalDate.of(2024, 12, 1), reserva.getFechaDeIngreso());
         assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso()); 
     }
-    
+     
     @Test
     public void testRealizarReserva() {  
     	Reserva reservaMock = mock(Reserva.class);

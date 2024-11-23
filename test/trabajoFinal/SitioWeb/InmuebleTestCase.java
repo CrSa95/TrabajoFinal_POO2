@@ -27,9 +27,10 @@ public class InmuebleTestCase {
 	private Optional<TipoDeInmueble> tipoDeInmuebleMock;
 	private TipoDeInmueble tipoConcretoMock;
 	private SolicitudDeReserva solicitudMock;
+	private SitioWeb sitioWebMock;
 	
 	@BeforeEach
-    public void setUp() {
+    public void setUp() { 
 		
 		usuarioMock = mock(Usuario.class);
 		inmueble = new Inmueble(usuarioMock, 40, "Argentina", "Buenos Aires", "Calle 43 N° 898", 3,  LocalTime.now(),  LocalTime.now(), 1000);
@@ -42,6 +43,7 @@ public class InmuebleTestCase {
 		tipoDeInmuebleMock = Optional.empty();
 		tipoConcretoMock = mock(TipoDeInmueble.class);
 		solicitudMock = mock(SolicitudDeReserva.class);
+		sitioWebMock = mock(SitioWeb.class);
 		
 	}
 	
@@ -49,16 +51,6 @@ public class InmuebleTestCase {
     void testUnInmuebleConoceSusDatos() {
 		
 		inmueble.datosDelInmueble();
-    }
-	
-	@Test
-    void testUnInmueblePuedeSumaryRestarLaCantidadDeVecesQueFueAlquilado() {
-		
-		assertTrue(inmueble.getCantidadDeVecesAlquilado() == 0);
-		inmueble.sumarCantidadDeVecesAlquilado();
-		assertTrue(inmueble.getCantidadDeVecesAlquilado() == 1);
-		inmueble.restarCantidadDeVecesAlquilado();
-		assertTrue(inmueble.getCantidadDeVecesAlquilado() == 0);
     }
 
 	@Test
@@ -153,11 +145,39 @@ public class InmuebleTestCase {
 	}
 	
 	@Test
-    void testUnInmueblePuedeSetearseUnComentario() {
+    void testUnInmueblePuedeRecibirUnComentario() {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		
 		assertTrue(inmueble.getComentarios().isEmpty());
-		inmueble.setComentario("Bello");
+		assertDoesNotThrow(() -> inmueble.dejarUnComentarioAlInmueble(reservaMock, "Bello"));
 		assertTrue(inmueble.getComentarios().contains("Bello"));
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoConfirmada());
+		assertThrows(Exception.class, () -> {inmueble.dejarUnComentarioAlInmueble(reservaMock, "Hermoso");});
+		assertFalse(inmueble.getComentarios().contains("Hermoso"));
+	}
+	
+	@Test
+    void testUnInmueblePuedeRecibirUnRankeo() throws Exception {
+		
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		
+		inmueble.setSitioWeb(sitioWebMock);
+		assertDoesNotThrow(() -> inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5));
+		assertFalse(inmueble.getRankeosInmueble().isEmpty());
+		
+	}
+	
+	@Test
+    void testUnInmuebleNoPuedeRecibirUnRankeo() throws Exception {
+		
+		assertThrows(Exception.class, () -> {inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5);});
+		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
+		when(categoriaMock.nombreCategoria()).thenReturn(" ");
+		doThrow(new Exception("Error: La categoria" + categoriaMock.nombreCategoria() + "es incorrecta.")).when(sitioWebMock).estaCategoriaEspecificaPropietario(categoriaMock);   
+		assertThrows(Exception.class, () -> {inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5);});
+		
 	}
 	
 	@Test
