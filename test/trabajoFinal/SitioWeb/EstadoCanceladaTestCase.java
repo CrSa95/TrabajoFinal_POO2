@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-//import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,5 +29,11 @@ class EstadoCanceladaTestCase {
 		estadoCancelada.finalizar(reservaMock);
 		
 		verifyNoInteractions(reservaMock);
+	}
+	
+	@Test
+	void testElEstadoEsFinalizado() throws Exception {
+		assertThrows(Exception.class, () -> {estadoCancelada.finalizoLaReserva(reservaMock);});
+		assertThrows(Exception.class,() -> estadoCancelada.finalizoLaReserva(reservaMock), "Error: La Reserva aun no finalizo.");
 	}
 } 

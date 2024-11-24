@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-//import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Optional;
@@ -68,5 +68,11 @@ class EstadoConfirmadaTestCase {
 		
 		verify(inmuebleMock).eliminarReserva(reservaMock);
 		verify(reservaMock).setEstadoDeReserva(any(EstadoFinalizada.class));
+	}
+
+	@Test
+	void testElEstadoEsFinalizado() throws Exception {
+		assertThrows(Exception.class, () -> {estadoConfirmada.finalizoLaReserva(reservaMock);});
+		assertThrows(Exception.class,() -> estadoConfirmada.finalizoLaReserva(reservaMock), "Error: La Reserva aun no finalizo.");
 	}
 }
