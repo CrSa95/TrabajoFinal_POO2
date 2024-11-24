@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +26,6 @@ public class SitioWebTestCase {
     private TipoDeInmueble terraza;
     private Inmueble inmueble;
     private Inmueble otroInmueble;
-    private String ciudad;
-    private LocalDate fechaEntrada;
-    private LocalDate fechaSalida;
-    private int capacidad;
-    private double precioMinimo;
-	private double precioMaximo;
     
     @BeforeEach
     public void setUp() {
@@ -51,12 +44,6 @@ public class SitioWebTestCase {
         terraza = mock(TipoDeInmueble.class);
         inmueble = mock(Inmueble.class);
         otroInmueble = mock(Inmueble.class);
-        ciudad = "Buenos Aires";
-        fechaEntrada = LocalDate.of(2024, 11, 1);
-        fechaSalida = LocalDate.of(2024, 11, 10);
-        capacidad = 3;
-        precioMinimo = 30;
-        precioMaximo = 50;
     }
 	
 	@Test
