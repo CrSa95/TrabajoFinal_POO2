@@ -18,13 +18,12 @@ class EstadoDeSolicitudPendienteTestCase {
 		estadoDeSolicitudPendiente = new EstadoDeSolicitudPendiente();
 		solicitudMock = mock(SolicitudDeReserva.class);
 		reservaMock = mock(Reserva.class);
-		when(solicitudMock.crearReserva()).thenReturn(reservaMock);
 	}
 	
 	@Test
 	void testAprobar() {
 		estadoDeSolicitudPendiente.aprobar(solicitudMock);
-		verify(solicitudMock).realizarReserva(reservaMock);
+		verify(solicitudMock).crearReserva();
 		verify(solicitudMock).notificarAInquilino();
 		verify(solicitudMock).setEstadoDeSolicitud(any(EstadoSolicitudAprobada.class));
 	}
