@@ -35,10 +35,6 @@ public class SolicitudDeReserva{
 	public void setEstadoDeSolicitud(EstadoDeSolicitud estadoDeSolicitud) {
 		this.estadoDeSolicitud = estadoDeSolicitud;
 	}
-  
-	public void realizarReserva(Reserva reserva) {
-		reserva.evaluarReserva();
-	}
 	
 	public Reserva crearReserva() {
 		return new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso);
