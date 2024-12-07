@@ -1,6 +1,5 @@
 package trabajoFinal.SitioWeb;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +14,6 @@ public class SitioWeb {
 	private List<Categoria> todasLasCategoriasDePropietario = new ArrayList<>();
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<>();
-	private List<Filtro> filtros = new ArrayList<>();
 
 	public void registrarUsuario(Usuario usuario) {
 		this.todosLosUsuarios.add(usuario);
@@ -71,26 +69,8 @@ public class SitioWeb {
 		return this.inmuebles;
 	}
 	
-	public List<Inmueble> buscarInmuebles(String ciudad, LocalDate fechaEntrada, LocalDate fechaSalida, int capacidad, double precioMinimo,
-			double precioMaximo){
-
-
-		filtros.add(new FiltroCiudad(ciudad));
-		filtros.add(new FiltroFechas(fechaEntrada, fechaSalida));
-
-		if (capacidad != 0) {
-			filtros.add(new FiltroCapacidad(capacidad));
-		}
-
-		if (precioMinimo != 0 || precioMaximo != 0) {
-			filtros.add(new FiltroPrecio(precioMinimo, precioMaximo));
-		}
-
-		List<Inmueble> resultado = this.inmuebles;
-		for (Filtro filtro : filtros) {
-			resultado = filtro.filtrar(resultado);
-		}
-		return resultado;
+	public List<Inmueble> buscarInmuebles(Busqueda busqueda){
+		return busqueda.aplicarFiltros(this.inmuebles);
 	}
 
 	//Metodos de administrador

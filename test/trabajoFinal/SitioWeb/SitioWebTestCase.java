@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +26,6 @@ public class SitioWebTestCase {
     private TipoDeInmueble terraza;
     private Inmueble inmueble;
     private Inmueble otroInmueble;
-    private String ciudad;
-    private LocalDate fechaEntrada;
-    private LocalDate fechaSalida;
-    private int capacidad;
-    private double precioMinimo;
-	private double precioMaximo;
     
     @BeforeEach
     public void setUp() {
@@ -51,12 +44,6 @@ public class SitioWebTestCase {
         terraza = mock(TipoDeInmueble.class);
         inmueble = mock(Inmueble.class);
         otroInmueble = mock(Inmueble.class);
-        ciudad = "Buenos Aires";
-        fechaEntrada = LocalDate.of(2024, 11, 1);
-        fechaSalida = LocalDate.of(2024, 11, 10);
-        capacidad = 3;
-        precioMinimo = 30;
-        precioMaximo = 50;
     }
 	
 	@Test
@@ -134,25 +121,13 @@ public class SitioWebTestCase {
 	@Test
     void testUnSitioWebPuedeBuscarInmuebles() {
 		
-		when(inmueble.getCapacidad()).thenReturn(3);
-        when(otroInmueble.getCapacidad()).thenReturn(4);
-        
-        when(inmueble.getCiudad()).thenReturn("Buenos Aires");
-        when(otroInmueble.getCiudad()).thenReturn("Córdoba");
-        
-        when(inmueble.getFechaInicial()).thenReturn(LocalDate.of(2024, 11, 1));
-        when(inmueble.getFechaFinal()).thenReturn(LocalDate.of(2024, 11, 10));
-        when(otroInmueble.getFechaInicial()).thenReturn(LocalDate.of(2024, 10, 20));
-        when(otroInmueble.getFechaFinal()).thenReturn(LocalDate.of(2024, 10, 25));
-        
-        when(inmueble.getPrecioBase()).thenReturn(50.0);
-        when(otroInmueble.getPrecioBase()).thenReturn(150.0);
-        
-        sitioWeb.altaInmueble(inmueble);
+		Busqueda busquedaMock = mock(Busqueda.class);
+		
+		sitioWeb.altaInmueble(inmueble);
         sitioWeb.altaInmueble(otroInmueble);
-        assertTrue(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo).contains(inmueble));
-        assertTrue(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, 0, 0, 0).contains(inmueble));
-        assertFalse(sitioWeb.buscarInmuebles(ciudad, fechaEntrada, fechaSalida, capacidad, precioMinimo, precioMaximo).contains(otroInmueble));
+        sitioWeb.buscarInmuebles(busquedaMock);
+		
+		verify(busquedaMock).aplicarFiltros(sitioWeb.getTodosLosInmuebles());
 	}
 
 	@Test

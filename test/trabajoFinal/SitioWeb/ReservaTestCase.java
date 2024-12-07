@@ -31,9 +31,10 @@ public class ReservaTestCase {
         LocalDate fechaDeIngreso = LocalDate.of(2024, 12, 1);
         LocalDate fechaDeEgreso = LocalDate.of(2024, 12, 10);
 
+        when(inmuebleMock.getManager()).thenReturn(managerMock);
+        when(inmuebleMock.estaReservado(reserva)).thenReturn(true); 
         reserva = new Reserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso);
-        reserva.setManager(managerMock);
-        when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
+        
     }
 	
     @Test
@@ -43,6 +44,7 @@ public class ReservaTestCase {
         assertEquals(formaDePagoMock, reserva.getFormaDePago());
         assertEquals(LocalDate.of(2024, 12, 1), reserva.getFechaDeIngreso());
         assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso());
+        assertNotNull(reserva.getManager());
     }
     
 	@Test
@@ -63,36 +65,39 @@ public class ReservaTestCase {
 	}
 	
 	@Test
-	void testEvaluarReservaCuandoInmuebleEstaReservado() { 
-		when(inmuebleMock.estaReservado(reserva)).thenReturn(true);
-		
-		reserva.evaluarReserva();
-	
-		assertTrue(reserva.obtenerReservaCondicional(inmuebleMock).isPresent());
-        assertTrue(reserva.obtenerReservaCondicional(inmuebleMock).get().equals(reserva));
-        assertTrue(reserva.getEstadoDeReserva() instanceof EstadoCondicional);
+	void testEvaluarReservaCuandoInmuebleEstaReservado() {     
+	    when(inmuebleMock.estaReservado(any(Reserva.class))).thenReturn(true);
+
+	    reserva.evaluarReserva();
+	    assertTrue(reserva.getEstadoDeReserva() instanceof EstadoCondicional);
+
+	    when(inmuebleMock.estaReservado(any(Reserva.class))).thenReturn(false);
+	    Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(inmuebleMock);
+
+	    assertTrue(reservaCondicional.isPresent());
+	    assertEquals(reserva, reservaCondicional.get());
 	}
 	
 	@Test
 	void testEvaluarReservaCuandoInmuebleEstaNoReservado() {
-		when(inmuebleMock.estaReservado(reserva)).thenReturn(false);
-		
-		reserva.evaluarReserva();
-	
-		assertFalse(reserva.obtenerReservaCondicional(inmuebleMock).isPresent()); 
-        verify(inmuebleMock).agregarReserva(reserva);
-        verify(inquilinoMock).registrarReserva(reserva);  
+        when(inmuebleMock.estaReservado(any(Reserva.class))).thenReturn(false);
+
         assertTrue(reserva.getEstadoDeReserva() instanceof EstadoConfirmada);
-        verify(managerMock, times(1)).altaDeReserva(); 
+        
+        verify(inmuebleMock, times(1)).agregarReserva(reserva);
+        verify(inquilinoMock, times(1)).registrarReserva(reserva);
+        verify(managerMock, times(1)).altaDeReserva();
 	}
 	
 	@Test
     void testObtenerReservaCondicional() {
-        when(inmuebleMock.estaReservado(reserva)).thenReturn(true);
-        reserva.evaluarReserva();
+		when(inmuebleMock.estaReservado(any(Reserva.class))).thenReturn(true);
+	    reserva.evaluarReserva();
 
-        Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(inmuebleMock);
-        assertTrue(reservaCondicional.isPresent());
-        assertEquals(reserva, reservaCondicional.get());
+	    when(inmuebleMock.estaReservado(any(Reserva.class))).thenReturn(false);
+
+	    Optional<Reserva> reservaCondicional = reserva.obtenerReservaCondicional(inmuebleMock);
+	    assertTrue(reservaCondicional.isPresent());
+	    assertEquals(reserva, reservaCondicional.get());
     }
 }

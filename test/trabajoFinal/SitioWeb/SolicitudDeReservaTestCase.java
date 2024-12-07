@@ -64,6 +64,8 @@ public class SolicitudDeReservaTestCase {
     
     @Test
     public void testCuandoSeCreaUnaReserva() {
+    	Manager managerMock = mock(Manager.class);
+    	when(inmuebleMock.getManager()).thenReturn(managerMock);
         Reserva reserva = solicitud.crearReserva();
 
         assertNotNull(reserva);
@@ -73,6 +75,7 @@ public class SolicitudDeReservaTestCase {
         assertEquals(formaDePagoMock, reserva.getFormaDePago());
         assertEquals(LocalDate.of(2024, 12, 1), reserva.getFechaDeIngreso());
         assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso()); 
+        assertNotNull(reserva.getManager());
     }
      
     @Test

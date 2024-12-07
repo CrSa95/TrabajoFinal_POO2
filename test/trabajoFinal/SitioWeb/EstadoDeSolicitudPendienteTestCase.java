@@ -18,7 +18,6 @@ class EstadoDeSolicitudPendienteTestCase {
 		estadoDeSolicitudPendiente = new EstadoDeSolicitudPendiente();
 		solicitudMock = mock(SolicitudDeReserva.class);
 		reservaMock = mock(Reserva.class);
-		when(solicitudMock.crearReserva()).thenReturn(reservaMock);
 	}
 	
 	@Test

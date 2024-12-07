@@ -43,5 +43,4 @@ public class SolicitudDeReserva{
 	public void notificarAInquilino() {
 		this.inquilino.recibirMail("Solicitud de reserva aceptada");
 	}
-
 }
