@@ -14,8 +14,6 @@ public interface UsuarioPropietario {
 	public void actualizarPrecioBase(Inmueble inmueble, int precioNuevo);
 	public void modificarPreciosEspecificos(Inmueble inmueble, LocalDate fechaInicial, LocalDate fechaFinal, int precio) throws Exception;
 	public void modificarFormasDePago(Inmueble inmueble,FormaDePago formaDePago);
-	public List<Inmueble> getInmueblesDadosDeAlta();
-	public List<String> getComentariosPropietario();
 	public List<Inmueble> inmueblesAlquilados();
 	public void recibirSolicitudReserva(SolicitudDeReserva solicitudDeReserva);
 	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception;

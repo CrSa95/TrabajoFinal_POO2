@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class Usuario implements UsuarioPropietario {
+public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 
 	private String nombreCompleto;
 	private String mail;
@@ -30,9 +30,7 @@ public class Usuario implements UsuarioPropietario {
 		this.telefono = telefono;
 
 	}
-
-	//METODOS QUE COMPARTEN AMBOS TIPOS DE USUARIOS
- 
+	
 	public void registrarEnSitioWeb(SitioWeb sitioWeb) {
 		this.sitioWeb = sitioWeb;
 		this.fechaRegistro = LocalDate.now();
@@ -121,21 +119,6 @@ public class Usuario implements UsuarioPropietario {
 	    				.forEach(rank -> rank.setPuntaje((int)((rankeoViejo.get().getPuntaje() + rankeo.getPuntaje()) / 2)));
 	}
 	
-	//METODOS DE INQUILINO
-
-	public long cantidadDeVecesQueAlquiloUnInquilino() {
-		return this.reservas.stream()
-                			.filter(reserva -> {
-													try {
-														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-														return true;
-													} catch (Exception e) {
-														return false;
-													}
-												} ) 
-                								.count();
-	}
-	
 	public List<Rankeo> getRankeosInquilino(){
 		return this.rankeosInquilino;
 	}
@@ -146,115 +129,6 @@ public class Usuario implements UsuarioPropietario {
 
 	public List<Reserva> getReservas(){
 		return this.reservas;
-	}
-
-	public List<Reserva> getReservasFuturas(LocalDate fechaActual){
-		return reservas.stream()
-		        .filter(reserva -> reserva.getFechaDeIngreso().isAfter(fechaActual))
-		        .collect(Collectors.toList());
-	}
-
-	public List<Reserva> getReservasEnCiudad(String ciudad){
-		return reservas.stream()
-		        .filter(reserva -> reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
-		        .collect(Collectors.toList());
-	}
-
-	public List<String> getCiudadesReservadas(){
-		return reservas.stream()
-					.filter(reserva -> reserva.getInquilino().equals(this))
-	            	.map(reserva -> reserva.getInmueble().getCiudad())
-	            	.distinct()
-	            	.collect(Collectors.toList());
-	}
-
-	public void cancelarReserva(Reserva reserva) throws Exception{
-
-		if (reservas.stream().anyMatch(reser -> reser.equals(reserva))){
-			reserva.cancelarReserva();
-			this.eliminarReserva(reserva);
-		}
-		else {
-			throw new Exception("La Reserva no le pertenece");
-		}
-	}
-
-	//Funciones que se deben realizar luego de finalizar la reserva
-
-	public void dejarUnComentarioAlPropietario(Reserva reserva, String comentario) throws Exception{
-
-		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-		this.comentariosPropietario.add(comentario);
-	}
-
-	public void rankearUnPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		
-		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-		this.sitioWeb.estaCategoriaEspecificaPropietario(categoria);
-		this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
-	}
-	
-	public void actualizarListaDeRankeoPropietario(Rankeo rankeo) {
-
-		if (this.estaElRank(rankeo,this.rankeosPropietario)) {
-
-			this.actualizarPuntajeDeRankeo(rankeo, this.rankeosPropietario);
-		}
-		else {
-
-			this.rankeosPropietario.add(rankeo);
-		}
-	}
-	
-	public void datosDelInquilino() {
-		this.getNombre();
-		this.getMail();
-		this.getTelefono();
-		this.getComentariosInquilino();
-		this.getRankeosInquilino();
-		this.calcularPromedioTotal(this.rankeosInquilino);
-		this.cantidadTiempoRegistrado();
-	}
-
-	//METODOS DE PROPIETARIO
-	public void altaInmueble(TipoDeInmueble tipoDeInmueble, int superficie, String pais, String ciudad,
-			 				 String direccion, List<TipoDeServicio> servicios, int capacidad,
-			 				 List<Foto> fotos, LocalTime checkIn, LocalTime checkOut,
-			 				 PoliticaDeCancelacion politicaDeCancelacion, double precioBase,
-			 				 LocalDate fechaInicial, LocalDate fechaFinal) throws Exception{
-		//Creo el inmueble
-		Inmueble inmueble = new Inmueble(this,superficie, pais, ciudad,
-		direccion, capacidad, checkIn, checkOut, precioBase);
-			
-		//Obtengo el tipo de inmueble que quiero aplicar a mi inmueble
-		inmueble.setTipoDeInmueble(sitioWeb.seleccionarTipoDeInmueble(tipoDeInmueble));
-		
-		//Obtengo la lista de servicios que quiero aplicar a mi inmueble
-		inmueble.setTipoDeServicios(sitioWeb.seleccionarTiposDeServicio(servicios));
-		
-		inmueble.setFotos(fotos);
-			
-		inmueble.setPoliticaDeCancelacion(politicaDeCancelacion);
-			
-		inmueble.setDisponibilidad(fechaInicial, fechaFinal);
-			
-		//Lo doy de alta en el sitio
-		this.sitioWeb.altaInmueble(inmueble);
-			
-		//Lo agrego a la lista de inmuebles dados de alta
-		this.inmueblesDadosDeAlta.add(inmueble);
-	}
-	
-	public void actualizarPrecioBase(Inmueble inmueble, int precioNuevo) {
-		inmueble.modificarPrecioBase(precioNuevo);
-	}
-	
-	public void modificarPreciosEspecificos(Inmueble inmueble, LocalDate fechaInicial, LocalDate fechaFinal, int precio) throws Exception {
-		inmueble.modificarPreciosEspecificos(fechaInicial, fechaFinal, precio);
-	}
-	
-	public void modificarFormasDePago(Inmueble inmueble,FormaDePago formaDePago) {
-		inmueble.modificarFormasDePago(formaDePago);
 	}
 	
 	public List<Inmueble> getInmueblesDadosDeAlta(){
@@ -269,11 +143,58 @@ public class Usuario implements UsuarioPropietario {
 		return this.rankeosPropietario;
 	}
 
+	@Override
+	public void altaInmueble(TipoDeInmueble tipoDeInmueble, int superficie, String pais, String ciudad,
+			String direccion, List<TipoDeServicio> servicios, int capacidad, List<Foto> fotos, LocalTime checkIn,
+			LocalTime checkOut, PoliticaDeCancelacion politicaDeCancelacion, double precioBase, LocalDate fechaInicial,
+			LocalDate fechaFinal) throws Exception {
+		
+		//Creo el inmueble
+		Inmueble inmueble = new Inmueble(this,superficie, pais, ciudad,
+		direccion, capacidad, checkIn, checkOut, precioBase);
+			
+		//Obtengo el tipo de inmueble que quiero aplicar a mi inmueble
+		inmueble.setTipoDeInmueble(this.getSitioWeb().seleccionarTipoDeInmueble(tipoDeInmueble));
+		
+		//Obtengo la lista de servicios que quiero aplicar a mi inmueble
+		inmueble.setTipoDeServicios(this.getSitioWeb().seleccionarTiposDeServicio(servicios));
+		
+		inmueble.setFotos(fotos);
+			
+		inmueble.setPoliticaDeCancelacion(politicaDeCancelacion);
+			
+		inmueble.setDisponibilidad(fechaInicial, fechaFinal);
+			
+		//Lo doy de alta en el sitio
+		this.getSitioWeb().altaInmueble(inmueble);
+			
+		//Lo agrego a la lista de inmuebles dados de alta
+		this.getInmueblesDadosDeAlta().add(inmueble);
+		
+	}
+
+	@Override
+	public void actualizarPrecioBase(Inmueble inmueble, int precioNuevo) {
+		inmueble.modificarPrecioBase(precioNuevo);	
+	}
+
+	@Override
+	public void modificarPreciosEspecificos(Inmueble inmueble, LocalDate fechaInicial, LocalDate fechaFinal, int precio)
+			throws Exception {
+		inmueble.modificarPreciosEspecificos(fechaInicial, fechaFinal, precio);
+	}
+
+	@Override
+	public void modificarFormasDePago(Inmueble inmueble, FormaDePago formaDePago) {
+		inmueble.modificarFormasDePago(formaDePago);	
+	}
+
+	@Override
 	public List<Inmueble> inmueblesAlquilados() {
-		return this.reservas.stream()
+		return this.getReservas().stream()
     			.filter(reserva -> {
 										try {
-											reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+											reserva.getEstadoDeReserva().finalizoLaReserva();
 											return true;
 										} catch (Exception e) {
 											return false;
@@ -283,77 +204,170 @@ public class Usuario implements UsuarioPropietario {
     								   .collect(Collectors.toList());
 	}
 
+	@Override
 	public void recibirSolicitudReserva(SolicitudDeReserva solicitudDeReserva) {
 		solicitudDeReserva.aprobarSolicitud();
-
 	}
 
+	@Override
 	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		
-		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-		this.sitioWeb.estaCategoriaEspecificaInquilino(categoria);
+		reserva.getEstadoDeReserva().finalizoLaReserva();
+		this.getSitioWeb().estaCategoriaEspecificaInquilino(categoria);
 		this.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));
-
 	}
 
+	@Override
 	public void actualizarListaDeRankeoInquilino(Rankeo rankeo) {
+		if (this.estaElRank(rankeo,this.getRankeosInquilino())) {
 
-		if (this.estaElRank(rankeo,this.rankeosInquilino)) {
-
-			this.actualizarPuntajeDeRankeo(rankeo, this.rankeosInquilino);
+			this.actualizarPuntajeDeRankeo(rankeo, this.getRankeosInquilino());
 		}
 		else {
 
-			this.rankeosInquilino.add(rankeo);
+			this.getRankeosInquilino().add(rankeo);
 		}
+		
 	}
-	
-	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception{
 
-		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-		this.comentariosInquilino.add(comentario);
+	@Override
+	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception {
+		reserva.getEstadoDeReserva().finalizoLaReserva();
+		this.getComentariosInquilino().add(comentario);
 	}
-	
+
+	@Override
 	public double recibirResarcimiento(double dineroResarcido) {
 		return dineroResarcido;
 	}
-	
+
+	@Override
 	public long cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles() {
-		return this.reservas.stream()
-                			.filter(reserva -> {
-													try {
-														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-														return true;
-													} catch (Exception e) {
-														return false;
-													}
-												} ) 
-                								.count();
-	}
-	
-	public long cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(Inmueble inmueble) {
-		return this.reservas.stream()
-                			.filter(reserva -> {
-													try {
-														reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
-														return reserva.getInmueble() == inmueble;
-													} catch (Exception e) {
-														return false;
-													}
-												} ) 
-                								.count();
+		return this.getReservas().stream()
+    			.filter(reserva -> {
+										try {
+											reserva.getEstadoDeReserva().finalizoLaReserva();
+											return true;
+										} catch (Exception e) {
+											return false;
+										}
+									} ) 
+    								.count();
 	}
 
+	@Override
+	public long cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(Inmueble inmueble) {
+		return this.getReservas().stream()
+    			.filter(reserva -> {
+										try {
+											reserva.getEstadoDeReserva().finalizoLaReserva();
+											return reserva.getInmueble() == inmueble;
+										} catch (Exception e) {
+											return false;
+										}
+									} ) 
+    								.count();
+	}
+
+
+	@Override
 	public void datosDelPropietario(Inmueble inmueble) {
 		this.getNombre();
 		this.getMail();
 		this.getTelefono();
 		this.getComentariosPropietario();
 		this.getRankeosPropietario();
-		this.calcularPromedioTotal(this.rankeosPropietario);
+		this.calcularPromedioTotal(this.getRankeosPropietario());
 		this.cantidadTiempoRegistrado();
 		this.cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(inmueble);
 		this.cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles();
 		this.inmueblesAlquilados();
+	}
+
+	@Override
+	public long cantidadDeVecesQueAlquiloUnInquilino() {
+		
+		return this.getReservas().stream()
+                			.filter(reserva -> {
+													try {
+														reserva.getEstadoDeReserva().finalizoLaReserva();
+														return true;
+													} catch (Exception e) {
+														return false;
+													}
+												} ).count();
+	}
+
+	@Override
+	public List<Reserva> getReservasFuturas(LocalDate fechaActual){
+		return this.getReservas().stream()
+		        .filter(reserva -> reserva.getFechaDeIngreso().isAfter(fechaActual))
+		        .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Reserva> getReservasEnCiudad(String ciudad){
+		return this.getReservas().stream()
+		        .filter(reserva -> reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
+		        .collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> getCiudadesReservadas(){
+		return this.getReservas().stream()
+					.filter(reserva -> reserva.getInquilino().equals(this))
+	            	.map(reserva -> reserva.getInmueble().getCiudad())
+	            	.distinct()
+	            	.collect(Collectors.toList());
+	}
+
+	@Override
+	public void cancelarReserva(Reserva reserva) throws Exception{
+
+		if (this.getReservas().stream().anyMatch(reser -> reser.equals(reserva))){
+			reserva.cancelarReserva();
+			this.eliminarReserva(reserva);
+		}
+		else {
+			throw new Exception("La Reserva no le pertenece");
+		}
+	}
+
+	@Override
+	public void dejarUnComentarioAlPropietario(Reserva reserva, String comentario) throws Exception{
+
+		reserva.getEstadoDeReserva().finalizoLaReserva();
+		this.getComentariosPropietario().add(comentario);
+	}
+
+	@Override
+	public void rankearUnPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		
+		reserva.getEstadoDeReserva().finalizoLaReserva();
+		this.getSitioWeb().estaCategoriaEspecificaPropietario(categoria);
+		this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
+	}
+
+	@Override
+	public void actualizarListaDeRankeoPropietario(Rankeo rankeo) {
+
+		if (this.estaElRank(rankeo,this.getRankeosPropietario())) {
+
+			this.actualizarPuntajeDeRankeo(rankeo,this.getRankeosPropietario());
+		}
+		else {
+
+			this.getRankeosPropietario().add(rankeo);
+		}
+	}
+
+	@Override
+	public void datosDelInquilino() {
+		this.getNombre();
+		this.getMail();
+		this.getTelefono();
+		this.getComentariosInquilino();
+		this.getRankeosInquilino();
+		this.calcularPromedioTotal(this.getRankeosInquilino());
+		this.cantidadTiempoRegistrado();
 	}
 }

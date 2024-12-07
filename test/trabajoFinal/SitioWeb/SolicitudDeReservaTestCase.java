@@ -85,7 +85,7 @@ public class SolicitudDeReservaTestCase {
     	when(reservaMock.getManager()).thenReturn(managerMock);
     	when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
     	
-        solicitud.realizarReserva(reservaMock); // Llamamos al método que debería evaluar la reserva
+        solicitud.crearReserva(); // Llamamos al método que debería evaluar la reserva
 
         verify(reservaMock).evaluarReserva(); // Verificamos la interacción con el mock
     }

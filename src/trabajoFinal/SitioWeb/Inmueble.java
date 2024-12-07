@@ -177,14 +177,14 @@ public class Inmueble {
 	
 	public void dejarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
 
-		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		reserva.getEstadoDeReserva().finalizoLaReserva();
 		comentarios.add(comentario);
 	
 	}
 	
 	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception  {
 
-		reserva.getEstadoDeReserva().finalizoLaReserva(reserva);
+		reserva.getEstadoDeReserva().finalizoLaReserva();
 		this.sitioWeb.estaCategoriaEspecificaInmueble(categoria);
 		this.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
 	}
