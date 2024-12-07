@@ -1,6 +1,5 @@
 package trabajoFinal.SitioWeb;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +14,6 @@ public class SitioWeb {
 	private List<Categoria> todasLasCategoriasDePropietario = new ArrayList<>();
 	private List<TipoDeServicio> todosLosTiposDeServicios = new ArrayList<>();
 	private List<TipoDeInmueble> todosLosTiposDeInmueble = new ArrayList<>();
-	private List<Filtro> filtros = new ArrayList<>();
 
 	public void registrarUsuario(Usuario usuario) {
 		this.todosLosUsuarios.add(usuario);
