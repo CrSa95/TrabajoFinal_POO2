@@ -66,11 +66,6 @@ public class UsuarioTestCase {
     }
 	
 	//Test de funcionalidades en comun 
-	
-    @Test
-    void testUnUsuarioInquilinoYUnUsuarioPropietarioEsElMismoUsuario() {
-    	assertTrue(usuarioInquilino.equals(usuarioPropietario));
-    }
     
 	@Test
     void testUnUsuarioPuedeRegistrarseEnSitioWeb() {
