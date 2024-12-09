@@ -208,7 +208,11 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	public void recibirSolicitudReserva(SolicitudDeReserva solicitudDeReserva) {
 		solicitudDeReserva.aprobarSolicitud();
 	}
-
+	
+	public void laReservaFinalizo(Reserva reserva) throws Exception {
+		reserva.getEstadoDeReserva().finalizoLaReserva();
+	}
+	
 	@Override
 	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
 		reserva.getEstadoDeReserva().finalizoLaReserva();
