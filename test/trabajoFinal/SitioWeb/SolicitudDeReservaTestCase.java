@@ -77,5 +77,4 @@ public class SolicitudDeReservaTestCase {
         assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso()); 
         assertNotNull(reserva.getManager());
     }
-     
 }
