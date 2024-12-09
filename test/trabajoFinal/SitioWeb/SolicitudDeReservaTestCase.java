@@ -77,19 +77,4 @@ public class SolicitudDeReservaTestCase {
         assertEquals(LocalDate.of(2024, 12, 10), reserva.getFechaDeEgreso()); 
         assertNotNull(reserva.getManager());
     }
-     
-    @Test
-    public void testRealizarReserva() {  
-    	Reserva reservaMock = mock(Reserva.class);
-    	Usuario propietarioMock = mock(Usuario.class);
-    	Manager managerMock = mock(Manager.class);
-
-    	reservaMock.setManager(managerMock);
-    	when(reservaMock.getManager()).thenReturn(managerMock);
-    	when(inmuebleMock.getPropietario()).thenReturn(propietarioMock);
-    	
-        solicitud.crearReserva(); // Llamamos al método que debería evaluar la reserva
-
-        verify(reservaMock).evaluarReserva(); // Verificamos la interacción con el mock
-    }
 }

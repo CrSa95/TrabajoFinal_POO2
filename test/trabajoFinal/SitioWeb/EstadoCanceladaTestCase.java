@@ -33,7 +33,7 @@ class EstadoCanceladaTestCase {
 	
 	@Test
 	void testElEstadoEsFinalizado() throws Exception {
-		assertThrows(Exception.class, () -> {estadoCancelada.finalizoLaReserva(reservaMock);});
-		assertThrows(Exception.class,() -> estadoCancelada.finalizoLaReserva(reservaMock), "Error: La Reserva aun no finalizo.");
+		assertThrows(Exception.class, () -> {estadoCancelada.finalizoLaReserva();});
+		assertThrows(Exception.class,() -> estadoCancelada.finalizoLaReserva(), "Error: La Reserva aun no finalizo.");
 	}
 } 
