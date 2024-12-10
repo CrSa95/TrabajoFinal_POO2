@@ -173,21 +173,14 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		
 	}
 
-	@Override
 	public List<Inmueble> inmueblesAlquilados() {
-		return this.getReservas().stream()
-    			.filter(reserva -> {
-										try {
-											reserva.getEstadoDeReserva().finalizoLaReserva();
-											return true;
-										} catch (Exception e) {
-											return false;
-										}
-									} ).map(Reserva::getInmueble) 
-    								   .distinct()
-    								   .collect(Collectors.toList());
+	    return this.getReservas().stream()
+	            .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado())
+	            .map(Reserva::getInmueble)
+	            .distinct()
+	            .collect(Collectors.toList());
 	}
-
+	
 	@Override
 	public void recibirSolicitudReserva(SolicitudDeReserva solicitudDeReserva) {
 		solicitudDeReserva.aprobarSolicitud();
@@ -219,32 +212,17 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		return dineroResarcido;
 	}
 
-	@Override
 	public long cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles() {
-		return this.getReservas().stream()
-    			.filter(reserva -> {
-										try {
-											reserva.getEstadoDeReserva().finalizoLaReserva();
-											return true;
-										} catch (Exception e) {
-											return false;
-										}
-									} ) 
-    								.count();
+	    return this.getReservas().stream()
+	               .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado())
+	               .count();
 	}
 
-	@Override
 	public long cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(Inmueble inmueble) {
-		return this.getReservas().stream()
-    			.filter(reserva -> {
-										try {
-											reserva.getEstadoDeReserva().finalizoLaReserva();
-											return reserva.getInmueble() == inmueble;
-										} catch (Exception e) {
-											return false;
-										}
-									} ) 
-    								.count();
+	    return this.getReservas().stream()
+	               .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado() 
+	                                  && reserva.getInmueble() == inmueble)
+	               .count();
 	}
 
 
@@ -262,18 +240,10 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		this.inmueblesAlquilados();
 	}
 
-	@Override
 	public long cantidadDeVecesQueAlquiloUnInquilino() {
-		
-		return this.getReservas().stream()
-                			.filter(reserva -> {
-													try {
-														reserva.getEstadoDeReserva().finalizoLaReserva();
-														return true;
-													} catch (Exception e) {
-														return false;
-													}
-												} ).count();
+	    return this.getReservas().stream()
+	               .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado())
+	               .count();
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-//import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.List;
@@ -41,7 +41,10 @@ class EstadoFinalizadaTestCase {
 		verifyNoInteractions(reservaMock);
 	}
 	
-	
+	@Test
+	void testElEstadoEsFinalizado() throws Exception {
+		assertTrue(estadoFinalizada.esFinalizado());
+	}
 	
 	@Test
 	void testRankearAUnPropietario() throws Exception {

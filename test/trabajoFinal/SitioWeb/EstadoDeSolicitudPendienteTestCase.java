@@ -11,13 +11,11 @@ class EstadoDeSolicitudPendienteTestCase {
 
 	private EstadoDeSolicitudPendiente estadoDeSolicitudPendiente;
 	private SolicitudDeReserva solicitudMock;
-	private Reserva reservaMock;
 	
 	@BeforeEach
     public void setUp() {
 		estadoDeSolicitudPendiente = new EstadoDeSolicitudPendiente();
 		solicitudMock = mock(SolicitudDeReserva.class);
-		reservaMock = mock(Reserva.class);
 	}
 	
 	@Test

@@ -29,8 +29,8 @@ public class EstadoConfirmada implements EstadoDeReserva {
 	}
 
 	@Override
-	public void finalizoLaReserva() throws Exception  {
-		throw new Exception("Error: La Reserva aun no finalizo.");
+	public boolean esFinalizado(){
+		return  false;
 	}
 
 	@Override

@@ -72,8 +72,7 @@ class EstadoConfirmadaTestCase {
 
 	@Test
 	void testElEstadoEsFinalizado() throws Exception {
-		assertThrows(Exception.class, () -> {estadoConfirmada.finalizoLaReserva();});
-		assertThrows(Exception.class,() -> estadoConfirmada.finalizoLaReserva(), "Error: La Reserva aun no finalizo."); 
+		assertFalse(estadoConfirmada.esFinalizado());
 	}
 	
 	@Test

@@ -37,8 +37,7 @@ class EstadoCondicionalTestCase {
 	
 	@Test
 	void testElEstadoEsFinalizado() throws Exception {
-		assertThrows(Exception.class, () -> {estadoCondicional.finalizoLaReserva();});
-		assertThrows(Exception.class,() -> estadoCondicional.finalizoLaReserva(), "Error: La Reserva aun no finalizo.");
+		assertFalse(estadoCondicional.esFinalizado());
 	}
 	
 	@Test

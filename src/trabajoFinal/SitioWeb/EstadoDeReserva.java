@@ -4,7 +4,7 @@ public interface EstadoDeReserva {
 
 	public void cancelar(Reserva reserva);
 	public void finalizar(Reserva reserva);
-	public void finalizoLaReserva() throws Exception;
+	public boolean esFinalizado();
 	public void rankearAUnPropietario(Usuario usuario, Categoria categoria, int puntaje) throws Exception;
 	public void rankearAUnInquilino(Usuario usuario, Categoria categoria, int puntaje) throws Exception;
 	public void rankearUnInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws Exception;
