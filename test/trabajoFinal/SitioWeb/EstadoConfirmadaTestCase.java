@@ -73,6 +73,51 @@ class EstadoConfirmadaTestCase {
 	@Test
 	void testElEstadoEsFinalizado() throws Exception {
 		assertThrows(Exception.class, () -> {estadoConfirmada.finalizoLaReserva();});
-		assertThrows(Exception.class,() -> estadoConfirmada.finalizoLaReserva(), "Error: La Reserva aun no finalizo.");
+		assertThrows(Exception.class,() -> estadoConfirmada.finalizoLaReserva(), "Error: La Reserva aun no finalizo."); 
+	}
+	
+	@Test
+	void testRankearAUnPropietarioLanzaExcepcion() {
+	    Categoria categoriaMock = mock(Categoria.class);
+
+	    assertThrows(Exception.class, () -> {estadoConfirmada.rankearAUnPropietario(usuarioMock, categoriaMock, 5);});
+	    assertThrows(Exception.class, () -> estadoConfirmada.rankearAUnPropietario(usuarioMock, categoriaMock, 5), "Error: La Reserva aun no finalizo.");
+	}
+
+	@Test
+	void testRankearAUnInquilinoLanzaExcepcion() {
+	    Categoria categoriaMock = mock(Categoria.class);
+
+	    assertThrows(Exception.class, () -> {estadoConfirmada.rankearAUnInquilino(usuarioMock, categoriaMock, 5);});
+	    assertThrows(Exception.class, () -> estadoConfirmada.rankearAUnInquilino(usuarioMock, categoriaMock, 5), "Error: La Reserva aun no finalizo.");
+	}
+
+	@Test
+	void testRankearUnInmuebleLanzaExcepcion() {
+	    Categoria categoriaMock = mock(Categoria.class);
+
+	    assertThrows(Exception.class, () -> {estadoConfirmada.rankearUnInmueble(inmuebleMock, categoriaMock, 5);});
+	    assertThrows(Exception.class, () -> estadoConfirmada.rankearUnInmueble(inmuebleMock, categoriaMock, 5), "Error: La Reserva aun no finalizo.");
+	}
+
+	@Test
+	void testRegistrarComentarioParaElPropietarioLanzaExcepcion() {
+  
+	    assertThrows(Exception.class, () -> {estadoConfirmada.registrarComentarioParaElPropietario(usuarioMock, "Excelente propietario");});
+	    assertThrows(Exception.class, () -> estadoConfirmada.registrarComentarioParaElPropietario(usuarioMock, "Excelente propietario"), "Error: La Reserva aun no finalizo.");
+	}
+
+	@Test
+	void testRegistrarComentarioParaElInquilinoLanzaExcepcion() {
+	    
+	    assertThrows(Exception.class, () -> {estadoConfirmada.registrarComentarioParaElInquilino(usuarioMock, "Muy buen inquilino");});
+	    assertThrows(Exception.class, () -> estadoConfirmada.registrarComentarioParaElInquilino(usuarioMock, "Muy buen inquilino"), "Error: La Reserva aun no finalizo.");
+	}
+
+	@Test
+	void testRegistrarComentarioParaElInmuebleLanzaExcepcion() {
+	    
+	    assertThrows(Exception.class, () -> {estadoConfirmada.registrarComentarioParaElInmueble(inmuebleMock, "Excelente ubicación");});
+	    assertThrows(Exception.class, () -> estadoConfirmada.registrarComentarioParaElInmueble(inmuebleMock, "Excelente ubicación"), "Error: La Reserva aun no finalizo.");
 	}
 }

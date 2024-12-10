@@ -1,6 +1,5 @@
 package trabajoFinal.SitioWeb;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,26 +71,6 @@ public class SitioWeb {
 	
 	public List<Inmueble> buscarInmuebles(Busqueda busqueda){
 		return busqueda.aplicarFiltros(this.inmuebles);
-	}
-
-	public List<Reserva> getReservasFuturas(LocalDate fechaActual, Usuario usuario){
-		return usuario.getReservas().stream()
-		        .filter(reserva -> reserva.getFechaDeIngreso().isAfter(fechaActual))
-		        .collect(Collectors.toList());
-	}
-
-	public List<Reserva> getReservasEnCiudad(String ciudad, Usuario usuario){
-		return usuario.getReservas().stream()
-		        .filter(reserva -> reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
-		        .collect(Collectors.toList());
-	}
-
-	public List<String> getCiudadesReservadas(Usuario usuario){
-		return usuario.getReservas().stream()
-					.filter(reserva -> reserva.getInquilino().equals(usuario))
-	            	.map(reserva -> reserva.getInmueble().getCiudad())
-	            	.distinct()
-	            	.collect(Collectors.toList());
 	}
 	
 	//Metodos de administrador
