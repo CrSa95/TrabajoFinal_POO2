@@ -14,7 +14,6 @@ public class ReservaTestCase {
     private Reserva reserva;
     private Inmueble inmuebleMock;
     private Usuario inquilinoMock;
-    private Usuario propietarioMock;
     private FormaDePago formaDePagoMock;
     private EstadoDeReserva estadoDeReservaMock;
     private Manager managerMock;
@@ -23,7 +22,6 @@ public class ReservaTestCase {
     public void setUp() {
         inmuebleMock = mock(Inmueble.class); 
         inquilinoMock = mock(Usuario.class); 
-        propietarioMock = mock(Usuario.class);
         formaDePagoMock = mock(FormaDePago.class);
         estadoDeReservaMock = mock(EstadoDeReserva.class);
         managerMock = mock(Manager.class);

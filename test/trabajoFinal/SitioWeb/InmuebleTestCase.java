@@ -89,9 +89,9 @@ public class InmuebleTestCase {
 		inmueble.setManager(managerMock);
 		
 		assertTrue(inmueble.getPrecioBase() == 1000);
-		inmueble.modificarPrecioBase(2000);
+		inmueble.actualizarPrecioBase(2000);
 		assertTrue(inmueble.getPrecioBase() == 2000);
-		inmueble.modificarPrecioBase(500);
+		inmueble.actualizarPrecioBase(500);
 		assertTrue(inmueble.getPrecioBase() == 500);
 		
 		verify(managerMock).bajaDePrecio(inmueble);
@@ -138,9 +138,9 @@ public class InmuebleTestCase {
 		when(rankeoMock.getPuntaje()).thenReturn(3);
 		when(otroRankeoMock.getPuntaje()).thenReturn(5);
 		
-		inmueble.actualizarListaDeRaneko(rankeoMock);
+		inmueble.actualizarListaDeRankeoInmueble(rankeoMock);
 		assertTrue(inmueble.getRankeosInmueble().contains(rankeoMock));
-		inmueble.actualizarListaDeRaneko(rankeoMock);	
+		inmueble.actualizarListaDeRankeoInmueble(rankeoMock);	
 		assertTrue(inmueble.calcularPromedioTotal() == 3);
 	}
 	
@@ -164,7 +164,7 @@ public class InmuebleTestCase {
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		
 		inmueble.setSitioWeb(sitioWebMock);
-		assertDoesNotThrow(() -> inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5));
+		assertDoesNotThrow(() -> inmueble.rankearAInmueble(reservaMock, categoriaMock, 5));
 		assertFalse(inmueble.getRankeosInmueble().isEmpty());
 		
 	}
@@ -172,11 +172,11 @@ public class InmuebleTestCase {
 	@Test
     void testUnInmuebleNoPuedeRecibirUnRankeo() throws Exception {
 		
-		assertThrows(Exception.class, () -> {inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5);});
+		assertThrows(Exception.class, () -> {inmueble.rankearAInmueble(reservaMock, categoriaMock, 5);});
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		when(categoriaMock.nombreCategoria()).thenReturn(" ");
 		doThrow(new Exception("Error: La categoria" + categoriaMock.nombreCategoria() + "es incorrecta.")).when(sitioWebMock).estaCategoriaEspecificaPropietario(categoriaMock);   
-		assertThrows(Exception.class, () -> {inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5);});
+		assertThrows(Exception.class, () -> {inmueble.rankearAInmueble(reservaMock, categoriaMock, 5);});
 		
 	}
 	

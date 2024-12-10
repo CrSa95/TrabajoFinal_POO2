@@ -125,7 +125,7 @@ public class Inmueble {
 	            );
 	}
 	
-	public void modificarPrecioBase(double precioBase) {	
+	public void actualizarPrecioBase(double precioBase) {	
 		if (this.precioBase > precioBase) {
 			this.manager.bajaDePrecio(this);
 		}
@@ -135,6 +135,11 @@ public class Inmueble {
 	public double getPrecioBase() {
 		return this.precioBase;
 	}
+	
+	public SitioWeb getSitioWeb() {
+		return this.sitioWeb;
+	}
+
 
 	public void setDisponibilidad(LocalDate fechaInicial, LocalDate fechaFinal) {
 
@@ -176,27 +181,19 @@ public class Inmueble {
 	}
 	
 	public void dejarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
-
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		comentarios.add(comentario);
-	
+		reserva.getEstadoDeReserva().registrarComentarioParaElInmueble(this, comentario);
 	}
 	
-	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception  {
-
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		this.sitioWeb.estaCategoriaEspecificaInmueble(categoria);
-		this.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
+	public void rankearAInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearUnInmueble(this, categoria, puntaje);
 	}
 	
-	public void actualizarListaDeRaneko(Rankeo rankeo) {
+	public void actualizarListaDeRankeoInmueble(Rankeo rankeo) {
 
 		if (this.estaElRank(rankeo)) {
-
 			this.actualizarPuntajeDeRankeo(rankeo);
 		}
 		else {
-
 			this.rankeosInmueble.add(rankeo);
 		}
 	}

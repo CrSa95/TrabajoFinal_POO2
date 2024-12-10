@@ -174,22 +174,6 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	}
 
 	@Override
-	public void actualizarPrecioBase(Inmueble inmueble, int precioNuevo) {
-		inmueble.modificarPrecioBase(precioNuevo);	
-	}
-
-	@Override
-	public void modificarPreciosEspecificos(Inmueble inmueble, LocalDate fechaInicial, LocalDate fechaFinal, int precio)
-			throws Exception {
-		inmueble.modificarPreciosEspecificos(fechaInicial, fechaFinal, precio);
-	}
-
-	@Override
-	public void modificarFormasDePago(Inmueble inmueble, FormaDePago formaDePago) {
-		inmueble.modificarFormasDePago(formaDePago);	
-	}
-
-	@Override
 	public List<Inmueble> inmueblesAlquilados() {
 		return this.getReservas().stream()
     			.filter(reserva -> {
@@ -214,29 +198,24 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	}
 	
 	@Override
-	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		this.getSitioWeb().estaCategoriaEspecificaInquilino(categoria);
-		this.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));
+	public void rankearAInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearAUnInquilino(this, categoria, puntaje);
 	}
 
 	@Override
 	public void actualizarListaDeRankeoInquilino(Rankeo rankeo) {
 		if (this.estaElRank(rankeo,this.getRankeosInquilino())) {
-
 			this.actualizarPuntajeDeRankeo(rankeo, this.getRankeosInquilino());
 		}
 		else {
-
 			this.getRankeosInquilino().add(rankeo);
 		}
 		
 	}
 
 	@Override
-	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception {
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		this.getComentariosInquilino().add(comentario);
+	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception{
+		reserva.getEstadoDeReserva().registrarComentarioParaElInquilino(this, comentario);
 	}
 
 	@Override
@@ -323,7 +302,7 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	            	.distinct()
 	            	.collect(Collectors.toList());
 	}
-
+	
 	@Override
 	public void cancelarReserva(Reserva reserva) throws Exception{
 
@@ -338,28 +317,21 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 
 	@Override
 	public void dejarUnComentarioAlPropietario(Reserva reserva, String comentario) throws Exception{
-
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		this.getComentariosPropietario().add(comentario);
+		reserva.getEstadoDeReserva().registrarComentarioParaElPropietario(this, comentario);
 	}
 
 	@Override
-	public void rankearUnPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		this.getSitioWeb().estaCategoriaEspecificaPropietario(categoria);
-		this.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
+	public void rankearAPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearAUnPropietario(this, categoria, puntaje);
 	}
+	
 
 	@Override
 	public void actualizarListaDeRankeoPropietario(Rankeo rankeo) {
-
 		if (this.estaElRank(rankeo,this.getRankeosPropietario())) {
-
 			this.actualizarPuntajeDeRankeo(rankeo,this.getRankeosPropietario());
 		}
 		else {
-
 			this.getRankeosPropietario().add(rankeo);
 		}
 	}
