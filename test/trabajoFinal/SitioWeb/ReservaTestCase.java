@@ -45,7 +45,7 @@ public class ReservaTestCase {
     }
     
 	@Test
-	void testCuandoSeFinalizaLaReserva() {
+	void testCuandoSeFinalizaLaReserva() throws Exception {
 		reserva.setEstadoDeReserva(estadoDeReservaMock);
 		reserva.finalizarReserva();
 		
@@ -53,7 +53,7 @@ public class ReservaTestCase {
 	}
 	
 	@Test
-	void testCuandoSeCancelaLaReserva() {
+	void testCuandoSeCancelaLaReserva() throws Exception {
 		reserva.setEstadoDeReserva(estadoDeReservaMock);
 		reserva.cancelarReserva(); 
 		

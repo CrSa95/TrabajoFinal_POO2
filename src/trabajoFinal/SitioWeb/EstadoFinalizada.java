@@ -1,19 +1,17 @@
 package trabajoFinal.SitioWeb;
 
-public class EstadoFinalizada implements EstadoDeReserva {
-
+public class EstadoFinalizada extends EstadoDeReserva {
+	
 	@Override
-	public void cancelar(Reserva reserva) {
-		// TODO Auto-generated method stub
-
+	public void cancelar(Reserva reserva) throws Exception{
+		throw new Exception("Error: La Reserva esta finalizada.");
 	}
-
+	
 	@Override
-	public void finalizar(Reserva reserva) {
-		// TODO Auto-generated method stub
-
+	public void finalizar(Reserva reserva) throws Exception{
+		throw new Exception("Error: La Reserva esta finalizada.");
 	}
-
+	
 	@Override
 	public boolean esFinalizado(){
 		return  true;

@@ -55,11 +55,11 @@ public class Reserva {
 		return this.estadoDeReserva;
 	}
 
-	public void finalizarReserva() {
+	public void finalizarReserva() throws Exception {
 		this.estadoDeReserva.finalizar(this);
 	}
 
-	public void cancelarReserva() {
+	public void cancelarReserva() throws Exception {
 		this.estadoDeReserva.cancelar(this);
 		this.manager.cancelacionDeReserva(this.inmueble);
 	}

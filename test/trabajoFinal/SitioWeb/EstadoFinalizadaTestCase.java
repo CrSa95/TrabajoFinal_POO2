@@ -28,21 +28,19 @@ class EstadoFinalizadaTestCase {
 	}
 	
 	@Test
-	void testCancelar() {
-		estadoFinalizada.cancelar(reservaMock);
-		
-		verifyNoInteractions(reservaMock);
+	void testCancelar() throws Exception {
+		Exception exception = assertThrows(Exception.class, () -> estadoFinalizada.cancelar(reservaMock));
+	    assertEquals("Error: La Reserva esta finalizada.", exception.getMessage());
 	}
 	
 	@Test
-	void testFinalizar() {
-		estadoFinalizada.finalizar(reservaMock);
-		
-		verifyNoInteractions(reservaMock);
+	void testFinalizar() throws Exception {
+		Exception exception = assertThrows(Exception.class, () -> estadoFinalizada.finalizar(reservaMock));
+	    assertEquals("Error: La Reserva esta finalizada.", exception.getMessage());
 	}
 	
 	@Test
-	void testElEstadoEsFinalizado() throws Exception {
+	void testElEstadoEsFinalizado() throws Exception { 
 		assertTrue(estadoFinalizada.esFinalizado());
 	}
 	
@@ -115,4 +113,4 @@ class EstadoFinalizadaTestCase {
 	    verify(comentarios).add("Lugar acogedor");
 	}
 
-} 
+}
