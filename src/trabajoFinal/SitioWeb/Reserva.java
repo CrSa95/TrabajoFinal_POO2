@@ -46,6 +46,14 @@ public class Reserva {
 	public LocalDate getFechaDeEgreso() {
 		return this.fechaDeEgreso;
 	}
+	
+	public Inmueble getInmueble() {
+		return this.inmueble;
+	}
+	
+	public EstadoDeReserva getEstadoDeReserva() {
+		return this.estadoDeReserva;
+	}
 
 	public void finalizarReserva() {
 		this.estadoDeReserva.finalizar(this);
@@ -54,10 +62,6 @@ public class Reserva {
 	public void cancelarReserva() {
 		this.estadoDeReserva.cancelar(this);
 		this.manager.cancelacionDeReserva(this.inmueble);
-	}
-
-	public Inmueble getInmueble() {
-		return this.inmueble;
 	}
 
 	public void evaluarReserva() {
@@ -80,9 +84,5 @@ public class Reserva {
 
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
 		this.estadoDeReserva = estadoDeReserva; 
-	}
-
-	public EstadoDeReserva getEstadoDeReserva() {
-		return this.estadoDeReserva;
 	}
 }
