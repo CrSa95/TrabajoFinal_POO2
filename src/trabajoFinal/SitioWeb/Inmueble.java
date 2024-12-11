@@ -52,21 +52,6 @@ public class Inmueble {
 		this.sitioWeb = sitioWeb;
 	}
 	
-	public void datosDelInmueble() {
-		this.getSuperficie();
-		this.getPais();
-		this.getCiudad();
-		this.getDireccion(); 
-		this.getCapacidad();
-		this.getFotos();
-		this.getTiposDeServicios();
-		this.getCheckIn();
-		this.getCheckOut();
-		this.getComentarios();
-		this.getRankeosInmueble();
-		this.calcularPromedioTotal();
-	}
-
 	public List<TipoDeServicio> getTiposDeServicios() {
 		return this.tiposDeServicios;
 		
@@ -181,12 +166,12 @@ public class Inmueble {
 		return this.propietario;
 	}
 	
-	public void dejarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
-		reserva.getEstadoDeReserva().registrarComentarioParaElInmueble(this, comentario);
+	public void agregarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
+		reserva.getEstadoDeReserva().registrarComentarioInmueble(this, comentario);
 	}
 	
-	public void rankearAInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		reserva.getEstadoDeReserva().rankearUnInmueble(this, categoria, puntaje);
+	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearInmueble(this, categoria, puntaje);
 	}
 	
 	public void actualizarListaDeRankeoInmueble(Rankeo rankeo) {

@@ -102,14 +102,6 @@ public class SitioWeb {
                 .collect(Collectors.toList());
     }
 	
-	public void visualizarInmueble(Inmueble inmueble){
-
-		inmueble.datosDelInmueble();
-		inmueble.getPropietario().datosDelPropietario(inmueble);
-	}
-	
-	
-	
 	public List<Reserva> getReservasFuturas(LocalDate fechaActual, Usuario usuario){
 		return usuario.getReservas().stream()
 		        .filter(reserva -> reserva.getFechaDeIngreso().isAfter(fechaActual))

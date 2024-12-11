@@ -164,17 +164,6 @@ public class SitioWebTestCase {
 	}
 	
 	@Test
-    void testUnSitioWebPuedeVisualizarUnInmueble() {
-		
-		when(inmueble.getPropietario()).thenReturn(usuarioMock);
-		
-		sitioWeb.visualizarInmueble(inmueble);
-		
-        verify(inmueble).datosDelInmueble();
-        verify(inmueble.getPropietario()).datosDelPropietario(inmueble);
-    }
-	
-	@Test
 	void testUnUsuarioInquilinoPuedeVerSusReservasFuturas() {
         Reserva reservaMock = mock(Reserva.class);
         Reserva otraReservaMock = mock(Reserva.class);

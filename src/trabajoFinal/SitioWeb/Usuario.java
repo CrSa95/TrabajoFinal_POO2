@@ -35,10 +35,6 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		return this.sitioWeb;
 	}
 
-	public LocalDate getFechaDeRegistro() {
-		return this.fechaRegistro;
-	}
-
 	public String getNombre() {
 		return this.nombreCompleto; 
 	}
@@ -49,10 +45,6 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	
 	public int getTelefono() {
 		return telefono;
-	}
-	
-	public String getContenidoMail() {
-		return this.contenidoMail; 
 	}
 	
 	public List<Rankeo> getRankeosInquilino(){
@@ -142,30 +134,30 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 
 	// Comentarios
 	@Override
-	public void dejarUnComentarioAlPropietario(Reserva reserva, String comentario) throws Exception{
-		reserva.getEstadoDeReserva().registrarComentarioParaElPropietario(this, comentario);
+	public void agregarUnComentarioAlPropietario(Reserva reserva, String comentario) throws Exception{
+		reserva.getEstadoDeReserva().registrarComentarioPropietario(this, comentario);
 	}
 
 	@Override
-	public void dejarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception{
-		reserva.getEstadoDeReserva().registrarComentarioParaElInquilino(this, comentario);
+	public void agregarUnComentarioAlInqulino(Reserva reserva, String comentario) throws Exception{
+		reserva.getEstadoDeReserva().registrarComentarioInquilino(this, comentario);
 	}
 	
 	// Rankeo
 	@Override
-	public void rankearAPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		reserva.getEstadoDeReserva().rankearAUnPropietario(this, categoria, puntaje);
+	public void rankearUnPropietario(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearPropietario(this, categoria, puntaje);
 	}
 	
 
 	@Override
-	public void rankearAInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
-		reserva.getEstadoDeReserva().rankearAUnInquilino(this, categoria, puntaje);
+	public void rankearUnInquilino(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearInquilino(this, categoria, puntaje);
 	}
 
 	@Override
 	public void actualizarListaDeRankeoInquilino(Rankeo rankeo) {
-		if (this.estaElRank(rankeo,this.getRankeosInquilino())) {
+		if (this.estaElRankeo(rankeo,this.getRankeosInquilino())) {
 			this.actualizarPuntajeDeRankeo(rankeo, this.getRankeosInquilino());
 		}
 		else {
@@ -176,7 +168,7 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	
 	@Override
 	public void actualizarListaDeRankeoPropietario(Rankeo rankeo) {
-		if (this.estaElRank(rankeo,this.getRankeosPropietario())) {
+		if (this.estaElRankeo(rankeo,this.getRankeosPropietario())) {
 			this.actualizarPuntajeDeRankeo(rankeo,this.getRankeosPropietario());
 		}
 		else {
@@ -184,7 +176,7 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		}
 	}
 	
-	public Boolean estaElRank(Rankeo rankeo, List<Rankeo> listaDeRankeo) {
+	public Boolean estaElRankeo(Rankeo rankeo, List<Rankeo> listaDeRankeo) {
 		return listaDeRankeo.stream()
 				.anyMatch(rank -> rank.getCategoria().nombreCategoria().equals
 						 (rankeo.getCategoria().nombreCategoria()));
@@ -198,30 +190,5 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		listaDeRankeo.stream()
 	    				.filter(rank -> rank.getCategoria().nombreCategoria().equals(rankeo.getCategoria().nombreCategoria()))
 	    				.forEach(rank -> rank.setPuntaje((int)((rankeoViejo.get().getPuntaje() + rankeo.getPuntaje()) / 2)));
-	}
-	
-	@Override
-	public void datosDelPropietario(Inmueble inmueble) {
-		this.getNombre();
-		this.getMail();
-		this.getTelefono();
-		this.getComentariosPropietario();
-		this.getRankeosPropietario();
-		this.calcularPromedioTotal(this.getRankeosPropietario());
-		this.cantidadTiempoRegistrado();
-		this.sitioWeb.cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(inmueble, this);
-		this.sitioWeb.cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles(this);
-		this.inmueblesAlquilados();
-	}
-	
-	@Override
-	public void datosDelInquilino() {
-		this.getNombre();
-		this.getMail();
-		this.getTelefono();
-		this.getComentariosInquilino();
-		this.getRankeosInquilino();
-		this.calcularPromedioTotal(this.getRankeosInquilino());
-		this.cantidadTiempoRegistrado();
 	}
 }

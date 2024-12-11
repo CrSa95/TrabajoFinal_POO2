@@ -37,39 +37,39 @@ class EstadoDeReservaTestCase {
     
 	@Test
     public void testRankearAUnPropietarioLanzaException() {
-        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.rankearAUnPropietario(propietarioMock, categoriaMock, 5);});
+        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.rankearPropietario(propietarioMock, categoriaMock, 5);});
         assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
     }
 
     @Test
     public void testRankearAUnInquilinoLanzaException() {
-        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.rankearAUnInquilino(inquilinoMock, categoriaMock, 5);});
+        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.rankearInquilino(inquilinoMock, categoriaMock, 5);});
         assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
     }
 
     @Test
     public void testRankearUnInmuebleLanzaException() {
     	Inmueble inmuebleMock = mock(Inmueble.class);
-        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.rankearUnInmueble(inmuebleMock, categoriaMock, 5);});
+        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.rankearInmueble(inmuebleMock, categoriaMock, 5);});
         assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
     }
 
     @Test
     public void testRegistrarComentarioParaElPropietarioLanzaException() {
-        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.registrarComentarioParaElPropietario(propietarioMock, "Comentario");});
+        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.registrarComentarioPropietario(propietarioMock, "Comentario");});
         assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
     }
 	
     @Test
     public void testRegistrarComentarioParaElInquilinoLanzaException() {
-        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.registrarComentarioParaElInquilino(inquilinoMock, "Comentario");});
+        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.registrarComentarioInquilino(inquilinoMock, "Comentario");});
         assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
     }
 
     @Test
     public void testRegistrarComentarioParaElInmuebleLanzaException() {
     	Inmueble inmuebleMock = mock(Inmueble.class);
-        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.registrarComentarioParaElInmueble(inmuebleMock, "Comentario");});
+        Exception exception = assertThrows(Exception.class, () -> {estadoCancelada.registrarComentarioInmueble(inmuebleMock, "Comentario");});
         assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
     }
 }

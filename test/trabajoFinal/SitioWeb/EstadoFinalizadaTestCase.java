@@ -49,7 +49,7 @@ class EstadoFinalizadaTestCase {
 
 	    when(propietarioMock.getSitioWeb()).thenReturn(sitioWebMock);
 
-	    estadoFinalizada.rankearAUnPropietario(propietarioMock, categoriaMock, 5);
+	    estadoFinalizada.rankearPropietario(propietarioMock, categoriaMock, 5);
 
 	    verify(sitioWebMock).estaCategoriaEspecificaPropietario(categoriaMock);
 	    verify(propietarioMock).actualizarListaDeRankeoPropietario(any(Rankeo.class));
@@ -60,7 +60,7 @@ class EstadoFinalizadaTestCase {
 
 	    when(inquilinoMock.getSitioWeb()).thenReturn(sitioWebMock);
 
-	    estadoFinalizada.rankearAUnInquilino(inquilinoMock, categoriaMock, 4);
+	    estadoFinalizada.rankearInquilino(inquilinoMock, categoriaMock, 4);
 
 	    verify(sitioWebMock).estaCategoriaEspecificaInquilino(categoriaMock);
 	    verify(inquilinoMock).actualizarListaDeRankeoInquilino(any(Rankeo.class));
@@ -72,7 +72,7 @@ class EstadoFinalizadaTestCase {
 
 	    when(inmuebleMock.getSitioWeb()).thenReturn(sitioWebMock);
 
-	    estadoFinalizada.rankearUnInmueble(inmuebleMock, categoriaMock, 3);
+	    estadoFinalizada.rankearInmueble(inmuebleMock, categoriaMock, 3);
 
 	    verify(sitioWebMock).estaCategoriaEspecificaInmueble(categoriaMock);
 	    verify(inmuebleMock).actualizarListaDeRankeoInmueble(any(Rankeo.class));
@@ -86,7 +86,7 @@ class EstadoFinalizadaTestCase {
 	    List<String> comentarios = mock(List.class);
 	    when(propietarioMock.getComentariosPropietario()).thenReturn(comentarios);
 
-	    estadoFinalizada.registrarComentarioParaElPropietario(propietarioMock, "Excelente propietario");
+	    estadoFinalizada.registrarComentarioPropietario(propietarioMock, "Excelente propietario");
 
 	    verify(comentarios).add("Excelente propietario");
 	}
@@ -97,7 +97,7 @@ class EstadoFinalizadaTestCase {
 	    List<String> comentarios = mock(List.class);
 	    when(inquilinoMock.getComentariosInquilino()).thenReturn(comentarios);
 
-	    estadoFinalizada.registrarComentarioParaElInquilino(inquilinoMock, "Muy buen inquilino");
+	    estadoFinalizada.registrarComentarioInquilino(inquilinoMock, "Muy buen inquilino");
 
 	    verify(comentarios).add("Muy buen inquilino");
 	}
@@ -108,7 +108,7 @@ class EstadoFinalizadaTestCase {
 	    List<String> comentarios = mock(List.class);
 	    when(inmuebleMock.getComentarios()).thenReturn(comentarios);
 
-	    estadoFinalizada.registrarComentarioParaElInmueble(inmuebleMock, "Lugar acogedor");
+	    estadoFinalizada.registrarComentarioInmueble(inmuebleMock, "Lugar acogedor");
 
 	    verify(comentarios).add("Lugar acogedor");
 	}

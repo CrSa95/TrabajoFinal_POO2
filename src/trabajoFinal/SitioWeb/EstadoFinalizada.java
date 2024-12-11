@@ -18,33 +18,33 @@ public class EstadoFinalizada extends EstadoDeReserva {
 	}
 	
 	@Override
-	public void rankearAUnPropietario(Usuario usuario, Categoria categoria, int puntaje) throws Exception {
+	public void rankearPropietario(Usuario usuario, Categoria categoria, int puntaje) throws Exception {
 		usuario.getSitioWeb().estaCategoriaEspecificaPropietario(categoria);
 		usuario.actualizarListaDeRankeoPropietario(new Rankeo(categoria, puntaje));
 	}
 
 	@Override
-	public void rankearAUnInquilino(Usuario usuario, Categoria categoria, int puntaje) throws Exception {
+	public void rankearInquilino(Usuario usuario, Categoria categoria, int puntaje) throws Exception {
 		usuario.getSitioWeb().estaCategoriaEspecificaInquilino(categoria);
 		usuario.actualizarListaDeRankeoInquilino(new Rankeo(categoria, puntaje));	
 	}
 	
 	@Override
-	public void rankearUnInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws Exception {
+	public void rankearInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws Exception {
 		inmueble.getSitioWeb().estaCategoriaEspecificaInmueble(categoria);
 		inmueble.actualizarListaDeRankeoInmueble(new Rankeo(categoria, puntaje));	
 	}
 	
-	public void registrarComentarioParaElPropietario(Usuario usuario, String comentario){
+	public void registrarComentarioPropietario(Usuario usuario, String comentario){
 		usuario.getComentariosPropietario().add(comentario);
 	}
 	
-	public void registrarComentarioParaElInquilino(Usuario usuario, String comentario){
+	public void registrarComentarioInquilino(Usuario usuario, String comentario){
 		usuario.getComentariosInquilino().add(comentario);
 	}
 
 	@Override
-	public void registrarComentarioParaElInmueble(Inmueble inmueble, String comentario) throws Exception {
+	public void registrarComentarioInmueble(Inmueble inmueble, String comentario) throws Exception {
 		inmueble.getComentarios().add(comentario);
 	}
 }

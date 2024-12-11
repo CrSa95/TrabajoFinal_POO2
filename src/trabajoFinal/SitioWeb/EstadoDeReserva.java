@@ -10,22 +10,22 @@ public abstract class EstadoDeReserva {
 		return false;
 	}
 	
-	public void rankearAUnPropietario(Usuario usuario, Categoria categoria, int puntaje) throws Exception{
+	public void rankearPropietario(Usuario usuario, Categoria categoria, int puntaje) throws Exception{
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}
-	public void rankearAUnInquilino(Usuario usuario, Categoria categoria, int puntaje) throws Exception{
+	public void rankearInquilino(Usuario usuario, Categoria categoria, int puntaje) throws Exception{
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}
-	public void rankearUnInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws Exception{
+	public void rankearInmueble(Inmueble inmueble, Categoria categoria, int puntaje) throws Exception{
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}
-	public void registrarComentarioParaElPropietario(Usuario usuario, String comentario) throws Exception{
+	public void registrarComentarioPropietario(Usuario usuario, String comentario) throws Exception{
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}
-	public void registrarComentarioParaElInquilino(Usuario usuario, String comentario) throws Exception{
+	public void registrarComentarioInquilino(Usuario usuario, String comentario) throws Exception{
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}
-	public void registrarComentarioParaElInmueble(Inmueble inmueble, String comentario) throws Exception{
+	public void registrarComentarioInmueble(Inmueble inmueble, String comentario) throws Exception{
 		throw new Exception("Error: La Reserva aun no finalizo.");
 	}
 }

@@ -26,29 +26,26 @@ public class InmuebleTestCase {
 	private TipoDeInmueble tipoConcretoMock;
 	private SolicitudDeReserva solicitudMock;
 	private SitioWeb sitioWebMock;
+	private LocalTime hora;
 	
 	@BeforeEach
     public void setUp() { 
 		
+	    hora =  LocalTime.now();
+		
 		usuarioMock = mock(Usuario.class);
 		managerMock = mock(Manager.class);
-		inmueble = new Inmueble(tipoConcretoMock, usuarioMock, 40, "Argentina", "Buenos Aires", "Calle 43 N° 898", 3,  LocalTime.now(),  LocalTime.now(), 1000, managerMock);
+		tipoConcretoMock = mock(TipoDeInmueble.class);
+		inmueble = new Inmueble(tipoConcretoMock, usuarioMock, 40, "Argentina", "Buenos Aires", "Calle 43 N° 898", 3,  hora,  hora, 1000, managerMock);
+		rankeoMock = mock(Rankeo.class);
+		otroRankeoMock = mock(Rankeo.class);
 		reservaMock = mock(Reserva.class);
 		otraReservaMock = mock(Reserva.class);
-		rankeoMock = mock(Rankeo.class);
 		categoriaMock = mock(Categoria.class);
-		otroRankeoMock = mock(Rankeo.class);
-		tipoConcretoMock = mock(TipoDeInmueble.class);
 		solicitudMock = mock(SolicitudDeReserva.class);
 		sitioWebMock = mock(SitioWeb.class);
 		
 	}
-	
-	@Test
-    void testUnInmuebleConoceSusDatos() {
-		
-		inmueble.datosDelInmueble();
-    }
 
 	@Test
     void testUnInmueblePuedeRegistrarYEliminarUnaReserva() {
@@ -119,11 +116,19 @@ public class InmuebleTestCase {
     }
 	
 	@Test
-    void testUnInmueblePuedeSaberQuienEsSuPropietario() {
+    void testUnInmueblePuedeSaberSuDatos() {
 		
-		assertTrue(inmueble.getPropietario().equals(usuarioMock));
+		assertEquals(inmueble.getPropietario(),usuarioMock);
+		assertEquals(inmueble.getCapacidad(),3);
+		assertEquals(inmueble.getCheckIn(), hora);
+		assertEquals(inmueble.getCheckOut(), hora);
+		assertEquals(inmueble.getDireccion(),"Calle 43 N° 898");
+		assertEquals(inmueble.getPais(),"Argentina");
+		assertEquals(inmueble.getSuperficie(),40);
+		assertEquals(inmueble.getCiudad(),"Buenos Aires");
+		assertEquals(inmueble.getTipoInmueble(),tipoConcretoMock);
     }
-	
+	 
 	@Test
     void testUnInmueblePuedeActualizarSuListaDeRanking() throws Exception {
 		
@@ -145,11 +150,11 @@ public class InmuebleTestCase {
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		
 		assertTrue(inmueble.getComentarios().isEmpty());
-		assertDoesNotThrow(() -> inmueble.dejarUnComentarioAlInmueble(reservaMock, "Bello"));
+		assertDoesNotThrow(() -> inmueble.agregarUnComentarioAlInmueble(reservaMock, "Bello"));
 		assertTrue(inmueble.getComentarios().contains("Bello"));
 		
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoConfirmada());
-		assertThrows(Exception.class, () -> {inmueble.dejarUnComentarioAlInmueble(reservaMock, "Hermoso");});
+		assertThrows(Exception.class, () -> {inmueble.agregarUnComentarioAlInmueble(reservaMock, "Hermoso");});
 		assertFalse(inmueble.getComentarios().contains("Hermoso"));
 	}
 	
@@ -159,7 +164,7 @@ public class InmuebleTestCase {
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		
 		inmueble.setSitioWeb(sitioWebMock);
-		assertDoesNotThrow(() -> inmueble.rankearAInmueble(reservaMock, categoriaMock, 5));
+		assertDoesNotThrow(() -> inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5));
 		assertFalse(inmueble.getRankeosInmueble().isEmpty());
 		
 	}
@@ -167,11 +172,11 @@ public class InmuebleTestCase {
 	@Test
     void testUnInmuebleNoPuedeRecibirUnRankeo() throws Exception {
 		
-		assertThrows(Exception.class, () -> {inmueble.rankearAInmueble(reservaMock, categoriaMock, 5);});
+		assertThrows(Exception.class, () -> {inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5);});
 		when(reservaMock.getEstadoDeReserva()).thenReturn(new EstadoFinalizada());
 		when(categoriaMock.nombreCategoria()).thenReturn(" ");
 		doThrow(new Exception("Error: La categoria" + categoriaMock.nombreCategoria() + "es incorrecta.")).when(sitioWebMock).estaCategoriaEspecificaPropietario(categoriaMock);   
-		assertThrows(Exception.class, () -> {inmueble.rankearAInmueble(reservaMock, categoriaMock, 5);});
+		assertThrows(Exception.class, () -> {inmueble.rankearUnInmueble(reservaMock, categoriaMock, 5);});
 		
 	}
 	
