@@ -29,9 +29,8 @@ public class ReservaTestCase {
         LocalDate fechaDeIngreso = LocalDate.of(2024, 12, 1);
         LocalDate fechaDeEgreso = LocalDate.of(2024, 12, 10);
 
-        when(inmuebleMock.getManager()).thenReturn(managerMock);
         when(inmuebleMock.estaReservado(reserva)).thenReturn(true); 
-        reserva = new Reserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso);
+        reserva = new Reserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso, managerMock);
         
     }
 	

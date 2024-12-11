@@ -17,19 +17,15 @@ public class Reserva {
 	private List<Reserva> reservasCondicionales = new ArrayList<Reserva>();
 	private Manager manager;
 	
-	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
+	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso, Manager manager) {
 		this.inmueble = inmueble;
 		this.inquilino = inquilino;
 		this.formaDePago = formaDePago;
 		this.fechaDeIngreso = fechaDeIngreso;
 		this.fechaDeEgreso = fechaDeEgreso;
-		this.setManager(inmueble.getManager());
+		this.manager = manager;
 		this.evaluarReserva();
 	} 
-	
-	public void setManager(Manager manager) {
-		this.manager = manager;
-	}
 	
 	public Manager getManager() {
 		return this.manager;

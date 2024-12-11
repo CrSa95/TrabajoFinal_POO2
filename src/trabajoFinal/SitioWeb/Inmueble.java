@@ -32,9 +32,10 @@ public class Inmueble {
 	private Manager manager;
 	private SitioWeb sitioWeb;
 
-	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
-			 		LocalTime checkIn, LocalTime checkOut, double precioBase) {
+	public Inmueble(TipoDeInmueble tipoDeInmueble, Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
+			 		LocalTime checkIn, LocalTime checkOut, double precioBase, Manager manager) {
 		
+		this.tipoInmueble = tipoDeInmueble; 
 		this.propietario = propietario;
 		this.superficie = superficie;
 		this.pais = pais;
@@ -44,7 +45,7 @@ public class Inmueble {
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.precioBase = precioBase; 
-		this.setSitioWeb(propietario.getSitioWeb());
+		this.manager = manager;
 	}
 	
 	public void setSitioWeb(SitioWeb sitioWeb) {
@@ -227,16 +228,6 @@ public class Inmueble {
 		return this.ciudad;
 	}
 
-	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws Exception {
-		
-		if (tipoDeInmueble.isEmpty()) {
-			throw new Exception("Error: El tipo de inmueble seleccionado es incorrecto.");
-		}
-		else {
-			this.tipoInmueble = tipoDeInmueble.get();	
-		}
-	}
-
 	public TipoDeInmueble getTipoInmueble() {
 		return this.tipoInmueble;
 	}
@@ -288,10 +279,6 @@ public class Inmueble {
 	
 	public List<FormaDePago> getFormasDePago(){
 		return this.formasDePago;
-	}
-	
-    public void setManager(Manager manager) {
-		this.manager = manager;
 	}
 	
 	public Manager getManager() {

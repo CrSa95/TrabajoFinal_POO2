@@ -37,7 +37,7 @@ public class SolicitudDeReserva{
 	}
 	
 	public Reserva crearReserva() {
-		return new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso);
+		return new Reserva(this.inmueble,this.inquilino, this.formaDePago, this.fechaDeIngreso, this.fechaDeEgreso, inmueble.getManager());
 	}
 
 	public void notificarAInquilino() {

@@ -1,6 +1,6 @@
 package trabajoFinal.SitioWeb;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*; 
 
 import static org.mockito.Mockito.*;
 
@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ public class InmuebleTestCase {
 	private Rankeo rankeoMock;
 	private Rankeo otroRankeoMock;
 	private Categoria categoriaMock;
-	private Optional<TipoDeInmueble> tipoDeInmuebleMock;
 	private TipoDeInmueble tipoConcretoMock;
 	private SolicitudDeReserva solicitudMock;
 	private SitioWeb sitioWebMock;
@@ -33,14 +31,13 @@ public class InmuebleTestCase {
     public void setUp() { 
 		
 		usuarioMock = mock(Usuario.class);
-		inmueble = new Inmueble(usuarioMock, 40, "Argentina", "Buenos Aires", "Calle 43 N° 898", 3,  LocalTime.now(),  LocalTime.now(), 1000);
+		managerMock = mock(Manager.class);
+		inmueble = new Inmueble(tipoConcretoMock, usuarioMock, 40, "Argentina", "Buenos Aires", "Calle 43 N° 898", 3,  LocalTime.now(),  LocalTime.now(), 1000, managerMock);
 		reservaMock = mock(Reserva.class);
 		otraReservaMock = mock(Reserva.class);
-		managerMock = mock(Manager.class);
 		rankeoMock = mock(Rankeo.class);
 		categoriaMock = mock(Categoria.class);
 		otroRankeoMock = mock(Rankeo.class);
-		tipoDeInmuebleMock = Optional.empty();
 		tipoConcretoMock = mock(TipoDeInmueble.class);
 		solicitudMock = mock(SolicitudDeReserva.class);
 		sitioWebMock = mock(SitioWeb.class);
@@ -85,8 +82,6 @@ public class InmuebleTestCase {
 	
 	@Test
     void testUnInmueblePuedeModificarSuPrecioBase() {
-		
-		inmueble.setManager(managerMock);
 		
 		assertTrue(inmueble.getPrecioBase() == 1000);
 		inmueble.actualizarPrecioBase(2000);
@@ -181,15 +176,6 @@ public class InmuebleTestCase {
 	}
 	
 	@Test
-    void testUnInmueblePuedeSetearSuTipoDeInmueble() throws Exception {
-		
-		assertThrows(Exception.class, () -> {inmueble.setTipoDeInmueble(tipoDeInmuebleMock);});
-		
-		inmueble.setTipoDeInmueble(Optional.of(tipoConcretoMock));
-		assertTrue(inmueble.getTipoInmueble().equals(tipoConcretoMock));
-	}
-	
-	@Test
     void testUnInmueblePuedeSetearSusTiposDeServicios() {
 		
 		TipoDeServicio gasMock = mock(TipoDeServicio.class);
@@ -224,7 +210,6 @@ public class InmuebleTestCase {
 	@Test
     void testUnInmuebleConoceQuienEsSuManager() {
 		
-		inmueble.setManager(managerMock);
 		assertTrue(inmueble.getManager().equals(managerMock));
 	}
 	
