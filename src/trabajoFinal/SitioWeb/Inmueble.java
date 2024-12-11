@@ -32,9 +32,10 @@ public class Inmueble {
 	private Manager manager;
 	private SitioWeb sitioWeb;
 
-	public Inmueble(Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
-			 		LocalTime checkIn, LocalTime checkOut, double precioBase) {
+	public Inmueble(TipoDeInmueble tipoDeInmueble, Usuario propietario, int superficie, String pais, String ciudad, String direccion, int capacidad,
+			 		LocalTime checkIn, LocalTime checkOut, double precioBase, Manager manager) {
 		
+		this.tipoInmueble = tipoDeInmueble; 
 		this.propietario = propietario;
 		this.superficie = superficie;
 		this.pais = pais;
@@ -44,28 +45,13 @@ public class Inmueble {
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
 		this.precioBase = precioBase; 
-		this.setSitioWeb(propietario.getSitioWeb());
+		this.manager = manager;
 	}
 	
 	public void setSitioWeb(SitioWeb sitioWeb) {
 		this.sitioWeb = sitioWeb;
 	}
 	
-	public void datosDelInmueble() {
-		this.getSuperficie();
-		this.getPais();
-		this.getCiudad();
-		this.getDireccion(); 
-		this.getCapacidad();
-		this.getFotos();
-		this.getTiposDeServicios();
-		this.getCheckIn();
-		this.getCheckOut();
-		this.getComentarios();
-		this.getRankeosInmueble();
-		this.calcularPromedioTotal();
-	}
-
 	public List<TipoDeServicio> getTiposDeServicios() {
 		return this.tiposDeServicios;
 		
@@ -125,7 +111,7 @@ public class Inmueble {
 	            );
 	}
 	
-	public void modificarPrecioBase(double precioBase) {	
+	public void actualizarPrecioBase(double precioBase) {	
 		if (this.precioBase > precioBase) {
 			this.manager.bajaDePrecio(this);
 		}
@@ -135,6 +121,11 @@ public class Inmueble {
 	public double getPrecioBase() {
 		return this.precioBase;
 	}
+	
+	public SitioWeb getSitioWeb() {
+		return this.sitioWeb;
+	}
+
 
 	public void setDisponibilidad(LocalDate fechaInicial, LocalDate fechaFinal) {
 
@@ -175,28 +166,20 @@ public class Inmueble {
 		return this.propietario;
 	}
 	
-	public void dejarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
-
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		comentarios.add(comentario);
-	
+	public void agregarUnComentarioAlInmueble(Reserva reserva, String comentario) throws Exception {
+		reserva.getEstadoDeReserva().registrarComentarioInmueble(this, comentario);
 	}
 	
-	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception  {
-
-		reserva.getEstadoDeReserva().finalizoLaReserva();
-		this.sitioWeb.estaCategoriaEspecificaInmueble(categoria);
-		this.actualizarListaDeRaneko(new Rankeo(categoria, puntaje));
+	public void rankearUnInmueble(Reserva reserva, Categoria categoria, int puntaje) throws Exception {
+		reserva.getEstadoDeReserva().rankearInmueble(this, categoria, puntaje);
 	}
 	
-	public void actualizarListaDeRaneko(Rankeo rankeo) {
+	public void actualizarListaDeRankeoInmueble(Rankeo rankeo) {
 
 		if (this.estaElRank(rankeo)) {
-
 			this.actualizarPuntajeDeRankeo(rankeo);
 		}
 		else {
-
 			this.rankeosInmueble.add(rankeo);
 		}
 	}
@@ -228,16 +211,6 @@ public class Inmueble {
 	public String getCiudad() {
 
 		return this.ciudad;
-	}
-
-	public void setTipoDeInmueble(Optional<TipoDeInmueble> tipoDeInmueble) throws Exception {
-		
-		if (tipoDeInmueble.isEmpty()) {
-			throw new Exception("Error: El tipo de inmueble seleccionado es incorrecto.");
-		}
-		else {
-			this.tipoInmueble = tipoDeInmueble.get();	
-		}
 	}
 
 	public TipoDeInmueble getTipoInmueble() {
@@ -291,10 +264,6 @@ public class Inmueble {
 	
 	public List<FormaDePago> getFormasDePago(){
 		return this.formasDePago;
-	}
-	
-    public void setManager(Manager manager) {
-		this.manager = manager;
 	}
 	
 	public Manager getManager() {

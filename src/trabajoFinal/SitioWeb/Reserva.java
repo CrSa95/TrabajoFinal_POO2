@@ -17,19 +17,15 @@ public class Reserva {
 	private List<Reserva> reservasCondicionales = new ArrayList<Reserva>();
 	private Manager manager;
 	
-	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso) {
+	public Reserva(Inmueble inmueble, Usuario inquilino, FormaDePago formaDePago, LocalDate fechaDeIngreso,LocalDate fechaDeEgreso, Manager manager) {
 		this.inmueble = inmueble;
 		this.inquilino = inquilino;
 		this.formaDePago = formaDePago;
 		this.fechaDeIngreso = fechaDeIngreso;
 		this.fechaDeEgreso = fechaDeEgreso;
-		this.setManager(inmueble.getManager());
+		this.manager = manager;
 		this.evaluarReserva();
 	} 
-	
-	public void setManager(Manager manager) {
-		this.manager = manager;
-	}
 	
 	public Manager getManager() {
 		return this.manager;
@@ -50,18 +46,22 @@ public class Reserva {
 	public LocalDate getFechaDeEgreso() {
 		return this.fechaDeEgreso;
 	}
+	
+	public Inmueble getInmueble() {
+		return this.inmueble;
+	}
+	
+	public EstadoDeReserva getEstadoDeReserva() {
+		return this.estadoDeReserva;
+	}
 
-	public void finalizarReserva() {
+	public void finalizarReserva() throws Exception {
 		this.estadoDeReserva.finalizar(this);
 	}
 
-	public void cancelarReserva() {
+	public void cancelarReserva() throws Exception {
 		this.estadoDeReserva.cancelar(this);
 		this.manager.cancelacionDeReserva(this.inmueble);
-	}
-
-	public Inmueble getInmueble() {
-		return this.inmueble;
 	}
 
 	public void evaluarReserva() {
@@ -84,9 +84,5 @@ public class Reserva {
 
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
 		this.estadoDeReserva = estadoDeReserva; 
-	}
-
-	public EstadoDeReserva getEstadoDeReserva() {
-		return this.estadoDeReserva;
 	}
 }

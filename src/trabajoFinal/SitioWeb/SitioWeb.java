@@ -1,8 +1,8 @@
 package trabajoFinal.SitioWeb;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.ArrayList; 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class SitioWeb {
@@ -24,6 +24,13 @@ public class SitioWeb {
 		return this.todosLosUsuarios;
 	}
 	
+	public List<TipoDeServicio> getTiposDeServicios(){
+		return this.todosLosTiposDeServicios;
+	}
+	
+	public List<TipoDeInmueble> getTiposDeInmuebles(){
+		return this.todosLosTiposDeInmueble;
+	}
 	
 	public void estaCategoriaEspecificaInmueble(Categoria categoriaEspecifica) throws Exception{ 
 		this.todasLasCategoriasDeInmueble.stream()
@@ -46,20 +53,6 @@ public class SitioWeb {
 		        							.orElseThrow(() -> new Exception("Error: La categoria" + categoriaEspecifica.nombreCategoria() + "es incorrecta."));
 	}
 
-	public List<TipoDeServicio> seleccionarTiposDeServicio(List<TipoDeServicio> servicios){
-
-		//Filtra elementos de tiposDeServicio que están presentes en servicios
-		return todosLosTiposDeServicios.stream()
-										.filter(servicios::contains)
-										.collect(Collectors.toList());
-	}
-
-	public Optional<TipoDeInmueble> seleccionarTipoDeInmueble(TipoDeInmueble tipoDeInmueble) {
-
-		return this.todosLosTiposDeInmueble.stream()
-				   .filter(tipoInmueble -> tipoInmueble.getTipoDeInmueble().equals(tipoDeInmueble.getTipoDeInmueble())).findFirst();
-
-	} 
 
 	public void altaInmueble(Inmueble inmueble) {
 		this.inmuebles.add(inmueble);
@@ -72,7 +65,7 @@ public class SitioWeb {
 	public List<Inmueble> buscarInmuebles(Busqueda busqueda){
 		return busqueda.aplicarFiltros(this.inmuebles);
 	}
-
+	
 	//Metodos de administrador
 	
 	public void altaTipoDeServicio(TipoDeServicio tipoDeServicio) {
@@ -104,14 +97,49 @@ public class SitioWeb {
 	
 	public List<Usuario> obtenerTopTresInquilinoQueMasAlquilaron() {
         return this.todosLosUsuarios.stream()
-                .sorted((u1, u2) -> Long.compare(u2.cantidadDeVecesQueAlquiloUnInquilino(), u1.cantidadDeVecesQueAlquiloUnInquilino()))
+                .sorted((u1, u2) -> Long.compare(this.cantidadDeVecesQueAlquiloUnInquilino(u2), this.cantidadDeVecesQueAlquiloUnInquilino(u1)))
                 .limit(3)
                 .collect(Collectors.toList());
     }
 	
-	public void visualizarInmueble(Inmueble inmueble){
+	public List<Reserva> getReservasFuturas(LocalDate fechaActual, Usuario usuario){
+		return usuario.getReservas().stream()
+		        .filter(reserva -> reserva.getFechaDeIngreso().isAfter(fechaActual))
+		        .collect(Collectors.toList());
+	}
 
-		inmueble.datosDelInmueble();
-		inmueble.getPropietario().datosDelPropietario(inmueble);
+
+	public List<Reserva> getReservasEnCiudad(String ciudad, Usuario usuario){
+		return usuario.getReservas().stream()
+		        .filter(reserva -> reserva.getInmueble().getCiudad().equalsIgnoreCase(ciudad))
+		        .collect(Collectors.toList());
+	}
+
+
+	public List<String> getCiudadesReservadas(Usuario usuario){
+		return usuario.getReservas().stream()
+					.filter(reserva -> reserva.getInquilino().equals(usuario))
+	            	.map(reserva -> reserva.getInmueble().getCiudad())
+	            	.distinct()
+	            	.collect(Collectors.toList());
+	}
+	
+	public long cantidadDeVecesQueAlquiloUnPropietarioSusInmuebles(Usuario usuario) { //
+	    return usuario.getReservas().stream()
+	               .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado())
+	               .count();
+	}
+
+	public long cantidadDeVecesQueUnPropietarioAlquiloUnInmueble(Inmueble inmueble, Usuario usuario) { //
+	    return inmueble.getReservas().stream()
+	               .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado() 
+	                                  && inmueble.getPropietario() == usuario)
+	               .count();
+	}
+
+	public long cantidadDeVecesQueAlquiloUnInquilino(Usuario usuario) {
+	    return usuario.getReservas().stream()
+	               .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado())
+	               .count();
 	}
 }

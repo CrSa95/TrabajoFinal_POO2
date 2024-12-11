@@ -19,21 +19,13 @@ class EstadoCondicionalTestCase {
 	
 	@Test
 	void testCancelar() {
-		estadoCondicional.cancelar(reservaMock);
-		
-		verifyNoInteractions(reservaMock);
+		Exception exception = assertThrows(Exception.class, () -> estadoCondicional.cancelar(reservaMock));
+	    assertEquals("Error: La Reserva esta en estado condicional.", exception.getMessage());
 	}
 	
 	@Test
 	void testFinalizar() {
-		estadoCondicional.finalizar(reservaMock);
-		
-		verifyNoInteractions(reservaMock);
+		Exception exception = assertThrows(Exception.class, () -> estadoCondicional.finalizar(reservaMock));
+	    assertEquals("Error: La Reserva esta en estado condicional.", exception.getMessage());
 	}
-	
-	@Test
-	void testElEstadoEsFinalizado() throws Exception {
-		assertThrows(Exception.class, () -> {estadoCondicional.finalizoLaReserva();});
-		assertThrows(Exception.class,() -> estadoCondicional.finalizoLaReserva(), "Error: La Reserva aun no finalizo.");
-	}
-} 
+}

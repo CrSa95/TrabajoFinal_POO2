@@ -3,9 +3,8 @@ package trabajoFinal.SitioWeb;
 import java.util.Optional;
 
 
-public class EstadoConfirmada implements EstadoDeReserva {
+public class EstadoConfirmada extends EstadoDeReserva {
 
-	@Override
 	public void cancelar(Reserva reserva) {	
 		Inmueble inmueble = reserva.getInmueble();
 
@@ -22,16 +21,8 @@ public class EstadoConfirmada implements EstadoDeReserva {
 		}
 	}
 
-	@Override
 	public void finalizar(Reserva reserva) {
 		reserva.getInmueble().eliminarReserva(reserva);
 		reserva.setEstadoDeReserva(new EstadoFinalizada());
 	}
-
-	@Override
-	public void finalizoLaReserva() throws Exception  {
-		
-		throw new Exception("Error: La Reserva aun no finalizo.");
-	}
-
-} 
+}

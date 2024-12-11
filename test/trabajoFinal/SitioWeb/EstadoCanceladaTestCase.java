@@ -10,7 +10,7 @@ class EstadoCanceladaTestCase {
 
 	private EstadoCancelada estadoCancelada;
 	private Reserva reservaMock;
-	
+
 	@BeforeEach
     public void setUp() {
 		estadoCancelada = new EstadoCancelada();
@@ -18,22 +18,14 @@ class EstadoCanceladaTestCase {
 	}
 	
 	@Test
-	void testCancelar() {
-		estadoCancelada.cancelar(reservaMock);
-		
-		verifyNoInteractions(reservaMock);
+	void testCancelar() throws Exception {
+		Exception exception = assertThrows(Exception.class, () -> estadoCancelada.cancelar(reservaMock));
+	    assertEquals("Error: La Reserva se encuentra cancelada.", exception.getMessage());
 	}
 	
 	@Test
-	void testFinalizar() {
-		estadoCancelada.finalizar(reservaMock);
-		
-		verifyNoInteractions(reservaMock);
-	}
-	
-	@Test
-	void testElEstadoEsFinalizado() throws Exception {
-		assertThrows(Exception.class, () -> {estadoCancelada.finalizoLaReserva();});
-		assertThrows(Exception.class,() -> estadoCancelada.finalizoLaReserva(), "Error: La Reserva aun no finalizo.");
+	void testFinalizar() throws Exception {
+		Exception exception = assertThrows(Exception.class, () -> estadoCancelada.finalizar(reservaMock));
+	    assertEquals("Error: La Reserva se encuentra cancelada.", exception.getMessage());
 	}
 } 

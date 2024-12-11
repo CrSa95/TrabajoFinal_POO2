@@ -14,7 +14,6 @@ public class ReservaTestCase {
     private Reserva reserva;
     private Inmueble inmuebleMock;
     private Usuario inquilinoMock;
-    private Usuario propietarioMock;
     private FormaDePago formaDePagoMock;
     private EstadoDeReserva estadoDeReservaMock;
     private Manager managerMock;
@@ -23,7 +22,6 @@ public class ReservaTestCase {
     public void setUp() {
         inmuebleMock = mock(Inmueble.class); 
         inquilinoMock = mock(Usuario.class); 
-        propietarioMock = mock(Usuario.class);
         formaDePagoMock = mock(FormaDePago.class);
         estadoDeReservaMock = mock(EstadoDeReserva.class);
         managerMock = mock(Manager.class);
@@ -31,9 +29,8 @@ public class ReservaTestCase {
         LocalDate fechaDeIngreso = LocalDate.of(2024, 12, 1);
         LocalDate fechaDeEgreso = LocalDate.of(2024, 12, 10);
 
-        when(inmuebleMock.getManager()).thenReturn(managerMock);
         when(inmuebleMock.estaReservado(reserva)).thenReturn(true); 
-        reserva = new Reserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso);
+        reserva = new Reserva(inmuebleMock, inquilinoMock, formaDePagoMock, fechaDeIngreso, fechaDeEgreso, managerMock);
         
     }
 	
@@ -48,7 +45,7 @@ public class ReservaTestCase {
     }
     
 	@Test
-	void testCuandoSeFinalizaLaReserva() {
+	void testCuandoSeFinalizaLaReserva() throws Exception {
 		reserva.setEstadoDeReserva(estadoDeReservaMock);
 		reserva.finalizarReserva();
 		
@@ -56,7 +53,7 @@ public class ReservaTestCase {
 	}
 	
 	@Test
-	void testCuandoSeCancelaLaReserva() {
+	void testCuandoSeCancelaLaReserva() throws Exception {
 		reserva.setEstadoDeReserva(estadoDeReservaMock);
 		reserva.cancelarReserva(); 
 		
