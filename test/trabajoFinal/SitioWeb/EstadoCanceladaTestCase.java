@@ -29,6 +29,7 @@ class EstadoCanceladaTestCase {
 	    assertEquals("Error: La Reserva se encuentra cancelada.", exception.getMessage());
 	}
 	
+	// Test para mostrar lo pedido en la corrección. 
 	@Test
 	void testCuandoSeQuiereRealizarUnRankeoLaReservaNoEstaFinalizada() {
 		Usuario usuarioMock = mock(Usuario.class);
