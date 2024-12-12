@@ -80,7 +80,7 @@ public class Reserva {
 	public Optional<Reserva> obtenerReservaCondicional(Inmueble inmueble) {
 		return this.reservasCondicionales.stream().filter(unaReserva -> unaReserva.getInmueble().equals(inmueble) 
 															&& !inmueble.estaReservado(unaReserva)).findFirst();
-	}
+	} 
 
 	public void setEstadoDeReserva(EstadoDeReserva estadoDeReserva) {
 		this.estadoDeReserva = estadoDeReserva; 
