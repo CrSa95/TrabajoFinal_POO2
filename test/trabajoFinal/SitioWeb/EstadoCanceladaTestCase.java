@@ -28,4 +28,13 @@ class EstadoCanceladaTestCase {
 		Exception exception = assertThrows(Exception.class, () -> estadoCancelada.finalizar(reservaMock));
 	    assertEquals("Error: La Reserva se encuentra cancelada.", exception.getMessage());
 	}
+	
+	@Test
+	void testCuandoSeQuiereRealizarUnRankeoLaReservaNoEstaFinalizada() {
+		Usuario usuarioMock = mock(Usuario.class);
+		Categoria categoriaMock = mock(Categoria.class);
+		
+		Exception exception = assertThrows(Exception.class, () -> estadoCancelada.rankearInquilino(usuarioMock, categoriaMock, 3));
+	    assertEquals("Error: La Reserva aun no finalizo.", exception.getMessage());
+	}
 } 
