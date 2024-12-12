@@ -31,26 +31,32 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	
 	// Get
 	
+	@Override
 	public SitioWeb getSitioWeb() { 
 		return this.sitioWeb;
 	}
 
+	@Override
 	public String getNombre() {
 		return this.nombreCompleto; 
 	}
 	
+	@Override
 	public String getMail() {
 		return mail;
 	}
 	
+	@Override
 	public int getTelefono() {
 		return telefono;
 	}
 	
+	@Override
 	public List<Rankeo> getRankeosInquilino(){
 		return this.rankeosInquilino;
 	}
 
+	@Override
 	public List<String> getComentariosInquilino(){
 		return comentariosInquilino; 
 	}
@@ -59,10 +65,12 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 		return this.reservas;
 	}
 	
+	@Override
 	public List<String> getComentariosPropietario(){
 		return this.comentariosPropietario;
 	}
 
+	@Override
 	public List<Rankeo> getRankeosPropietario(){
 		return this.rankeosPropietario;
 	}
@@ -83,15 +91,18 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 	public void enviarMail(String contenidoDelMail, Usuario usuario){ 
 		usuario.recibirMail(contenidoDelMail);
 	}
-	
+
+	@Override
 	public void registrarReserva(Reserva reserva) {
 		this.reservas.add(reserva);
 	}
 	
+	@Override
 	public void eliminarReserva(Reserva reserva) {
 		this.reservas.remove(reserva);
 	}
 
+	@Override
 	public int calcularPromedioTotal(List<Rankeo> rankeos) {
 
 		double sumaTotal = 0;
@@ -102,6 +113,7 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
         return (int) (sumaTotal / rankeos.size());
 	}
 
+	@Override
 	public List<Inmueble> inmueblesAlquilados() {
 	    return this.getReservas().stream()
 	            .filter(reserva -> reserva.getEstadoDeReserva().esFinalizado())
@@ -182,6 +194,7 @@ public class Usuario implements UsuarioInquilino,UsuarioPropietario {
 						 (rankeo.getCategoria().nombreCategoria()));
 	}
 
+	@Override
 	public void actualizarPuntajeDeRankeo(Rankeo rankeo, List<Rankeo> listaDeRankeo) {
 
 		Optional<Rankeo> rankeoViejo = listaDeRankeo.stream()
